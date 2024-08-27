@@ -11,11 +11,11 @@ namespace SudokuSolverCore
 
         Tile[,] puzzle;
 
-        public void Init(string simplePuzzle1)
+        public void Init(string puzzleAsString)
         {
-            for (int i = 0;i< simplePuzzle1.Length;i++)
+            for (int i = 0;i< puzzleAsString.Length;i++)
             {
-                puzzle[i / 9, i % 9] = simplePuzzle1[i].ToString();
+                puzzle[i / 9, i % 9] = puzzleAsString[i].ToString();
             }
         }
 
