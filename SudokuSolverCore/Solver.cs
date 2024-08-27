@@ -46,22 +46,22 @@ namespace SudokuSolverCore
                 for (int column = 0; column < PUZZLE_SIZE; column++)
                 {
                     Tile currentTile = Puzzle[line, column];
-                    if (currentTile.GetValue() == -1)
+                    if (currentTile.Value == -1)
                     {
                         int numberOfPotentialValues = 0;
                         for (int digit = 1; digit <= PUZZLE_SIZE; digit++)
                         {
-                            if (currentTile.potentialValues[digit] == true)
+                            if (currentTile.PotentialValues[digit] == true)
                                 numberOfPotentialValues++;
                         }
                         if (numberOfPotentialValues == 1)
                         {
                             for (int digit = 1; digit <= PUZZLE_SIZE; digit++)
                             {
-                                if (currentTile.potentialValues[digit] == true)
+                                if (currentTile.PotentialValues[digit] == true)
                                 {
                                     valueModified = true;
-                                    currentTile.SetValue(digit);
+                                    currentTile.Value = digit;
                                 }
                             }
                         }
@@ -80,7 +80,7 @@ namespace SudokuSolverCore
                 {
                     Tile currentTile = Puzzle[line, column];
 
-                    bool valueNotFixed = currentTile.GetValue() == -1;
+                    bool valueNotFixed = currentTile.Value == -1;
                     if (valueNotFixed)
                     {
                         var existingValues = new HashSet<int>();
@@ -90,7 +90,7 @@ namespace SudokuSolverCore
 
                         foreach (var value in existingValues)
                         {
-                            currentTile.potentialValues[value] = false;
+                            currentTile.PotentialValues[value] = false;
                         }
                     }
                 }
@@ -100,7 +100,7 @@ namespace SudokuSolverCore
             {
                 for (int column = 0; column < PUZZLE_SIZE; column++)
                 {
-                    int value = Puzzle[line, column].GetValue();
+                    int value = Puzzle[line, column].Value;
                     if (value != UNDEFINED)
                     {
                         collectedValues.Add(value);
@@ -112,7 +112,7 @@ namespace SudokuSolverCore
             {
                 for (int line = 0; line < PUZZLE_SIZE; line++)
                 {
-                    int value = Puzzle[line, column].GetValue();
+                    int value = Puzzle[line, column].Value;
                     if (value != UNDEFINED)
                     {
                         collectedValues.Add(value);
@@ -129,7 +129,7 @@ namespace SudokuSolverCore
                 {
                     for (int column = 0; column < SQUARE_SIZE; column++)
                     {
-                        int value = Puzzle[rowOffset + line, columnOffset + column].GetValue();
+                        int value = Puzzle[rowOffset + line, columnOffset + column].Value;
                         if (value != UNDEFINED)
                         {
                             collectedValues.Add(value);

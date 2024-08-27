@@ -10,65 +10,39 @@ namespace SudokuSolverCore
 {
     internal class Tile
     {
-        int originalValue;
-        public Dictionary<int, bool> potentialValues;
-
         public Tile(int value)
         {
-            this.originalValue = value;
-            potentialValues = [];
+            Value = value;
+            PotentialValues = [];
             InitializePotentialValues();
         }
 
         public void InitializePotentialValues()
         {
-            int value = this.originalValue;
-
-            if (value == UNDEFINED)
+            if (Value == UNDEFINED)
             {
                 for (int i = 1; i <= PUZZLE_SIZE; i++)
-                    potentialValues[i] = true;
+                    PotentialValues[i] = true;
             }
             else
             {
                 for (int i = 1; i <= PUZZLE_SIZE; i++)
-                    potentialValues[i] = false;
-                potentialValues[value] = true;
+                    PotentialValues[i] = false;
+                PotentialValues[Value] = true;
             }
         }
 
-        public int GetValue() { return this.originalValue; }
+        public int Value { get; set; }
+        public Dictionary<int, bool> PotentialValues { get; set; }
 
-        public void SetValue(int v) { this.originalValue = v; }
-
-        public static int StringToInt(string simplePuzzle1)
+        public static implicit operator Tile(string value)
         {
-            int result = UNDEFINED;
-            var ch = simplePuzzle1.ToString();
-
-            if (ch != " ")
-                result = Int32.Parse(ch);
-            return result;
+            return new Tile(TileHelpers.StringToInt(value));
         }
 
-        public static string IntToString(int value)
+        public static implicit operator string(Tile tile)
         {
-            string s;
-            if (value == UNDEFINED)
-                s = " ";
-            else
-                s = value.ToString();
-            return s;
-        }
-
-        public static implicit operator Tile(string v)
-        {
-            return new Tile(StringToInt(v));
-        }
-
-        public static implicit operator string(Tile v)
-        {
-            return IntToString(v.originalValue);
+            return TileHelpers.IntToString(tile.Value);
         }
     }
 }
