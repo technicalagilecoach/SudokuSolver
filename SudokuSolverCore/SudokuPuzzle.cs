@@ -5,223 +5,38 @@ namespace SudokuSolverCore
 {
     public class SudokuPuzzle
     {
-        public SudokuPuzzle() { 
-            puzzle = new Tile[9,9]; 
+        public const int PUZZLE_SIZE = 9;
+        public const int SQUARE_SIZE = 3;
+        public const int UNDEFINED = -1;
+
+        public SudokuPuzzle()
+        {
+            puzzle = new Tile[PUZZLE_SIZE, PUZZLE_SIZE];
         }
 
         readonly Tile[,] puzzle;
 
+        internal Tile[,] Puzzle => puzzle;
+
         public void Init(string puzzleAsString)
         {
-            for (int i = 0;i< puzzleAsString.Length;i++)
+            for (int i = 0; i < puzzleAsString.Length; i++)
             {
-                puzzle[i / 9, i % 9] = puzzleAsString[i].ToString();
+                Puzzle[i / PUZZLE_SIZE, i % PUZZLE_SIZE] = puzzleAsString[i].ToString();
             }
         }
 
         public string Print()
         {
-            if (puzzle == null)
+            if (Puzzle == null)
                 throw new NullReferenceException();
 
             string result = "";
-            for (int i = 0; i < puzzle.Length; i++)
+            for (int i = 0; i < Puzzle.Length; i++)
             {
-                result += puzzle[i / 9, i % 9];
+                result += Puzzle[i / PUZZLE_SIZE, i % PUZZLE_SIZE];
             }
             return result;
-        }
-
-        public void Solve()
-        {
-            bool valueModified = false;
-            do
-            {
-                ResetPotentialValues();
-                OneIteration();
-                valueModified = UpdateValues();
-
-            } while (valueModified);
-        }
-
-        private void ResetPotentialValues()
-        {
-            for (int line = 0; line < 9; line++)
-            {
-                for (int column = 0; column < 9; column++)
-                {
-                    Tile currentTile = puzzle[line, column];
-                    currentTile.InitializePotentialValues();
-                }
-            }
-        }
-
-        private bool UpdateValues()
-        {
-            bool valueModified = false;
-            for (int line = 0; line < 9; line++)
-            {
-                for (int column = 0; column < 9; column++)
-                {
-                    Tile currentTile = puzzle[line, column];
-                    if (currentTile.GetValue() == -1)
-                    {
-                        int numberOfPotentialValues = 0;
-                        for (int k = 1; k <= 9; k++)
-                        {
-                            if (currentTile.potentialValues[k] == true)
-                                numberOfPotentialValues++;
-                        }
-                        if (numberOfPotentialValues == 1)
-                        {
-                            for (int k = 1; k <= 9; k++)
-                            {
-                                if (currentTile.potentialValues[k] == true)
-                                {
-                                    valueModified = true;
-                                    currentTile.SetValue(k);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return valueModified;
-        }
-
-        private void OneIteration()
-        {
-            for (int line = 0; line < 9; line++)
-            {
-                for (int column = 0; column < 9; column++)
-                {
-                    Tile currentTile = puzzle[line, column];
-
-                    bool valueNotFixed = currentTile.GetValue() == -1;
-                    if (valueNotFixed)
-                    {
-                        bool useOldMethod = false;
-                        if (useOldMethod)
-                        {
-                            CurrentLine(currentTile, line);
-                            CurrentColumn(currentTile, column);
-                            CurrentSquare(currentTile, line / 3, column / 3);
-                        }
-                        else
-                        {
-                            var valuesInLine = GetValuesFromLine(line);
-                            var valuesInColumn = GetValuesFromColumn(column);
-                            var valuesInSquare = GetValuesFromSquare(line / 3, column / 3);
-
-                            var existingValues = new HashSet<int>();
-                            existingValues.UnionWith(valuesInLine);
-                            existingValues.UnionWith(valuesInColumn);
-                            existingValues.UnionWith(valuesInSquare);
-
-                            foreach (var value in existingValues) {
-                                currentTile.potentialValues[value] = false;
-                            }
-                        }
-
-                    }
-                }
-            }
-
-            HashSet<int> GetValuesFromLine(int line) { 
-                HashSet<int> values = [];
-
-                for (int i = 0; i < 9; i++)
-                {
-                    int w = puzzle[line, i].GetValue();
-                    if (w != -1)
-                    {
-                        values.Add(w);
-                    }
-                }
-                return values;
-            }
-
-            void CurrentLine(Tile currentTile, int line)
-            {
-                for (int i = 0; i < 9; i++)
-                {
-                    int w = puzzle[line, i].GetValue();
-                    if (w != -1 && w != currentTile.GetValue())
-                    {
-                        currentTile.potentialValues[w] = false;
-                    }
-                }
-            }
-
-            HashSet<int> GetValuesFromColumn(int column)
-            {
-                HashSet<int> values = [];
-
-                for (int i = 0; i < 9; i++)
-                {
-                    int w = puzzle[i,column].GetValue();
-                    if (w != -1)
-                    {
-                        values.Add(w);
-                    }
-                }
-                return values;
-            }
-
-
-            void CurrentColumn(Tile currentTile, int column)
-            {
-                for (int line = 0; line < 9; line++)
-                {
-                    int w = puzzle[line, column].GetValue();
-                    if (w != -1 && w != currentTile.GetValue())
-                    {
-                        currentTile.potentialValues[w] = false;
-                    }
-                }
-            }
-
-            HashSet<int> GetValuesFromSquare(int v1, int v2)
-            {
-                HashSet<int> values = [];
-
-                int rowOffset = v1 * 3;
-                int columnOffset = v2 * 3;
-
-                for (int line = 0; line < 3; line++)
-                {
-                    for (int column = 0; column < 3; column++)
-                    {
-                        int w = puzzle[rowOffset + line, columnOffset + column].GetValue();
-                        if (w != -1)
-                        {
-                            values.Add(w);
-                        }
-                    }
-                }
-
-                return values;
-            }
-
-
-            void CurrentSquare(Tile currentTile, int v1, int v2)
-            {
-                int rowOffset = v1 * 3;
-                int columnOffset = v2 * 3;
-
-                for (int line = 0; line < 3; line++)
-                {
-                    for (int column = 0; column < 3; column++)
-                    {
-                        int w = puzzle[rowOffset + line, columnOffset + column].GetValue();
-                        if (w != -1 && w != currentTile.GetValue())
-                        {
-                            currentTile.potentialValues[w] = false;
-                        }
-                    }
-                }
-            }
         }
     }
 }

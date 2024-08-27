@@ -7,10 +7,11 @@ namespace SudokuSolver
     {
         private static string Solve(string puzzle)
         {
-            SudokuPuzzle solver = new SudokuPuzzle();
-            solver.Init(puzzle);
+            SudokuPuzzle sudokuPuzzle = new();
+            sudokuPuzzle.Init(puzzle);
+            Solver solver = new(sudokuPuzzle);
             solver.Solve();
-            return solver.Print();
+            return sudokuPuzzle.Print();
         }
 
         [TestMethod]
