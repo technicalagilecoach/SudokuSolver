@@ -32,10 +32,15 @@ namespace SudokuSolverCore
             {
                 for (int column = 0; column < PUZZLE_SIZE; column++)
                 {
-                    Cell currentCell = Puzzle[line, column];
-                    currentCell.InitializePotentialValues();
+                    ResetOneCell(line, column);
                 }
             }
+        }
+
+        private void ResetOneCell(int line, int column)
+        {
+            Cell currentCell = Puzzle[line, column];
+            currentCell.InitializePotentialValues();
         }
 
         private bool UpdateValues()
@@ -45,31 +50,36 @@ namespace SudokuSolverCore
             {
                 for (int column = 0; column < PUZZLE_SIZE; column++)
                 {
-                    Cell currentCell = Puzzle[line, column];
-                    if (currentCell.Value == -1)
-                    {
-                        int numberOfPotentialValues = 0;
-                        for (int digit = 1; digit <= PUZZLE_SIZE; digit++)
-                        {
-                            if (currentCell.PotentialValues[digit] == true)
-                                numberOfPotentialValues++;
-                        }
-                        if (numberOfPotentialValues == 1)
-                        {
-                            for (int digit = 1; digit <= PUZZLE_SIZE; digit++)
-                            {
-                                if (currentCell.PotentialValues[digit] == true)
-                                {
-                                    valueModified = true;
-                                    currentCell.Value = digit;
-                                }
-                            }
-                        }
-                    }
+                    UpdateOneCell(ref valueModified, line, column);
                 }
             }
 
             return valueModified;
+        }
+
+        private void UpdateOneCell(ref bool valueModified, int line, int column)
+        {
+            Cell currentCell = Puzzle[line, column];
+            if (currentCell.Value == -1)
+            {
+                int numberOfPotentialValues = 0;
+                for (int digit = 1; digit <= PUZZLE_SIZE; digit++)
+                {
+                    if (currentCell.PotentialValues[digit] == true)
+                        numberOfPotentialValues++;
+                }
+                if (numberOfPotentialValues == 1)
+                {
+                    for (int digit = 1; digit <= PUZZLE_SIZE; digit++)
+                    {
+                        if (currentCell.PotentialValues[digit] == true)
+                        {
+                            valueModified = true;
+                            currentCell.Value = digit;
+                        }
+                    }
+                }
+            }
         }
 
         private void OneIteration()
@@ -78,21 +88,7 @@ namespace SudokuSolverCore
             {
                 for (int column = 0; column < PUZZLE_SIZE; column++)
                 {
-                    Cell currentCell = Puzzle[line, column];
-
-                    bool valueNotFixed = currentCell.Value == -1;
-                    if (valueNotFixed)
-                    {
-                        var existingValues = new HashSet<int>();
-                        AddValuesFromLine(existingValues, line);
-                        AddValuesFromColumn(existingValues, column);
-                        AddValuesFromSquare(existingValues, line / SQUARE_SIZE, column / SQUARE_SIZE);
-
-                        foreach (var value in existingValues)
-                        {
-                            currentCell.PotentialValues[value] = false;
-                        }
-                    }
+                    IterateOneCell(line, column);
                 }
             }
 
@@ -134,6 +130,25 @@ namespace SudokuSolverCore
                         {
                             collectedValues.Add(value);
                         }
+                    }
+                }
+            }
+
+            void IterateOneCell(int line, int column)
+            {
+                Cell currentCell = Puzzle[line, column];
+
+                bool valueNotFixed = currentCell.Value == -1;
+                if (valueNotFixed)
+                {
+                    var existingValues = new HashSet<int>();
+                    AddValuesFromLine(existingValues, line);
+                    AddValuesFromColumn(existingValues, column);
+                    AddValuesFromSquare(existingValues, line / SQUARE_SIZE, column / SQUARE_SIZE);
+
+                    foreach (var value in existingValues)
+                    {
+                        currentCell.PotentialValues[value] = false;
                     }
                 }
             }
