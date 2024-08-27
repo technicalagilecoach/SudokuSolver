@@ -11,12 +11,12 @@ namespace SudokuSolverCore
 
         public SudokuPuzzle()
         {
-            puzzle = new Tile[PUZZLE_SIZE, PUZZLE_SIZE];
+            puzzle = new Cell[PUZZLE_SIZE, PUZZLE_SIZE];
         }
 
-        readonly Tile[,] puzzle;
+        readonly Cell[,] puzzle;
 
-        internal Tile[,] Puzzle => puzzle;
+        internal Cell[,] Puzzle => puzzle;
 
         public void Init(string puzzleAsString)
         {

@@ -12,7 +12,7 @@ namespace SudokuSolverCore
     {
         private readonly SudokuPuzzle puzzle = puzzle;
 
-        internal Tile[,] Puzzle => puzzle.Puzzle;
+        internal Cell[,] Puzzle => puzzle.Puzzle;
 
         public void Solve()
         {
@@ -32,8 +32,8 @@ namespace SudokuSolverCore
             {
                 for (int column = 0; column < PUZZLE_SIZE; column++)
                 {
-                    Tile currentTile = Puzzle[line, column];
-                    currentTile.InitializePotentialValues();
+                    Cell currentCell = Puzzle[line, column];
+                    currentCell.InitializePotentialValues();
                 }
             }
         }
@@ -45,23 +45,23 @@ namespace SudokuSolverCore
             {
                 for (int column = 0; column < PUZZLE_SIZE; column++)
                 {
-                    Tile currentTile = Puzzle[line, column];
-                    if (currentTile.Value == -1)
+                    Cell currentCell = Puzzle[line, column];
+                    if (currentCell.Value == -1)
                     {
                         int numberOfPotentialValues = 0;
                         for (int digit = 1; digit <= PUZZLE_SIZE; digit++)
                         {
-                            if (currentTile.PotentialValues[digit] == true)
+                            if (currentCell.PotentialValues[digit] == true)
                                 numberOfPotentialValues++;
                         }
                         if (numberOfPotentialValues == 1)
                         {
                             for (int digit = 1; digit <= PUZZLE_SIZE; digit++)
                             {
-                                if (currentTile.PotentialValues[digit] == true)
+                                if (currentCell.PotentialValues[digit] == true)
                                 {
                                     valueModified = true;
-                                    currentTile.Value = digit;
+                                    currentCell.Value = digit;
                                 }
                             }
                         }
@@ -78,9 +78,9 @@ namespace SudokuSolverCore
             {
                 for (int column = 0; column < PUZZLE_SIZE; column++)
                 {
-                    Tile currentTile = Puzzle[line, column];
+                    Cell currentCell = Puzzle[line, column];
 
-                    bool valueNotFixed = currentTile.Value == -1;
+                    bool valueNotFixed = currentCell.Value == -1;
                     if (valueNotFixed)
                     {
                         var existingValues = new HashSet<int>();
@@ -90,7 +90,7 @@ namespace SudokuSolverCore
 
                         foreach (var value in existingValues)
                         {
-                            currentTile.PotentialValues[value] = false;
+                            currentCell.PotentialValues[value] = false;
                         }
                     }
                 }

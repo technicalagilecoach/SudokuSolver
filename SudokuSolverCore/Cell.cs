@@ -8,9 +8,9 @@ using static SudokuSolverCore.SudokuPuzzle;
 
 namespace SudokuSolverCore
 {
-    internal class Tile
+    internal class Cell
     {
-        public Tile(int value)
+        public Cell(int value)
         {
             Value = value;
             PotentialValues = [];
@@ -35,14 +35,14 @@ namespace SudokuSolverCore
         public int Value { get; set; }
         public Dictionary<int, bool> PotentialValues { get; set; }
 
-        public static implicit operator Tile(string value)
+        public static implicit operator Cell(string value)
         {
-            return new Tile(TileHelpers.StringToInt(value));
+            return new Cell(CellHelpers.StringToInt(value));
         }
 
-        public static implicit operator string(Tile tile)
+        public static implicit operator string(Cell tile)
         {
-            return TileHelpers.IntToString(tile.Value);
+            return CellHelpers.IntToString(tile.Value);
         }
     }
 }

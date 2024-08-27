@@ -1,6 +1,6 @@
 ﻿using static SudokuSolverCore.SudokuPuzzle;
 
-internal static class TileHelpers
+internal static class CellHelpers
 {
 
     internal static string IntToString(int value)
