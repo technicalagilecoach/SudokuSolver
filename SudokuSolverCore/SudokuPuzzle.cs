@@ -9,7 +9,7 @@ namespace SudokuSolverCore
             puzzle = new Tile[9,9]; 
         }
 
-        Tile[,] puzzle;
+        readonly Tile[,] puzzle;
 
         public void Init(string puzzleAsString)
         {
@@ -46,11 +46,11 @@ namespace SudokuSolverCore
 
         private void ResetPotentialValues()
         {
-            for (int i = 0; i < 9; i++)
+            for (int line = 0; line < 9; line++)
             {
-                for (int j = 0; j < 9; j++)
+                for (int column = 0; column < 9; column++)
                 {
-                    Tile currentTile = puzzle[i, j];
+                    Tile currentTile = puzzle[line, column];
                     currentTile.InitializePotentialValues();
                 }
             }
@@ -59,11 +59,11 @@ namespace SudokuSolverCore
         private bool UpdateValues()
         {
             bool valueModified = false;
-            for (int i = 0; i < 9; i++)
+            for (int line = 0; line < 9; line++)
             {
-                for (int j = 0; j < 9; j++)
+                for (int column = 0; column < 9; column++)
                 {
-                    Tile currentTile = puzzle[i, j];
+                    Tile currentTile = puzzle[line, column];
                     if (currentTile.GetValue() == -1)
                     {
                         int numberOfPotentialValues = 0;
@@ -92,11 +92,11 @@ namespace SudokuSolverCore
 
         private void OneIteration()
         {
-            for (int i = 0; i < 9; i++)
+            for (int line = 0; line < 9; line++)
             {
-                for (int j = 0; j < 9; j++)
+                for (int column = 0; column < 9; column++)
                 {
-                    Tile currentTile = puzzle[i, j];
+                    Tile currentTile = puzzle[line, column];
 
                     bool valueNotFixed = currentTile.GetValue() == -1;
                     if (valueNotFixed)
@@ -104,15 +104,15 @@ namespace SudokuSolverCore
                         bool useOldMethod = false;
                         if (useOldMethod)
                         {
-                            CurrentLine(currentTile, i);
-                            CurrentColumn(currentTile, j);
-                            CurrentSquare(currentTile, i / 3, j / 3);
+                            CurrentLine(currentTile, line);
+                            CurrentColumn(currentTile, column);
+                            CurrentSquare(currentTile, line / 3, column / 3);
                         }
                         else
                         {
-                            var valuesInLine = GetValuesFromLine(i);
-                            var valuesInColumn = GetValuesFromColumn(j);
-                            var valuesInSquare = GetValuesFromSquare(i / 3, j / 3);
+                            var valuesInLine = GetValuesFromLine(line);
+                            var valuesInColumn = GetValuesFromColumn(column);
+                            var valuesInSquare = GetValuesFromSquare(line / 3, column / 3);
 
                             var existingValues = new HashSet<int>();
                             existingValues.UnionWith(valuesInLine);
@@ -129,7 +129,7 @@ namespace SudokuSolverCore
             }
 
             HashSet<int> GetValuesFromLine(int line) { 
-                HashSet<int> values = new HashSet<int>();
+                HashSet<int> values = [];
 
                 for (int i = 0; i < 9; i++)
                 {
@@ -156,7 +156,7 @@ namespace SudokuSolverCore
 
             HashSet<int> GetValuesFromColumn(int column)
             {
-                HashSet<int> values = new HashSet<int>();
+                HashSet<int> values = [];
 
                 for (int i = 0; i < 9; i++)
                 {
@@ -172,9 +172,9 @@ namespace SudokuSolverCore
 
             void CurrentColumn(Tile currentTile, int column)
             {
-                for (int i = 0; i < 9; i++)
+                for (int line = 0; line < 9; line++)
                 {
-                    int w = puzzle[i, column].GetValue();
+                    int w = puzzle[line, column].GetValue();
                     if (w != -1 && w != currentTile.GetValue())
                     {
                         currentTile.potentialValues[w] = false;
@@ -184,16 +184,16 @@ namespace SudokuSolverCore
 
             HashSet<int> GetValuesFromSquare(int v1, int v2)
             {
-                HashSet<int> values = new HashSet<int>();
+                HashSet<int> values = [];
 
                 int rowOffset = v1 * 3;
                 int columnOffset = v2 * 3;
 
-                for (int i = 0; i < 3; i++)
+                for (int line = 0; line < 3; line++)
                 {
-                    for (int j = 0; j < 3; j++)
+                    for (int column = 0; column < 3; column++)
                     {
-                        int w = puzzle[rowOffset + i, columnOffset + j].GetValue();
+                        int w = puzzle[rowOffset + line, columnOffset + column].GetValue();
                         if (w != -1)
                         {
                             values.Add(w);
@@ -210,11 +210,11 @@ namespace SudokuSolverCore
                 int rowOffset = v1 * 3;
                 int columnOffset = v2 * 3;
 
-                for (int i = 0; i < 3; i++)
+                for (int line = 0; line < 3; line++)
                 {
-                    for (int j = 0; j < 3; j++)
+                    for (int column = 0; column < 3; column++)
                     {
-                        int w = puzzle[rowOffset + i, columnOffset + j].GetValue();
+                        int w = puzzle[rowOffset + line, columnOffset + column].GetValue();
                         if (w != -1 && w != currentTile.GetValue())
                         {
                             currentTile.potentialValues[w] = false;

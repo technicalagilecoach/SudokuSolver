@@ -14,6 +14,7 @@ namespace SudokuSolverCore
         public Tile(int value)
         {
             this.originalValue = value;
+            potentialValues = new Dictionary<int, bool>();
             InitializePotentialValues();
         }
 
@@ -21,7 +22,6 @@ namespace SudokuSolverCore
         {
             int value = this.originalValue;
             
-            potentialValues = new Dictionary<int, bool>();
             if (value == -1)
             {
                 for (int i = 1; i <= 9; i++)
