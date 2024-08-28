@@ -1,5 +1,4 @@
-﻿
-using System.Data.Common;
+﻿using System.Data.Common;
 
 namespace SudokuSolverCore
 {
@@ -15,6 +14,9 @@ namespace SudokuSolverCore
         }
 
         readonly Cell[,] _grid;
+
+        internal static IEnumerable<int> allLines = Enumerable.Range(0, GRID_SIZE);
+        internal static IEnumerable<int> allColumns = Enumerable.Range(0, GRID_SIZE);
 
         internal Cell[,] grid => _grid;
 
@@ -37,6 +39,16 @@ namespace SudokuSolverCore
                 result += grid[i / GRID_SIZE, i % GRID_SIZE];
             }
             return result;
+        }
+        public static void ForEachCell(Action<int, int> action)
+        {
+            foreach (var line in allLines)
+            {
+                foreach (var column in allColumns)
+                {
+                    action(line, column);
+                }
+            }
         }
     }
 }

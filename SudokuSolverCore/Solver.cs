@@ -16,9 +16,6 @@ namespace SudokuSolverCore
 
         internal Cell[,] Grid => grid.grid;
 
-        internal static IEnumerable<int> allLines = Enumerable.Range(0, GRID_SIZE);
-        internal static IEnumerable<int> allColumns = Enumerable.Range(0, GRID_SIZE);
-
         public void Solve()
         {
             bool valueModified;
@@ -33,13 +30,10 @@ namespace SudokuSolverCore
 
         private void ResetPotentialValues()
         {
-            foreach (var line in allLines)
+            ForEachCell((line, column) =>
             {
-                foreach (var column in allColumns)
-                {
-                    ResetOneCell(line, column);
-                }
-            }
+                ResetOneCell(line, column);
+            });
         }
 
         private void ResetOneCell(int line, int column)
@@ -48,21 +42,10 @@ namespace SudokuSolverCore
             currentCell.InitializePotentialValues();
         }
 
-        static void ForEachCell(Action<int, int> action)
-        {
-            foreach (var line in allLines)
-            {
-                foreach (var column in allColumns)
-                {
-                    action(line, column);
-                }
-            }
-        }
-
         private bool UpdateValues()
         {
             bool valueModified = false;
-
+            
             ForEachCell((line, column) =>
             {
                 UpdateOneCell(ref valueModified, line, column);
@@ -74,7 +57,9 @@ namespace SudokuSolverCore
         private void UpdateOneCell(ref bool valueModified, int line, int column)
         {
             Cell currentCell = Grid[line, column];
-            if (currentCell.Value == UNDEFINED)
+            bool valueNotFixed = currentCell.Value == UNDEFINED;
+
+            if (valueNotFixed)
             {
                 var possibleValues = currentCell.PotentialValues.Where(x => x.Value == true);
                 if (possibleValues.Count() == 1)
