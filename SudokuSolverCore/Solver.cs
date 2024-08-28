@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,9 +29,10 @@ namespace SudokuSolverCore
 
         private void ResetPotentialValues()
         {
-            for (int line = 0; line < GRID_SIZE; line++)
+            var indices = Enumerable.Range(0,GRID_SIZE);           
+            foreach (var line in indices)
             {
-                for (int column = 0; column < GRID_SIZE; column++)
+                foreach (var column in indices)
                 {
                     ResetOneCell(line, column);
                 }
@@ -46,9 +48,10 @@ namespace SudokuSolverCore
         private bool UpdateValues()
         {
             bool valueModified = false;
-            for (int line = 0; line < GRID_SIZE; line++)
+            var indices = Enumerable.Range(0, GRID_SIZE);
+            foreach (var line in indices)
             {
-                for (int column = 0; column < GRID_SIZE; column++)
+                foreach (var column in indices)
                 {
                     UpdateOneCell(ref valueModified, line, column);
                 }
@@ -73,9 +76,10 @@ namespace SudokuSolverCore
 
         private void OneIteration()
         {
-            for (int line = 0; line < GRID_SIZE; line++)
+            var indices = Enumerable.Range(0, GRID_SIZE);
+            foreach (var line in indices)
             {
-                for (int column = 0; column < GRID_SIZE; column++)
+                foreach (var column in indices)
                 {
                     IterateOneCell(line, column);
                 }
@@ -83,42 +87,31 @@ namespace SudokuSolverCore
 
             void AddValuesFromLine(HashSet<int> collectedValues, int line)
             {
-                for (int column = 0; column < GRID_SIZE; column++)
+                var indices = Enumerable.Range(0, GRID_SIZE);
+                foreach (var column in indices)
                 {
-                    int value = Grid[line, column].Value;
-                    if (value != UNDEFINED)
-                    {
-                        collectedValues.Add(value);
-                    }
+                    CollectValues(collectedValues, line, column);
                 }
             }
 
             void AddValuesFromColumn(HashSet<int> collectedValues, int column)
             {
-                for (int line = 0; line < GRID_SIZE; line++)
+                var indices = Enumerable.Range(0, GRID_SIZE);
+                foreach (var line in indices)
                 {
-                    int value = Grid[line, column].Value;
-                    if (value != UNDEFINED)
-                    {
-                        collectedValues.Add(value);
-                    }
+                    CollectValues(collectedValues, line, column);
                 }
             }
 
             void AddValuesFromRegion(HashSet<int> collectedValues, int regionLine, int regionColumn)
             {
-                int rowOffset = regionLine * REGION_SIZE;
+                int lineOffset = regionLine * REGION_SIZE;
                 int columnOffset = regionColumn * REGION_SIZE;
 
-                for (int line = 0; line < REGION_SIZE; line++)
-                {
-                    for (int column = 0; column < REGION_SIZE; column++)
-                    {
-                        int value = Grid[rowOffset + line, columnOffset + column].Value;
-                        if (value != UNDEFINED)
-                        {
-                            collectedValues.Add(value);
-                        }
+                var indices = Enumerable.Range(0, REGION_SIZE);
+                foreach (var line in indices) {
+                    foreach (var column in indices) {
+                        CollectValues(collectedValues, lineOffset + line, columnOffset + column);
                     }
                 }
             }
@@ -140,6 +133,15 @@ namespace SudokuSolverCore
                         currentCell.PotentialValues[value] = false;
                     }
                 }
+            }
+        }
+
+        private void CollectValues(HashSet<int> collectedValues, int line, int column)
+        {
+            int value = Grid[line, column].Value;
+            if (value != UNDEFINED)
+            {
+                collectedValues.Add(value);
             }
         }
     }
