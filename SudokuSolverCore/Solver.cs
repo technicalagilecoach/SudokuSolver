@@ -58,28 +58,17 @@ namespace SudokuSolverCore
         }
 
         private void UpdateOneCell(ref bool valueModified, int line, int column)
-        {
-            Cell currentCell = Grid[line, column];
-            if (currentCell.Value == -1)
+        {          
+            Cell currentCell = Grid[line, column];         
+            if (currentCell.Value == UNDEFINED)
             {
-                int numberOfPotentialValues = 0;
-                for (int digit = 1; digit <= GRID_SIZE; digit++)
+                var possibleValues = currentCell.PotentialValues.Where(x => x.Value == true);
+                if (possibleValues.Count() == 1)
                 {
-                    if (currentCell.PotentialValues[digit] == true)
-                        numberOfPotentialValues++;
+                    valueModified = true;
+                    currentCell.Value = possibleValues.First().Key;
                 }
-                if (numberOfPotentialValues == 1)
-                {
-                    for (int digit = 1; digit <= GRID_SIZE; digit++)
-                    {
-                        if (currentCell.PotentialValues[digit] == true)
-                        {
-                            valueModified = true;
-                            currentCell.Value = digit;
-                        }
-                    }
-                }
-            }
+            }      
         }
 
         private void OneIteration()
