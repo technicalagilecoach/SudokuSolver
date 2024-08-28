@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static SudokuSolverCore.SudokuPuzzle;
+using static SudokuSolverCore.Grid;
 
 namespace SudokuSolverCore
 {
-    public class Solver(SudokuPuzzle puzzle)
+    public class Solver(Grid grid)
     {
-        private readonly SudokuPuzzle puzzle = puzzle;
+        private readonly Grid grid = grid;
 
-        internal Cell[,] Puzzle => puzzle.Puzzle;
+        internal Cell[,] Grid => grid.grid;
 
         public void Solve()
         {
@@ -28,9 +28,9 @@ namespace SudokuSolverCore
 
         private void ResetPotentialValues()
         {
-            for (int line = 0; line < PUZZLE_SIZE; line++)
+            for (int line = 0; line < GRID_SIZE; line++)
             {
-                for (int column = 0; column < PUZZLE_SIZE; column++)
+                for (int column = 0; column < GRID_SIZE; column++)
                 {
                     ResetOneCell(line, column);
                 }
@@ -39,16 +39,16 @@ namespace SudokuSolverCore
 
         private void ResetOneCell(int line, int column)
         {
-            Cell currentCell = Puzzle[line, column];
+            Cell currentCell = Grid[line, column];
             currentCell.InitializePotentialValues();
         }
 
         private bool UpdateValues()
         {
             bool valueModified = false;
-            for (int line = 0; line < PUZZLE_SIZE; line++)
+            for (int line = 0; line < GRID_SIZE; line++)
             {
-                for (int column = 0; column < PUZZLE_SIZE; column++)
+                for (int column = 0; column < GRID_SIZE; column++)
                 {
                     UpdateOneCell(ref valueModified, line, column);
                 }
@@ -59,18 +59,18 @@ namespace SudokuSolverCore
 
         private void UpdateOneCell(ref bool valueModified, int line, int column)
         {
-            Cell currentCell = Puzzle[line, column];
+            Cell currentCell = Grid[line, column];
             if (currentCell.Value == -1)
             {
                 int numberOfPotentialValues = 0;
-                for (int digit = 1; digit <= PUZZLE_SIZE; digit++)
+                for (int digit = 1; digit <= GRID_SIZE; digit++)
                 {
                     if (currentCell.PotentialValues[digit] == true)
                         numberOfPotentialValues++;
                 }
                 if (numberOfPotentialValues == 1)
                 {
-                    for (int digit = 1; digit <= PUZZLE_SIZE; digit++)
+                    for (int digit = 1; digit <= GRID_SIZE; digit++)
                     {
                         if (currentCell.PotentialValues[digit] == true)
                         {
@@ -84,9 +84,9 @@ namespace SudokuSolverCore
 
         private void OneIteration()
         {
-            for (int line = 0; line < PUZZLE_SIZE; line++)
+            for (int line = 0; line < GRID_SIZE; line++)
             {
-                for (int column = 0; column < PUZZLE_SIZE; column++)
+                for (int column = 0; column < GRID_SIZE; column++)
                 {
                     IterateOneCell(line, column);
                 }
@@ -94,9 +94,9 @@ namespace SudokuSolverCore
 
             void AddValuesFromLine(HashSet<int> collectedValues, int line)
             {
-                for (int column = 0; column < PUZZLE_SIZE; column++)
+                for (int column = 0; column < GRID_SIZE; column++)
                 {
-                    int value = Puzzle[line, column].Value;
+                    int value = Grid[line, column].Value;
                     if (value != UNDEFINED)
                     {
                         collectedValues.Add(value);
@@ -106,9 +106,9 @@ namespace SudokuSolverCore
 
             void AddValuesFromColumn(HashSet<int> collectedValues, int column)
             {
-                for (int line = 0; line < PUZZLE_SIZE; line++)
+                for (int line = 0; line < GRID_SIZE; line++)
                 {
-                    int value = Puzzle[line, column].Value;
+                    int value = Grid[line, column].Value;
                     if (value != UNDEFINED)
                     {
                         collectedValues.Add(value);
@@ -125,7 +125,7 @@ namespace SudokuSolverCore
                 {
                     for (int column = 0; column < REGION_SIZE; column++)
                     {
-                        int value = Puzzle[rowOffset + line, columnOffset + column].Value;
+                        int value = Grid[rowOffset + line, columnOffset + column].Value;
                         if (value != UNDEFINED)
                         {
                             collectedValues.Add(value);
@@ -136,7 +136,7 @@ namespace SudokuSolverCore
 
             void IterateOneCell(int line, int column)
             {
-                Cell currentCell = Puzzle[line, column];
+                Cell currentCell = Grid[line, column];
 
                 bool valueNotFixed = currentCell.Value == -1;
                 if (valueNotFixed)

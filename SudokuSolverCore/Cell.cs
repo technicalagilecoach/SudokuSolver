@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static SudokuSolverCore.SudokuPuzzle;
+using static SudokuSolverCore.Grid;
 
 namespace SudokuSolverCore
 {
@@ -21,12 +21,12 @@ namespace SudokuSolverCore
         {
             if (Value == UNDEFINED)
             {
-                for (int i = 1; i <= PUZZLE_SIZE; i++)
+                for (int i = 1; i <= GRID_SIZE; i++)
                     PotentialValues[i] = true;
             }
             else
             {
-                for (int i = 1; i <= PUZZLE_SIZE; i++)
+                for (int i = 1; i <= GRID_SIZE; i++)
                     PotentialValues[i] = false;
                 PotentialValues[Value] = true;
             }

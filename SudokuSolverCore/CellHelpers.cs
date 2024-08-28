@@ -1,4 +1,4 @@
-﻿using static SudokuSolverCore.SudokuPuzzle;
+﻿using static SudokuSolverCore.Grid;
 
 internal static class CellHelpers
 { 
