@@ -116,14 +116,14 @@ namespace SudokuSolverCore
                 }
             }
 
-            void AddValuesFromSquare(HashSet<int> collectedValues, int squareLine, int squareColumn)
+            void AddValuesFromRegion(HashSet<int> collectedValues, int regionLine, int regionColumn)
             {
-                int rowOffset = squareLine * SQUARE_SIZE;
-                int columnOffset = squareColumn * SQUARE_SIZE;
+                int rowOffset = regionLine * REGION_SIZE;
+                int columnOffset = regionColumn * REGION_SIZE;
 
-                for (int line = 0; line < SQUARE_SIZE; line++)
+                for (int line = 0; line < REGION_SIZE; line++)
                 {
-                    for (int column = 0; column < SQUARE_SIZE; column++)
+                    for (int column = 0; column < REGION_SIZE; column++)
                     {
                         int value = Puzzle[rowOffset + line, columnOffset + column].Value;
                         if (value != UNDEFINED)
@@ -144,7 +144,7 @@ namespace SudokuSolverCore
                     var existingValues = new HashSet<int>();
                     AddValuesFromLine(existingValues, line);
                     AddValuesFromColumn(existingValues, column);
-                    AddValuesFromSquare(existingValues, line / SQUARE_SIZE, column / SQUARE_SIZE);
+                    AddValuesFromRegion(existingValues, line / REGION_SIZE, column / REGION_SIZE);
 
                     foreach (var value in existingValues)
                     {

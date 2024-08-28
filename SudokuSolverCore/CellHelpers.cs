@@ -1,8 +1,7 @@
 ﻿using static SudokuSolverCore.SudokuPuzzle;
 
 internal static class CellHelpers
-{
-
+{ 
     internal static string IntToString(int value)
     {
         string s;
@@ -12,7 +11,6 @@ internal static class CellHelpers
             s = value.ToString();
         return s;
     }
-
     internal static int StringToInt(string simplePuzzle1)
     {
         int result = UNDEFINED;

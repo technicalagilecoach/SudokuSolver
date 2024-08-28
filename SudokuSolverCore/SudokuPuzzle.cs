@@ -6,7 +6,7 @@ namespace SudokuSolverCore
     public class SudokuPuzzle
     {
         public const int PUZZLE_SIZE = 9;
-        public const int SQUARE_SIZE = 3;
+        public const int REGION_SIZE = 3;
         public const int UNDEFINED = -1;
 
         public SudokuPuzzle()
