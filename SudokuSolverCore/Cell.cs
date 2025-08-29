@@ -10,7 +10,7 @@ namespace SudokuSolverCore
 {
     internal class Cell
     {
-        public Cell(int value)
+        private Cell(int value)
         {
             Value = value;
             PotentialValues = [];
@@ -19,14 +19,14 @@ namespace SudokuSolverCore
 
         public void InitializePotentialValues()
         {
-            if (Value == UNDEFINED)
+            if (Value == Undefined)
             {
-                for (int i = 1; i <= GRID_SIZE; i++)
+                for (var i = 1; i <= GridSize; i++)
                     PotentialValues[i] = true;
             }
             else
             {
-                for (int i = 1; i <= GRID_SIZE; i++)
+                for (var i = 1; i <= GridSize; i++)
                     PotentialValues[i] = false;
                 PotentialValues[Value] = true;
             }

@@ -4,47 +4,40 @@ namespace SudokuSolverCore
 {
     public class Grid
     {
-        public const int GRID_SIZE = 9;
-        public const int REGION_SIZE = 3;
-        public const int UNDEFINED = -1;
+        public const int GridSize = 9;
+        public const int RegionSize = 3;
+        public const int Undefined = -1;
 
-        public Grid()
-        {
-            _grid = new Cell[GRID_SIZE, GRID_SIZE];
-        }
+        internal static readonly IEnumerable<int> AllLines = Enumerable.Range(0, GridSize);
+        internal static readonly IEnumerable<int> AllColumns = Enumerable.Range(0, GridSize);
 
-        readonly Cell[,] _grid;
-
-        internal static IEnumerable<int> allLines = Enumerable.Range(0, GRID_SIZE);
-        internal static IEnumerable<int> allColumns = Enumerable.Range(0, GRID_SIZE);
-
-        internal Cell[,] grid => _grid;
+        internal Cell[,] Cells { get; } = new Cell[GridSize, GridSize];
 
         public void Init(string puzzle)
         {
-            for (int i = 0; i < puzzle.Length; i++)
+            for (var i = 0; i < puzzle.Length; i++)
             {
-                grid[i / GRID_SIZE, i % GRID_SIZE] = puzzle[i].ToString();
+                Cells[i / GridSize, i % GridSize] = puzzle[i].ToString();
             }
         }
 
         public string Print()
         {
-            if (grid == null)
+            if (Cells == null)
                 throw new NullReferenceException();
 
-            string result = "";
-            for (int i = 0; i < grid.Length; i++)
+            var result = "";
+            for (var i = 0; i < Cells.Length; i++)
             {
-                result += grid[i / GRID_SIZE, i % GRID_SIZE];
+                result += Cells[i / GridSize, i % GridSize];
             }
             return result;
         }
         public static void ForEachCell(Action<int, int> action)
         {
-            foreach (var line in allLines)
+            foreach (var line in AllLines)
             {
-                foreach (var column in allColumns)
+                foreach (var column in AllColumns)
                 {
                     action(line, column);
                 }

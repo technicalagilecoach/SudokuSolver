@@ -12,9 +12,13 @@ namespace SudokuSolverCore
 {
     public class Solver(Grid grid)
     {
-        private readonly Grid grid = grid;
+        private readonly Grid _grid = grid;
 
-        internal Cell[,] Grid => grid.grid;
+        private Cell[,] Cells => _grid.Cells;
+        private Cell GetCell(int line, int column)
+        {
+            return Cells[line, column];
+        }
 
         public void Solve()
         {
@@ -32,19 +36,13 @@ namespace SudokuSolverCore
         {
             ForEachCell((line, column) =>
             {
-                ResetOneCell(line, column);
+                GetCell(line, column).InitializePotentialValues();
             });
-        }
-
-        private void ResetOneCell(int line, int column)
-        {
-            Cell currentCell = Grid[line, column];
-            currentCell.InitializePotentialValues();
         }
 
         private bool UpdateValues()
         {
-            bool valueModified = false;
+            var valueModified = false;
             
             ForEachCell((line, column) =>
             {
@@ -56,23 +54,24 @@ namespace SudokuSolverCore
 
         private void UpdateOneCell(ref bool valueModified, int line, int column)
         {
-            Cell currentCell = Grid[line, column];
-            bool valueNotFixed = currentCell.Value == UNDEFINED;
+            var currentCell = GetCell(line, column);
+            var valueNotFixed = currentCell.Value == Undefined;
 
-            if (valueNotFixed)
-            {
-                var possibleValues = currentCell.PotentialValues.Where(x => x.Value == true);
-                if (possibleValues.Count() == 1)
-                {
-                    valueModified = true;
-                    currentCell.Value = possibleValues.First().Key;
-                }
-            }
+            if (!valueNotFixed) 
+                return;
+            
+            var possibleValues = currentCell.PotentialValues.Where(x => x.Value == true).ToList();
+            
+            if (possibleValues.Count != 1) 
+                return;
+            
+            valueModified = true;
+            currentCell.Value = possibleValues.First().Key;
         }
 
         private void AddValuesFromLine(HashSet<int> collectedValues, int line)
         {
-            foreach (var column in allColumns)
+            foreach (var column in AllColumns)
             {
                 CollectValues(collectedValues, line, column);
             }
@@ -80,7 +79,7 @@ namespace SudokuSolverCore
 
         private void AddValuesFromColumn(HashSet<int> collectedValues, int column)
         {
-            foreach (var line in allLines)
+            foreach (var line in AllLines)
             {
                 CollectValues(collectedValues, line, column);
             }
@@ -88,10 +87,10 @@ namespace SudokuSolverCore
 
         private void AddValuesFromRegion(HashSet<int> collectedValues, int regionLine, int regionColumn)
         {
-            int lineOffset = regionLine * REGION_SIZE;
-            int columnOffset = regionColumn * REGION_SIZE;
+            var lineOffset = regionLine * RegionSize;
+            var columnOffset = regionColumn * RegionSize;
 
-            var indices = Enumerable.Range(0, REGION_SIZE);
+            var indices = Enumerable.Range(0, RegionSize).ToList();
             foreach (var line in indices)
             {
                 foreach (var column in indices)
@@ -103,35 +102,32 @@ namespace SudokuSolverCore
 
         private void OneIteration()
         {
-            ForEachCell((line, column) =>
-            {
-                IterateOneCell(line, column);
-            });
+            ForEachCell(IterateOneCell);
         }
 
         private void IterateOneCell(int line, int column)
         {
-            Cell currentCell = Grid[line, column];
+            var currentCell = GetCell(line, column);
 
-            bool valueNotFixed = currentCell.Value == UNDEFINED;
-            if (valueNotFixed)
+            var valueNotFixed = currentCell.Value == Undefined;
+            if (!valueNotFixed) 
+                return;
+            
+            var existingValues = new HashSet<int>();
+            AddValuesFromLine(existingValues, line);
+            AddValuesFromColumn(existingValues, column);
+            AddValuesFromRegion(existingValues, line / RegionSize, column / RegionSize);
+
+            foreach (var value in existingValues)
             {
-                var existingValues = new HashSet<int>();
-                AddValuesFromLine(existingValues, line);
-                AddValuesFromColumn(existingValues, column);
-                AddValuesFromRegion(existingValues, line / REGION_SIZE, column / REGION_SIZE);
-
-                foreach (var value in existingValues)
-                {
-                    currentCell.PotentialValues[value] = false;
-                }
+                currentCell.PotentialValues[value] = false;
             }
         }
 
         private void CollectValues(HashSet<int> collectedValues, int line, int column)
         {
-            int value = Grid[line, column].Value;
-            if (value != UNDEFINED)
+            var value = GetCell(line, column).Value;
+            if (value != Undefined)
             {
                 collectedValues.Add(value);
             }
