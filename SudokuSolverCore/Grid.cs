@@ -19,18 +19,57 @@
             }
         }
 
-        public string Print()
+        public string Print(bool withLineBreaks = false)
         {
             if (Cells == null)
                 throw new NullReferenceException();
 
-            var result = "";
-            for (var i = 0; i < Cells.Length; i++)
-            {
-                result += Cells[i / GridSize, i % GridSize];
-            }
-            return result;
+            var buffer = new StringWriter();
+            
+            for (var i = 0; i < Cells.GetLength(0); i++) 
+            { 
+                for (var j = 0; j < Cells.GetLength(1); j++) 
+                { 
+                    buffer.Write((string)Cells[i, j]);
+                } 
+                if (withLineBreaks)
+                    buffer.WriteLine();
+            }  
+            
+            return buffer.ToString();
         }
+        
+        public string PrintPotentialValues()
+        {
+            if (Cells == null)
+                throw new NullReferenceException();
+
+            var buffer = new StringWriter();
+            
+            for (var i = 0; i < Cells.GetLength(0); i++) 
+            { 
+                for (var j = 0; j < Cells.GetLength(1); j++) 
+                { 
+                    var cell = Cells[i, j];
+                    if (cell.Value == Undefined)
+                    {
+                        var pValues = cell.PotentialValues;
+
+                        string values = "";
+                        foreach (var kv in pValues)
+                        {
+                            if (kv.Value)
+                                values += " "+kv.Key;
+                        }
+
+                        buffer.Write(i+" "+j+":"+values+"\n");    
+                    }
+                } 
+            }  
+            
+            return buffer.ToString();
+        }
+        
         public static void ForEachCell(Action<int, int> action)
         {
             foreach (var line in AllLines)
