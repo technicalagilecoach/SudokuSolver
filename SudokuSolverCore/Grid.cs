@@ -17,7 +17,7 @@
 
             for (var i = 0; i < GridSize; i++)
             {
-                for (var j = 0; j< GridSize; j++)
+                for (var j = 0; j < GridSize; j++)
                 {
                     Cells[i, j] = (rows[i][j]).ToString();
                 }
@@ -65,7 +65,7 @@
                         {
                             var kv = pValues[index];
                             if (kv)
-                                values += " " + index+1;
+                                values += " " + (index+1);
                         }
 
                         buffer.Write(i+" "+j+":"+values+"\n");    

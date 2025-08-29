@@ -15,8 +15,7 @@ namespace SudokuSolverCore
             bool valueModified;
             do
             {
-                ResetPotentialValues();
-                DeterminePotentialValues();
+                PropagateValues();
                 valueModified = SetUniqueValues();
 
                 var currentState = grid.Print();
@@ -24,14 +23,6 @@ namespace SudokuSolverCore
                 var potentialValues = grid.PrintPotentialValues();
                 
             } while (valueModified);
-        }
-
-        private void ResetPotentialValues()
-        {
-            ForEachCell((line, column) =>
-            {
-                GetCell(line, column).InitializePotentialValues();
-            });
         }
 
         private bool SetUniqueValues()
@@ -49,87 +40,72 @@ namespace SudokuSolverCore
         private void SelectUniqueValueForCell(ref bool valueModified, int line, int column)
         {
             var currentCell = GetCell(line, column);
-            var valueNotFixed = currentCell.Value == Undefined;
-
-            if (!valueNotFixed) 
+            
+            var valueFixed = currentCell.Value != Undefined;
+            if (valueFixed) 
                 return;
 
-            var possibleValues = new LinkedList<int>();
+            int count = 0;
+            foreach (bool bit in currentCell.PotentialValues)
+            {
+                if (bit)
+                    count++;
+            }
+
+            if (count != 1)
+                return;
             
             for (var i = 1; i <= GridSize; i++)
             {
-                if (currentCell.PotentialValues[i-1])
-                    possibleValues.AddLast(i);
-            }
-          
-            if (possibleValues.Count != 1) 
+                if (currentCell.PotentialValues[i - 1])
+                {
+                    currentCell.Value=i;
+                    valueModified = true;
+                    PropagateUsedValuesForOneCell(line, column);
+                    return;
+                }
+            }            
+        }
+
+        private void PropagateValues()
+        {
+            ForEachCell(PropagateUsedValuesForOneCell);
+        }
+
+        private void PropagateUsedValuesForOneCell(int line, int column)
+        {
+            var currentCell = GetCell(line, column);
+
+            var valueIsUndefined = currentCell.Value == Undefined;
+            if (valueIsUndefined) 
                 return;
             
-            valueModified = true;
-            currentCell.Value = possibleValues.First();
-        }
-
-        private void AddValuesFromLine(HashSet<int> collectedValues, int line)
-        {
-            foreach (var column in AllColumns)
+            foreach (var c in AllColumns)
             {
-                CollectValues(collectedValues, line, column);
+                if (c!=column)
+                    GetCell(line, c).PotentialValues[currentCell.Value-1] = false;
             }
-        }
-
-        private void AddValuesFromColumn(HashSet<int> collectedValues, int column)
-        {
-            foreach (var line in AllLines)
+            
+            foreach (var l in AllLines)
             {
-                CollectValues(collectedValues, line, column);
+                if (l!=line)
+                    GetCell(l, column).PotentialValues[currentCell.Value-1] = false;
             }
-        }
-
-        private void AddValuesFromRegion(HashSet<int> collectedValues, int regionLine, int regionColumn)
-        {
+            
+            int regionLine = line / RegionSize;
+            int regionColumn = column / RegionSize;
+            
             var lineOffset = regionLine * RegionSize;
             var columnOffset = regionColumn * RegionSize;
 
             var indices = Enumerable.Range(0, RegionSize).ToList();
-            foreach (var line in indices)
+            foreach (var l in indices)
             {
-                foreach (var column in indices)
+                foreach (var c in indices)
                 {
-                    CollectValues(collectedValues, lineOffset + line, columnOffset + column);
+                    if (l!=line||c!=column)
+                        GetCell(lineOffset + l, columnOffset + c).PotentialValues[currentCell.Value-1] = false;
                 }
-            }
-        }
-
-        private void DeterminePotentialValues()
-        {
-            ForEachCell(DeterminePotentialValuesForOneCell);
-        }
-
-        private void DeterminePotentialValuesForOneCell(int line, int column)
-        {
-            var currentCell = GetCell(line, column);
-
-            var valueNotFixed = currentCell.Value == Undefined;
-            if (!valueNotFixed) 
-                return;
-            
-            var existingValues = new HashSet<int>();
-            AddValuesFromLine(existingValues, line);
-            AddValuesFromColumn(existingValues, column);
-            AddValuesFromRegion(existingValues, line / RegionSize, column / RegionSize);
-
-            foreach (var value in existingValues)
-            {
-                currentCell.PotentialValues[value-1] = false;
-            }
-        }
-
-        private void CollectValues(HashSet<int> collectedValues, int line, int column)
-        {
-            var value = GetCell(line, column).Value;
-            if (value != Undefined)
-            {
-                collectedValues.Add(value);
             }
         }
     }

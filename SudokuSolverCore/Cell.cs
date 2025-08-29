@@ -17,13 +17,11 @@ namespace SudokuSolverCore
         {
             if (Value == Undefined)
             {
-                for (var i = 1; i <= GridSize; i++)
-                    PotentialValues[i-1] = true;
+                PotentialValues.SetAll(true);
             }
             else
             {
-                for (var i = 1; i <= GridSize; i++)
-                    PotentialValues[i-1] = false;
+                PotentialValues.SetAll(false);
                 PotentialValues[Value-1] = true;
             }
         }
