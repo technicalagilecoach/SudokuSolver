@@ -1,6 +1,4 @@
-﻿using System.Data.Common;
-
-namespace SudokuSolverCore
+﻿namespace SudokuSolverCore
 {
     public class Grid
     {
