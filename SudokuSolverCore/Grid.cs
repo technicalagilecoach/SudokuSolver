@@ -13,13 +13,18 @@
 
         public void Init(string puzzle)
         {
-            for (var i = 0; i < puzzle.Length; i++)
+            var rows = puzzle.Split('\n');
+
+            for (var i = 0; i < GridSize; i++)
             {
-                Cells[i / GridSize, i % GridSize] = puzzle[i].ToString();
+                for (var j = 0; j< GridSize; j++)
+                {
+                    Cells[i, j] = (rows[i][j]).ToString();
+                }
             }
         }
 
-        public string Print(bool withLineBreaks = false)
+        public string Print()
         {
             if (Cells == null)
                 throw new NullReferenceException();
@@ -32,8 +37,8 @@
                 { 
                     buffer.Write((string)Cells[i, j]);
                 } 
-                if (withLineBreaks)
-                    buffer.WriteLine();
+
+                buffer.WriteLine();
             }  
             
             return buffer.ToString();

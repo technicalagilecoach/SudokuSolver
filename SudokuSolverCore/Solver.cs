@@ -21,7 +21,7 @@ namespace SudokuSolverCore
                 OneIteration();
                 valueModified = UpdateValues();
 
-                string currentState = _grid.Print(true);
+                string currentState = _grid.Print();
                 int spaces = currentState.Count(c => c == ' ');
                 string potentialValues = _grid.PrintPotentialValues();
             } while (valueModified);
