@@ -4,7 +4,7 @@
     {
         public const int GridSize = 9;
         public const int RegionSize = 3;
-        public const int Undefined = -1;
+        public const int Undefined = 0;
 
         internal static readonly IEnumerable<int> AllLines = Enumerable.Range(0, GridSize);
         internal static readonly IEnumerable<int> AllColumns = Enumerable.Range(0, GridSize);
@@ -61,10 +61,11 @@
                         var pValues = cell.PotentialValues;
 
                         var values = "";
-                        foreach (var kv in pValues)
+                        for (var index = 0; index < pValues.Count; index++)
                         {
-                            if (kv.Value)
-                                values += " "+kv.Key;
+                            var kv = pValues[index];
+                            if (kv)
+                                values += " " + index+1;
                         }
 
                         buffer.Write(i+" "+j+":"+values+"\n");    

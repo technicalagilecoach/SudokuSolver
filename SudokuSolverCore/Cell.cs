@@ -1,4 +1,6 @@
-﻿using static SudokuSolverCore.Grid;
+﻿using System.Collections;
+
+using static SudokuSolverCore.Grid;
 
 namespace SudokuSolverCore
 {
@@ -7,7 +9,7 @@ namespace SudokuSolverCore
         private Cell(int value)
         {
             Value = value;
-            PotentialValues = [];
+            PotentialValues = new BitArray(9);
             InitializePotentialValues();
         }
 
@@ -16,18 +18,18 @@ namespace SudokuSolverCore
             if (Value == Undefined)
             {
                 for (var i = 1; i <= GridSize; i++)
-                    PotentialValues[i] = true;
+                    PotentialValues[i-1] = true;
             }
             else
             {
                 for (var i = 1; i <= GridSize; i++)
-                    PotentialValues[i] = false;
-                PotentialValues[Value] = true;
+                    PotentialValues[i-1] = false;
+                PotentialValues[Value-1] = true;
             }
         }
 
         public int Value { get; set; }
-        public Dictionary<int, bool> PotentialValues { get; set; }
+        public BitArray PotentialValues { get; set; }
 
         public static implicit operator Cell(string value)
         {

@@ -53,14 +53,20 @@ namespace SudokuSolverCore
 
             if (!valueNotFixed) 
                 return;
+
+            var possibleValues = new LinkedList<int>();
             
-            var possibleValues = currentCell.PotentialValues.Where(x => x.Value == true).ToList();
-            
+            for (var i = 1; i <= GridSize; i++)
+            {
+                if (currentCell.PotentialValues[i-1])
+                    possibleValues.AddLast(i);
+            }
+          
             if (possibleValues.Count != 1) 
                 return;
             
             valueModified = true;
-            currentCell.Value = possibleValues.First().Key;
+            currentCell.Value = possibleValues.First();
         }
 
         private void AddValuesFromLine(HashSet<int> collectedValues, int line)
@@ -114,7 +120,7 @@ namespace SudokuSolverCore
 
             foreach (var value in existingValues)
             {
-                currentCell.PotentialValues[value] = false;
+                currentCell.PotentialValues[value-1] = false;
             }
         }
 
