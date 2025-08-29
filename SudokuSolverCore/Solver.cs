@@ -4,9 +4,7 @@ namespace SudokuSolverCore
 {
     public class Solver(Grid grid)
     {
-        private readonly Grid _grid = grid;
-
-        private Cell[,] Cells => _grid.Cells;
+        private Cell[,] Cells => grid.Cells;
         private Cell GetCell(int line, int column)
         {
             return Cells[line, column];
@@ -18,12 +16,13 @@ namespace SudokuSolverCore
             do
             {
                 ResetPotentialValues();
-                OneIteration();
-                valueModified = UpdateValues();
+                DeterminePotentialValues();
+                valueModified = SetUniqueValues();
 
-                string currentState = _grid.Print();
-                int spaces = currentState.Count(c => c == ' ');
-                string potentialValues = _grid.PrintPotentialValues();
+                var currentState = grid.Print();
+                var spaces = currentState.Count(c => c == ' ');
+                var potentialValues = grid.PrintPotentialValues();
+                
             } while (valueModified);
         }
 
@@ -35,19 +34,19 @@ namespace SudokuSolverCore
             });
         }
 
-        private bool UpdateValues()
+        private bool SetUniqueValues()
         {
             var valueModified = false;
             
             ForEachCell((line, column) =>
             {
-                UpdateOneCell(ref valueModified, line, column);
+                SelectUniqueValueForCell(ref valueModified, line, column);
             });
 
             return valueModified;
         }
 
-        private void UpdateOneCell(ref bool valueModified, int line, int column)
+        private void SelectUniqueValueForCell(ref bool valueModified, int line, int column)
         {
             var currentCell = GetCell(line, column);
             var valueNotFixed = currentCell.Value == Undefined;
@@ -95,12 +94,12 @@ namespace SudokuSolverCore
             }
         }
 
-        private void OneIteration()
+        private void DeterminePotentialValues()
         {
-            ForEachCell(IterateOneCell);
+            ForEachCell(DeterminePotentialValuesForOneCell);
         }
 
-        private void IterateOneCell(int line, int column)
+        private void DeterminePotentialValuesForOneCell(int line, int column)
         {
             var currentCell = GetCell(line, column);
 

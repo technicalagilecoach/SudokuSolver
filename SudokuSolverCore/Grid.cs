@@ -60,7 +60,7 @@
                     {
                         var pValues = cell.PotentialValues;
 
-                        string values = "";
+                        var values = "";
                         foreach (var kv in pValues)
                         {
                             if (kv.Value)
