@@ -9,34 +9,35 @@ namespace SudokuSolverCore
         private Cell(int value)
         {
             Value = value;
-            PotentialValues = new BitArray(9);
-            InitializePotentialValues();
+            PotentialValues = InitializePotentialValues();
         }
-
-        public void InitializePotentialValues()
+        
+        public int Value { get; set; }
+        public BitArray PotentialValues { get; set; }
+        
+        private BitArray InitializePotentialValues()
         {
+            var potentialValues = new BitArray(GridSize);
             if (Value == Undefined)
             {
-                PotentialValues.SetAll(true);
+                potentialValues.SetAll(true);
             }
             else
             {
-                PotentialValues.SetAll(false);
-                PotentialValues[Value-1] = true;
+                potentialValues.SetAll(false);
+                potentialValues[Value-1] = true;
             }
+            return potentialValues;
         }
-
-        public int Value { get; set; }
-        public BitArray PotentialValues { get; set; }
 
         public static implicit operator Cell(string value)
         {
-            return new Cell(CellHelpers.StringToInt(value));
+            return new Cell(value == " " ? Undefined : int.Parse(value));
         }
 
         public static implicit operator string(Cell tile)
         {
-            return CellHelpers.IntToString(tile.Value);
+            return tile.Value == Undefined ? " " : tile.Value.ToString();
         }
     }
 }

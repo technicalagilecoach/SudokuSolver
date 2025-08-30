@@ -18,6 +18,7 @@ namespace SudokuSolverTests
         public void SolveEasyPuzzle()
         {
             //https://sudoku-puzzles.net/sudoku-easy
+            //unit propagation is sufficient for solution
             const string easyPuzzle = " 7 583 2 \n" +
                                       " 592  3  \n" +
                                       "34   65 7\n" +
@@ -49,6 +50,7 @@ namespace SudokuSolverTests
         public void SolveMediumPuzzle()
         {
             //https://sudoku-puzzles.net/sudoku-medium/620/
+            //unit propagation is sufficient for solution
             const string mediumPuzzle = " 92 3 1 4\n" +
                                         " 4   1  9\n" +
                                         "  8 947  \n" +
@@ -75,12 +77,11 @@ namespace SudokuSolverTests
         }
 
         [TestMethod]
-        //[Ignore]
         public void SolveHardPuzzle()
         {
             //https://sudoku-puzzles.net/sudoku-hard/580/
-            //no unique solution?
-            const string hardPuzzle =   "   9 2  7\n"
+            //double pairs needed for solution
+            const string puzzle =   "   9 2  7\n"
                                       + "  467 8  \n"
                                       + " 3  8 5  \n"
                                       + "   853 1 \n"
@@ -100,7 +101,7 @@ namespace SudokuSolverTests
                                             + "475368129\n"
                                             + "263519784\n";
             
-            var result = Solve(hardPuzzle);
+            var result = Solve(puzzle);
             Assert.IsFalse(result.Contains(' '));
             Assert.AreEqual(expectedSolution, result);
         }
@@ -110,7 +111,7 @@ namespace SudokuSolverTests
         [Ignore]
         public void SolveAIEscargot2006Puzzle()
         {
-            const string hardPuzzle =       "1    7 9 \n"
+            const string puzzle =       "1    7 9 \n"
                                           + " 3  2   8\n"
                                           + "  96  5  \n"
                                           + "  53  9  \n"
@@ -120,7 +121,7 @@ namespace SudokuSolverTests
                                           + " 4      7\n"
                                           + "  7   3  \n";
            
-            var result = Solve(hardPuzzle);
+            var result = Solve(puzzle);
             Assert.IsFalse(result.Contains(' '));
         }
         
@@ -128,7 +129,7 @@ namespace SudokuSolverTests
         [Ignore]
         public void SolveArtoInkala2012Puzzle()
         {
-            const string hardPuzzle =     "  53     \n"
+            const string puzzle =     "  53     \n"
                                         + "8      2 \n"
                                         + " 7  1 5  \n"
                                         + "4    53  \n"
@@ -138,7 +139,7 @@ namespace SudokuSolverTests
                                         + "  4    3 \n"
                                         + "     97  \n";
            
-            var result = Solve(hardPuzzle);
+            var result = Solve(puzzle);
             Assert.IsFalse(result.Contains(' '));
         }
     }

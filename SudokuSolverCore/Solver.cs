@@ -7,14 +7,10 @@ namespace SudokuSolverCore
     public class Solver(Grid grid)
     {
         private Cell[,] Cells => grid.Cells;
-        private Cell GetCell(int line, int column)
-        {
-            return Cells[line, column];
-        }
 
         public void Solve()
         {
-            bool valueModified;
+            var valueModified = true;
             do
             {
                 PropagateValues();
@@ -25,6 +21,7 @@ namespace SudokuSolverCore
                     valueModified = HandleConnectedTwins();
                 }
                 
+                //for debugging
                 var currentState = grid.Print();
                 var spaces = currentState.Count(c => c == ' ');
                 var potentialValues = grid.PrintPotentialValues();
@@ -34,66 +31,51 @@ namespace SudokuSolverCore
 
         private bool HandleConnectedTwins()
         {
-            bool valueModified = false;
+            var valueModified = false;
             
             var undefinedCells = new bool[GridSize, GridSize];
-            foreach (var l in AllLines)
+            ForEachCell((row, column) =>
             {
-                foreach (var c in AllColumns)
-                {
-                    if (Cells[l,c].Value == Undefined)
-                        undefinedCells[l, c] = true;
-                    else 
-                        undefinedCells[l, c] = false;
-                }
-            }
+                if (Cells[row, column].Value == Undefined)
+                    undefinedCells[row, column] = true;
+                else
+                    undefinedCells[row, column] = false;
+            });
             
             var potentialTwins = new bool[GridSize, GridSize];
-            foreach (var l in AllLines)
+            ForEachCell((row, column) =>
             {
-                foreach (var c in AllColumns)
-                {
-                    if (undefinedCells[l, c])
-                    {
-                        if (CountPotentialValues(Cells[l, c]) == 2)
-                            potentialTwins[l, c] = true;
-                        else
-                            potentialTwins[l, c] = false;
-                    }
-                }
-            }
+                if (!undefinedCells[row, column]) 
+                    return;
+                
+                if (CountPotentialValues(Cells[row, column]) == 2)
+                    potentialTwins[row, column] = true;
+                else
+                    potentialTwins[row, column] = false;
+            });
 
-            //twins in a line
-            foreach (var l in AllLines)
+            //twins in a row
+            foreach (var row in AllRows)
             {
                 for (var c1 = 0; c1<GridSize-1; c1++)
                 {
                     for (var c2 = c1+1; c2<GridSize; c2++)
                     {
-                        if (potentialTwins[l, c1] && potentialTwins[l, c2])
+                        if (potentialTwins[row, c1] && potentialTwins[row, c2])
                         {
-                            Cell cell1 = GetCell(l, c1);
-                            Cell cell2 = GetCell(l, c2);
+                            var cell1 = Cells[row, c1];
+                            var cell2 = Cells[row, c2];
 
-                            bool equals = true;
-                            for (int i = 0; i < GridSize; i++)
+                            if (AreEqual(cell1, cell2))
                             {
-                                if (cell1.PotentialValues[i] != cell2.PotentialValues[i])
-                                {
-                                    equals = false;
-                                    break;
-                                }
-                            }
-
-                            if (equals)
-                            {
+                                //elminate potential values from other cells
                                 for (var c3 = 0; c3 < GridSize; c3++)
                                 {
-                                    if (undefinedCells[l, c3] && c3 != c1 && c3 != c2)
+                                    if (undefinedCells[row, c3] && c3 != c1 && c3 != c2)
                                     {
-                                        Cell cell3 = GetCell(l, c3);
+                                        var cell3 = Cells[row, c3];
 
-                                        for (var i = 0; i < GridSize; i++)
+                                        for (var i = 0; i < HighestNumber; i++)
                                         {
                                             if (cell1.PotentialValues[i])
                                                 cell3.PotentialValues[i] = false;
@@ -101,11 +83,11 @@ namespace SudokuSolverCore
                                     }
                                 }
 
+                                //exit the loop
                                 valueModified = true;
                                 break;
-                                //elminate potential values from other cells
-                                //exit the loop
-                                //if there are more twins in one line they will be found in later repetitions
+                                
+                                //if there are more twins in one row they will be found in later repetitions
                             }
                         }
                     }
@@ -113,36 +95,27 @@ namespace SudokuSolverCore
             }
             
             //twins in a column
-            foreach (var c in AllColumns)
+            foreach (var column in AllColumns)
             {
-                for (var l1 = 0; l1<GridSize-1; l1++)
+                for (var r1 = 0; r1<GridSize-1; r1++)
                 {
-                    for (var l2 = l1+1; l2<GridSize; l2++)
+                    for (var r2 = r1+1; r2<GridSize; r2++)
                     {
-                        if (potentialTwins[l1,c] && potentialTwins[l2,c])
+                        if (potentialTwins[r1,column] && potentialTwins[r2,column])
                         {
-                            Cell cell1 = GetCell( l1,c);
-                            Cell cell2 = GetCell( l2,c);
+                            var cell1 = Cells[r1, column];
+                            var cell2 = Cells[r2, column];
 
-                            bool equals = true;
-                            for (int i = 0; i < GridSize; i++)
+                            if (AreEqual(cell1, cell2))
                             {
-                                if (cell1.PotentialValues[i] != cell2.PotentialValues[i])
+                                //elminate potential values from other cells
+                                for (var r3 = 0; r3 < GridSize; r3++)
                                 {
-                                    equals = false;
-                                    break;
-                                }
-                            }
-
-                            if (equals)
-                            {
-                                for (var l3 = 0; l3 < GridSize; l3++)
-                                {
-                                    if (undefinedCells[l3,c] && l3 != l1 && l3 != l2)
+                                    if (undefinedCells[r3,column] && r3 != r1 && r3 != r2)
                                     {
-                                        Cell cell3 = GetCell( l3,c);
+                                        var cell3 = Cells[r3, column];
 
-                                        for (var i = 0; i < GridSize; i++)
+                                        for (var i = 0; i < HighestNumber; i++)
                                         {
                                             if (cell1.PotentialValues[i])
                                                 cell3.PotentialValues[i] = false;
@@ -150,38 +123,53 @@ namespace SudokuSolverCore
                                     }
                                 }
 
+                                //exit the loop
                                 valueModified = true;
                                 break;
-                                //elminate potential values from other cells
-                                //exit the loop
-                                //if there are more twins in one line they will be found in later repetitions
+                                
+                                //if there are more twins in one row they will be found in later repetitions
                             }
                         }
                     }
                 }
             }
-
             
             //twins in a region
 
             return valueModified;
         }
 
+        private static bool AreEqual(Cell cell1, Cell cell2)
+        {
+            bool equals = true;
+            
+            for (var i = 0; i < HighestNumber; i++)
+            {
+                if (cell1.PotentialValues[i] == cell2.PotentialValues[i]) 
+                    continue;
+                
+                equals = false;
+                break;
+            }
+
+            return equals;
+        }
+
         private bool SetUniqueValues()
         {
             var valueModified = false;
             
-            ForEachCell((line, column) =>
+            ForEachCell((row, column) =>
             {
-                SelectUniqueValueForCell(ref valueModified, line, column);
+                SelectUniqueValueForCell(ref valueModified, row, column);
             });
 
             return valueModified;
         }
 
-        private void SelectUniqueValueForCell(ref bool valueModified, int line, int column)
+        private void SelectUniqueValueForCell(ref bool valueModified, int row, int column)
         {
-            var currentCell = GetCell(line, column);
+            var currentCell = Cells[row, column];
             
             var valueFixed = currentCell.Value != Undefined;
             if (valueFixed) 
@@ -190,21 +178,19 @@ namespace SudokuSolverCore
             if (CountPotentialValues(currentCell) != 1)
                 return;
             
-            for (var i = 1; i <= GridSize; i++)
+            for (var i = 0; i < HighestNumber; i++)
             {
-                if (currentCell.PotentialValues[i - 1])
-                {
-                    currentCell.Value=i;
-                    valueModified = true;
-                    PropagateUsedValuesForOneCell(line, column);
-                    return;
-                }
+                if (!currentCell.PotentialValues[i]) continue;
+                currentCell.Value=i+1;
+                valueModified = true;
+                PropagateUsedValuesForOneCell(row, column);
+                return;
             }            
         }
 
         private static int CountPotentialValues(Cell currentCell)
         {
-            int count = 0;
+            var count = 0;
             
             foreach (bool bit in currentCell.PotentialValues)
             {
@@ -220,9 +206,9 @@ namespace SudokuSolverCore
             ForEachCell(PropagateUsedValuesForOneCell);
         }
 
-        private void PropagateUsedValuesForOneCell(int line, int column)
+        private void PropagateUsedValuesForOneCell(int row, int column)
         {
-            var currentCell = GetCell(line, column);
+            var currentCell = Cells[row, column];
 
             var valueIsUndefined = currentCell.Value == Undefined;
             if (valueIsUndefined) 
@@ -231,17 +217,17 @@ namespace SudokuSolverCore
             foreach (var c in AllColumns)
             {
                 if (c!=column)
-                    GetCell(line, c).PotentialValues[currentCell.Value-1] = false;
+                    Cells[row, c].PotentialValues[currentCell.Value-1] = false;
             }
             
-            foreach (var l in AllLines)
+            foreach (var l in AllRows)
             {
-                if (l!=line)
-                    GetCell(l, column).PotentialValues[currentCell.Value-1] = false;
+                if (l!=row)
+                    Cells[l, column].PotentialValues[currentCell.Value-1] = false;
             }
             
-            int regionLine = line / RegionSize;
-            int regionColumn = column / RegionSize;
+            var regionLine = row / RegionSize;
+            var regionColumn = column / RegionSize;
             
             var lineOffset = regionLine * RegionSize;
             var columnOffset = regionColumn * RegionSize;
@@ -251,8 +237,13 @@ namespace SudokuSolverCore
             {
                 foreach (var c in indices)
                 {
-                    if (l!=line||c!=column)
-                        GetCell(lineOffset + l, columnOffset + c).PotentialValues[currentCell.Value-1] = false;
+                    if (l!=row||c!=column)
+                    {
+                        int row1 = lineOffset + l;
+                        int column1 = columnOffset + c;
+                        
+                        Cells[row1, column1].PotentialValues[currentCell.Value-1] = false;
+                    }
                 }
             }
         }
