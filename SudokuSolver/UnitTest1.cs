@@ -75,7 +75,7 @@ namespace SudokuSolverTests
         }
 
         [TestMethod]
-        [Ignore]
+        //[Ignore]
         public void SolveHardPuzzle()
         {
             //https://sudoku-puzzles.net/sudoku-hard/580/
@@ -89,8 +89,20 @@ namespace SudokuSolverTests
                                       + "  9 2    \n"
                                       + " 75 6  2 \n"
                                       + "2  5   8 \n";
+
+            const string expectedSolution =   "518932647\n"
+                                            + "924675831\n"
+                                            + "637481592\n"
+                                            + "792853416\n"
+                                            + "846197253\n"
+                                            + "351246978\n"
+                                            + "189724365\n"
+                                            + "475368129\n"
+                                            + "263519784\n";
+            
             var result = Solve(hardPuzzle);
             Assert.IsFalse(result.Contains(' '));
+            Assert.AreEqual(expectedSolution, result);
         }
     }
 }
