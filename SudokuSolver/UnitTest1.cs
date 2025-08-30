@@ -104,5 +104,42 @@ namespace SudokuSolverTests
             Assert.IsFalse(result.Contains(' '));
             Assert.AreEqual(expectedSolution, result);
         }
+
+        
+        [TestMethod]
+        [Ignore]
+        public void SolveAIEscargot2006Puzzle()
+        {
+            const string hardPuzzle =       "1    7 9 \n"
+                                          + " 3  2   8\n"
+                                          + "  96  5  \n"
+                                          + "  53  9  \n"
+                                          + " 1  8   2\n"
+                                          + "6    4   \n"
+                                          + "3      1 \n"
+                                          + " 4      7\n"
+                                          + "  7   3  \n";
+           
+            var result = Solve(hardPuzzle);
+            Assert.IsFalse(result.Contains(' '));
+        }
+        
+        [TestMethod]
+        [Ignore]
+        public void SolveArtoInkala2012Puzzle()
+        {
+            const string hardPuzzle =     "  53     \n"
+                                        + "8      2 \n"
+                                        + " 7  1 5  \n"
+                                        + "4    53  \n"
+                                        + " 1  7   6\n"
+                                        + "  32   8 \n"
+                                        + " 6 5    9\n"
+                                        + "  4    3 \n"
+                                        + "     97  \n";
+           
+            var result = Solve(hardPuzzle);
+            Assert.IsFalse(result.Contains(' '));
+        }
     }
 }
