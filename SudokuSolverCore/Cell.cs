@@ -39,5 +39,34 @@ namespace SudokuSolverCore
         {
             return tile.Value == Undefined ? " " : tile.Value.ToString();
         }
+
+        public int CountPotentialValues()
+        {
+            var count = 0;
+            
+            foreach (bool bit in PotentialValues)
+            {
+                if (bit)
+                    count++;
+            }
+
+            return count;
+        }
+
+        public bool IsEqualTo(Cell cell)
+        {
+            bool equals = true;
+            
+            for (var i = 0; i < HighestNumber; i++)
+            {
+                if (PotentialValues[i] == cell.PotentialValues[i]) 
+                    continue;
+                
+                equals = false;
+                break;
+            }
+
+            return equals;
+        }
     }
 }

@@ -79,5 +79,54 @@
                 }
             }
         }
+        
+        public static void ForEachCellInColumnExcept(int row, Action<int> action)
+        {
+            foreach (var r in AllRows)
+            {
+                if (r!=row)
+                    action(r);
+            }
+        }
+        
+        public static void ForEachCellInRowExcept(int column, Action<int> action)
+        {
+            foreach (var c in AllColumns)
+            {
+                if (c != column)
+                    action(c);
+            }
+        }
+
+        public static void ForEachCellInRegionExcept(int row, int column, Action<Tuple<int, int>> action)
+        {
+            foreach (var p in GetIndicesForRegion(row, column))
+            {
+                if (p.Item1 != row || p.Item2 != column)
+                    action(p);
+            }
+        }
+
+        private static LinkedList<Tuple<int, int>> GetIndicesForRegion(int row, int column)
+        {
+            var region = new LinkedList<Tuple<int, int>>();
+            
+            var regionLine = row / RegionSize;
+            var regionColumn = column / RegionSize;
+            
+            var lineOffset = regionLine * RegionSize;
+            var columnOffset = regionColumn * RegionSize;
+
+            var indices = Enumerable.Range(0, RegionSize).ToList();
+            foreach (var l in indices)
+            {
+                foreach (var c in indices)
+                {
+                    region.AddLast(new Tuple<int, int>(lineOffset + l, columnOffset + c));
+                }
+            }
+
+            return region;
+        }
     }
 }

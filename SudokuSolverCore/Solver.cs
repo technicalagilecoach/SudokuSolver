@@ -11,15 +11,14 @@ namespace SudokuSolverCore
         public void Solve()
         {
             var valueModified = true;
+            
             do
             {
                 PropagateValues();
                 valueModified = SetUniqueValues();
                 
                 if (!valueModified)
-                {
                     valueModified = HandleConnectedTwins();
-                }
                 
                 //for debugging
                 var currentState = grid.Print();
@@ -48,7 +47,7 @@ namespace SudokuSolverCore
                 if (!undefinedCells[row, column]) 
                     return;
                 
-                if (CountPotentialValues(Cells[row, column]) == 2)
+                if (Cells[row, column].CountPotentialValues() == 2)
                     potentialTwins[row, column] = true;
                 else
                     potentialTwins[row, column] = false;
@@ -66,7 +65,7 @@ namespace SudokuSolverCore
                             var cell1 = Cells[row, c1];
                             var cell2 = Cells[row, c2];
 
-                            if (AreEqual(cell1, cell2))
+                            if (cell1.IsEqualTo(cell2))
                             {
                                 //elminate potential values from other cells
                                 for (var c3 = 0; c3 < GridSize; c3++)
@@ -106,7 +105,7 @@ namespace SudokuSolverCore
                             var cell1 = Cells[r1, column];
                             var cell2 = Cells[r2, column];
 
-                            if (AreEqual(cell1, cell2))
+                            if (cell1.IsEqualTo(cell2))
                             {
                                 //elminate potential values from other cells
                                 for (var r3 = 0; r3 < GridSize; r3++)
@@ -139,22 +138,6 @@ namespace SudokuSolverCore
             return valueModified;
         }
 
-        private static bool AreEqual(Cell cell1, Cell cell2)
-        {
-            bool equals = true;
-            
-            for (var i = 0; i < HighestNumber; i++)
-            {
-                if (cell1.PotentialValues[i] == cell2.PotentialValues[i]) 
-                    continue;
-                
-                equals = false;
-                break;
-            }
-
-            return equals;
-        }
-
         private bool SetUniqueValues()
         {
             var valueModified = false;
@@ -175,7 +158,7 @@ namespace SudokuSolverCore
             if (valueFixed) 
                 return;
 
-            if (CountPotentialValues(currentCell) != 1)
+            if (currentCell.CountPotentialValues() != 1)
                 return;
             
             for (var i = 0; i < HighestNumber; i++)
@@ -188,19 +171,6 @@ namespace SudokuSolverCore
             }            
         }
 
-        private static int CountPotentialValues(Cell currentCell)
-        {
-            var count = 0;
-            
-            foreach (bool bit in currentCell.PotentialValues)
-            {
-                if (bit)
-                    count++;
-            }
-
-            return count;
-        }
-
         private void PropagateValues()
         {
             ForEachCell(PropagateUsedValuesForOneCell);
@@ -208,44 +178,20 @@ namespace SudokuSolverCore
 
         private void PropagateUsedValuesForOneCell(int row, int column)
         {
-            var currentCell = Cells[row, column];
-
-            var valueIsUndefined = currentCell.Value == Undefined;
-            if (valueIsUndefined) 
+            if (Cells[row, column].Value == Undefined) 
                 return;
-            
-            foreach (var c in AllColumns)
-            {
-                if (c!=column)
-                    Cells[row, c].PotentialValues[currentCell.Value-1] = false;
-            }
-            
-            foreach (var l in AllRows)
-            {
-                if (l!=row)
-                    Cells[l, column].PotentialValues[currentCell.Value-1] = false;
-            }
-            
-            var regionLine = row / RegionSize;
-            var regionColumn = column / RegionSize;
-            
-            var lineOffset = regionLine * RegionSize;
-            var columnOffset = regionColumn * RegionSize;
 
-            var indices = Enumerable.Range(0, RegionSize).ToList();
-            foreach (var l in indices)
-            {
-                foreach (var c in indices)
-                {
-                    if (l!=row||c!=column)
-                    {
-                        int row1 = lineOffset + l;
-                        int column1 = columnOffset + c;
-                        
-                        Cells[row1, column1].PotentialValues[currentCell.Value-1] = false;
-                    }
-                }
-            }
+            ForEachCellInRowExcept(column, c => {
+                Cells[row, c].PotentialValues[Cells[row, column].Value-1] = false;
+            });
+
+            ForEachCellInColumnExcept(row, r => {
+                Cells[r, column].PotentialValues[Cells[row, column].Value-1] = false;
+            });
+
+            ForEachCellInRegionExcept(row, column, tuple => {
+                Cells[tuple.Item1, tuple.Item2].PotentialValues[Cells[row, column].Value-1] = false;    
+            });
         }
     }
 }
