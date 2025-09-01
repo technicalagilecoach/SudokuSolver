@@ -1,7 +1,17 @@
 # Notes
-- run propagation between different solver strategies? -> already done, if valueModified==true the 
- remainder of the Solve() loop is skipped and the next iteration starts with propagation 
-- Grid.Init assumes that the input puzzles always follows the expected syntax -> no error handling otherwise
-- handling connected twins for regions is missing
-- brute force search is not implemented but could help if all else fails
+
+## To Do
+- handling hidden pairs is not implemented
+- handling (naked) triples is not implemented
+- handling hidden triples is not implemented
 - make a nicer equality check for BitArrays than AreEqual
+
+## Done
+- handling pairs for regions
+
+## Ideas 
+- brute force search is not implemented but could help if all other strategies fail
+- implement more strategies mentioned at https://www.sudokuwiki.org/Sudoku.htm
+
+## Limitations
+- Grid.Init assumes that the input puzzles always follows the expected syntax -> no error handling otherwise

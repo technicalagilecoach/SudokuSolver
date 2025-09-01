@@ -37,7 +37,6 @@ namespace SudokuSolverCore
             var potentialValues = grid.PrintPotentialValues();
         }
 
-
         private bool FindUniqueValues()
         {
             var uniqueValues = new UniqueValues(Cells);
