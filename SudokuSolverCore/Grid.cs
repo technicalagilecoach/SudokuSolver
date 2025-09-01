@@ -9,6 +9,7 @@
 
         internal static readonly IEnumerable<int> AllRows = Enumerable.Range(0, GridSize);
         internal static readonly IEnumerable<int> AllColumns = Enumerable.Range(0, GridSize);
+        internal static readonly IEnumerable<(int row, int column)> AllRegions = [(1, 1), (1, 4), (1, 7), (4, 1), (4, 4), (4, 7), (7, 1), (7, 4), (7, 7)];
 
         internal Cell[,] Cells { get; } = new Cell[GridSize, GridSize];
 
