@@ -15,6 +15,9 @@ namespace SudokuSolverCore
             {
                 PropagateValues();
                 valueModified = FindUniqueValues();
+
+                if (!valueModified)
+                    valueModified = FindHiddenUniqueValues();
                 
                 if (!valueModified)
                     valueModified = FindDoublePairs();
@@ -34,11 +37,6 @@ namespace SudokuSolverCore
             var potentialValues = grid.PrintPotentialValues();
         }
 
-        private bool FindDoublePairs()
-        {
-            var doublePairs= new DoublePairs(Cells);
-            return doublePairs.Handle();
-        }
 
         private bool FindUniqueValues()
         {
@@ -46,7 +44,19 @@ namespace SudokuSolverCore
             return uniqueValues.SetUniqueValues();
         }
 
+        private bool FindHiddenUniqueValues()
+        {
+            var uniqueValues = new UniqueValues(Cells);
+            return uniqueValues.SetHiddenUniqueValues();
+        }
 
+        
+        private bool FindDoublePairs()
+        {
+            var doublePairs= new DoublePairs(Cells);
+            return doublePairs.Handle();
+        }
+        
         private void PropagateValues()
         {
             ForEachCell(PropagateUsedValuesForOneCell);

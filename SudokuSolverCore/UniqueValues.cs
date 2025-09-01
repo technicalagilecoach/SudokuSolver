@@ -15,7 +15,7 @@ internal class UniqueValues(Cell[,] cells)
 
         return valueModified;
     }
-
+    
     private void SelectUniqueValueForCell(ref bool valueModified, int row, int column)
     {
         var currentCell = cells[row, column];
@@ -30,6 +30,121 @@ internal class UniqueValues(Cell[,] cells)
         SetValue(out valueModified, currentCell);            
     }
 
+    public bool SetHiddenUniqueValues()
+    {
+        var valueModified = false;
+            
+        //rows
+        foreach (var row in AllRows)
+        {
+            var values = new int[HighestNumber];
+            
+            foreach (var column in AllColumns)
+            {
+                var value = cells[row, column].PotentialValues;
+
+                for (int i = 0; i < HighestNumber; i++)
+                {
+                    if (value[i])
+                        values[i]++;
+                }
+            }
+
+            foreach (var column in AllColumns)
+            {
+                for (int i = 0; i < HighestNumber; i++)
+                {
+                    if (cells[row, column].Value==Undefined && values[i] == 1 && cells[row,column].PotentialValues[i])
+                    {
+                        cells[row, column].Value = i + 1;
+                        valueModified = true;
+                        break;
+                    }
+                }
+            }
+        }     
+        
+        //columns
+        foreach (var column in AllColumns)
+        {
+            var values = new int[HighestNumber];
+            
+            foreach (var row in AllRows)    
+            {
+                var value = cells[row, column].PotentialValues;
+
+                for (int i = 0; i < HighestNumber; i++)
+                {
+                    if (value[i])
+                        values[i]++;
+                }
+            }
+
+            foreach (var row in AllRows)
+            {
+                for (int i = 0; i < HighestNumber; i++)
+                {
+                    if (cells[row, column].Value==Undefined && values[i] == 1 && cells[row,column].PotentialValues[i])
+                    {
+                        cells[row, column].Value = i + 1;
+                        valueModified = true;
+                        break;
+                    }
+                }
+            }
+        } 
+        
+        //regions
+        var regions = new List<(int row, int column)> { (1,1),(1,4),(1,7),(4,1),(4,4),(4,7),(7,1),(7,4),(7,7)};
+
+        foreach (var region in regions)
+        {
+            var indices = GetIndicesForRegion(region.row, region.column);
+            
+            var values = new int[HighestNumber];
+            
+            foreach (var index in indices)
+            {
+                var value = cells[index.Item1, index.Item2].PotentialValues;
+
+                for (int i = 0; i < HighestNumber; i++)
+                {
+                    if (value[i])
+                        values[i]++;
+                }
+            }
+
+            foreach (var index in indices)
+            {
+                for (int i = 0; i < HighestNumber; i++)
+                {
+                    if (cells[index.Item1, index.Item2].Value==Undefined && values[i] == 1 && cells[index.Item1,index.Item2].PotentialValues[i])
+                    {
+                        cells[index.Item1, index.Item2].Value = i + 1;
+                        valueModified = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return valueModified;
+    }
+    
+    private void SelectHiddenUniqueValueForCell(ref bool valueModified, int row, int column)
+    {
+        var currentCell = cells[row, column];
+            
+        var valueFixed = currentCell.Value != Undefined;
+        if (valueFixed) 
+            return;
+
+        if (currentCell.CountPotentialValues() != 1)
+            return;
+            
+        SetValue(out valueModified, currentCell);            
+    }
+    
     private static void SetValue(out bool valueModified, Cell currentCell)
     {
         valueModified = false;
