@@ -18,6 +18,7 @@ namespace SudokuSolverCore
         private BitArray InitializePotentialValues()
         {
             var potentialValues = new BitArray(GridSize);
+            
             if (Value == Undefined)
             {
                 potentialValues.SetAll(true);
@@ -27,6 +28,7 @@ namespace SudokuSolverCore
                 potentialValues.SetAll(false);
                 potentialValues[Value-1] = true;
             }
+            
             return potentialValues;
         }
 

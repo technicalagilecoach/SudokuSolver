@@ -11,165 +11,40 @@ namespace SudokuSolverCore
         public void Solve()
         {
             var valueModified = true;
+            const bool debug = false;
             
             do
             {
                 PropagateValues();
-                valueModified = SetUniqueValues();
+                valueModified = FindUniqueValues();
                 
                 if (!valueModified)
-                    valueModified = HandleConnectedTwins();
+                    valueModified = FindDoublePairs();
                 
-                //for debugging
-                var currentState = grid.Print();
-                var spaces = currentState.Count(c => c == ' ');
-                var potentialValues = grid.PrintPotentialValues();
-                
+                if (debug)
+                    GenerateDebugOutput();
             } while (valueModified);
         }
 
-        private bool HandleConnectedTwins()
+        private void GenerateDebugOutput()
         {
-            var valueModified = false;
-            
-            var undefinedCells = new bool[GridSize, GridSize];
-            ForEachCell((row, column) =>
-            {
-                if (Cells[row, column].Value == Undefined)
-                    undefinedCells[row, column] = true;
-                else
-                    undefinedCells[row, column] = false;
-            });
-            
-            var potentialTwins = new bool[GridSize, GridSize];
-            ForEachCell((row, column) =>
-            {
-                if (!undefinedCells[row, column]) 
-                    return;
-                
-                if (Cells[row, column].CountPotentialValues() == 2)
-                    potentialTwins[row, column] = true;
-                else
-                    potentialTwins[row, column] = false;
-            });
-
-            //twins in a row
-            foreach (var row in AllRows)
-            {
-                for (var c1 = 0; c1<GridSize-1; c1++)
-                {
-                    for (var c2 = c1+1; c2<GridSize; c2++)
-                    {
-                        if (potentialTwins[row, c1] && potentialTwins[row, c2])
-                        {
-                            var cell1 = Cells[row, c1];
-                            var cell2 = Cells[row, c2];
-
-                            if (cell1.IsEqualTo(cell2))
-                            {
-                                //elminate potential values from other cells
-                                for (var c3 = 0; c3 < GridSize; c3++)
-                                {
-                                    if (undefinedCells[row, c3] && c3 != c1 && c3 != c2)
-                                    {
-                                        var cell3 = Cells[row, c3];
-
-                                        for (var i = 0; i < HighestNumber; i++)
-                                        {
-                                            if (cell1.PotentialValues[i])
-                                                cell3.PotentialValues[i] = false;
-                                        }
-                                    }
-                                }
-
-                                //exit the loop
-                                valueModified = true;
-                                break;
-                                
-                                //if there are more twins in one row they will be found in later repetitions
-                            }
-                        }
-                    }
-                }
-            }
-            
-            //twins in a column
-            foreach (var column in AllColumns)
-            {
-                for (var r1 = 0; r1<GridSize-1; r1++)
-                {
-                    for (var r2 = r1+1; r2<GridSize; r2++)
-                    {
-                        if (potentialTwins[r1,column] && potentialTwins[r2,column])
-                        {
-                            var cell1 = Cells[r1, column];
-                            var cell2 = Cells[r2, column];
-
-                            if (cell1.IsEqualTo(cell2))
-                            {
-                                //elminate potential values from other cells
-                                for (var r3 = 0; r3 < GridSize; r3++)
-                                {
-                                    if (undefinedCells[r3,column] && r3 != r1 && r3 != r2)
-                                    {
-                                        var cell3 = Cells[r3, column];
-
-                                        for (var i = 0; i < HighestNumber; i++)
-                                        {
-                                            if (cell1.PotentialValues[i])
-                                                cell3.PotentialValues[i] = false;
-                                        }
-                                    }
-                                }
-
-                                //exit the loop
-                                valueModified = true;
-                                break;
-                                
-                                //if there are more twins in one row they will be found in later repetitions
-                            }
-                        }
-                    }
-                }
-            }
-            
-            //twins in a region
-
-            return valueModified;
+            var currentState = grid.Print();
+            var spaces = currentState.Count(c => c == ' ');
+            var potentialValues = grid.PrintPotentialValues();
         }
 
-        private bool SetUniqueValues()
+        private bool FindDoublePairs()
         {
-            var valueModified = false;
-            
-            ForEachCell((row, column) =>
-            {
-                SelectUniqueValueForCell(ref valueModified, row, column);
-            });
-
-            return valueModified;
+            var doublePairs= new DoublePairs(Cells);
+            return doublePairs.Handle();
         }
 
-        private void SelectUniqueValueForCell(ref bool valueModified, int row, int column)
+        private bool FindUniqueValues()
         {
-            var currentCell = Cells[row, column];
-            
-            var valueFixed = currentCell.Value != Undefined;
-            if (valueFixed) 
-                return;
-
-            if (currentCell.CountPotentialValues() != 1)
-                return;
-            
-            for (var i = 0; i < HighestNumber; i++)
-            {
-                if (!currentCell.PotentialValues[i]) continue;
-                currentCell.Value=i+1;
-                valueModified = true;
-                PropagateUsedValuesForOneCell(row, column);
-                return;
-            }            
+            var uniqueValues = new UniqueValues(Cells);
+            return uniqueValues.SetUniqueValues();
         }
+
 
         private void PropagateValues()
         {

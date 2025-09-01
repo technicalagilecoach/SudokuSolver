@@ -106,6 +106,25 @@ namespace SudokuSolverTests
             Assert.AreEqual(expectedSolution, result);
         }
 
+        [TestMethod]
+        [Ignore]
+        public void SolveExtremePuzzle()
+        {
+            //puzzle from https://sudoku.com/extreme/
+            const string puzzle =         " 62 1  8 \n"
+                                        + "       13\n"
+                                        + "  1 94   \n"
+                                        + "5 74    2\n"
+                                        + "9   81   \n"
+                                        + "   7    6\n"
+                                        + "       6 \n"
+                                        + "     84  \n"
+                                        + "  5 2    \n";
+           
+            var result = Solve(puzzle);
+            Assert.IsFalse(result.Contains(' '));
+        }
+        
         
         [TestMethod]
         [Ignore]
