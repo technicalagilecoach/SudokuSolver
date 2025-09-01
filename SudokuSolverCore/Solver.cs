@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.IO.Enumeration;
-using static SudokuSolverCore.Grid;
+﻿using static SudokuSolverCore.Grid;
 
 namespace SudokuSolverCore
 {
@@ -24,6 +22,9 @@ namespace SudokuSolverCore
                 if (debug)
                     GenerateDebugOutput();
             } while (valueModified);
+            
+            if (!ValidityChecker.Check(Cells))
+                GenerateDebugOutput();
         }
 
         private void GenerateDebugOutput()

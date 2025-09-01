@@ -107,7 +107,7 @@
             }
         }
 
-        private static LinkedList<Tuple<int, int>> GetIndicesForRegion(int row, int column)
+        public static LinkedList<Tuple<int, int>> GetIndicesForRegion(int row, int column)
         {
             var region = new LinkedList<Tuple<int, int>>();
             
