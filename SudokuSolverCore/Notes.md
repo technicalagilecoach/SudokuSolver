@@ -10,6 +10,7 @@
 - handling pairs for regions
 
 ## Ideas 
+- row, columns and regions can be treated equally when using a container with all cells/indices of that region
 - brute force search is not implemented but could help if all other strategies fail
 - implement more strategies mentioned at https://www.sudokuwiki.org/Sudoku.htm
 

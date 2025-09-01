@@ -99,18 +99,18 @@
             }
         }
 
-        public static void ForEachCellInRegionExcept(int row, int column, Action<Tuple<int, int>> action)
+        public static void ForEachCellInRegionExcept(int row, int column, Action<(int, int)> action)
         {
             foreach (var p in GetIndicesForRegion(row, column))
             {
-                if (p.Item1 != row || p.Item2 != column)
+                if (p.row != row || p.column != column)
                     action(p);
             }
         }
 
-        public static LinkedList<Tuple<int, int>> GetIndicesForRegion(int row, int column)
+        public static List<(int row, int column)> GetIndicesForRegion(int row, int column)
         {
-            var region = new LinkedList<Tuple<int, int>>();
+            var region = new List<(int, int)>();
             
             var regionLine = row / RegionSize;
             var regionColumn = column / RegionSize;
@@ -123,7 +123,7 @@
             {
                 foreach (var c in indices)
                 {
-                    region.AddLast(new Tuple<int, int>(lineOffset + l, columnOffset + c));
+                    region.Add((lineOffset + l, columnOffset + c));
                 }
             }
 
