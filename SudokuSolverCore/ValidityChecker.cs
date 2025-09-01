@@ -80,11 +80,9 @@ internal static class ValidityChecker
 
     private static bool DistinctValuesInRegions(Cell[,] cells)
     {
-        var regions = new List<(int row, int column)> { (1,1),(1,4),(1,7),(4,1),(4,4),(4,7),(7,1),(7,4),(7,7)};
-
-        foreach (var region in regions)
+        foreach (var region in AllRegions)
         {
-            var indices = GetIndicesForRegion(region.row, region.column);
+            var indices = GetIndicesForRegion(region);
 
             var values = new SortedSet<int>();
             

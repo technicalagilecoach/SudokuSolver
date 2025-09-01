@@ -14,7 +14,7 @@ internal class DoublePairs(Cell[,] cells)
 
         foreach (var row in AllRows)
         {
-            var allCellsOfInterest = GetIndicesForCurrentRow(row);
+            var allCellsOfInterest = GetIndicesForRow(row);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
 
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);
@@ -22,7 +22,7 @@ internal class DoublePairs(Cell[,] cells)
         
         foreach (var column in AllColumns)
         {
-            var allCellsOfInterest = GetIndicesForCurrentColumn(column);
+            var allCellsOfInterest = GetIndicesForColumn(column);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
             
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);
@@ -30,7 +30,7 @@ internal class DoublePairs(Cell[,] cells)
         
         foreach (var region in AllRegions)
         {
-            var allCellsOfInterest = GetIndicesForRegion(region.row, region.column);
+            var allCellsOfInterest = GetIndicesForRegion(region);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
             
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);
@@ -99,29 +99,7 @@ internal class DoublePairs(Cell[,] cells)
 
         return pairs;
     }
-    
-    private static List<(int row, int column)> GetIndicesForCurrentRow(int row)
-    {
-        var rowIndices = new List<(int row, int column)>();
-        for (var c = 0; c < GridSize; c++)
-        {
-            rowIndices.Add((row, c));
-        }
 
-        return rowIndices;
-    }
-
-    private static List<(int row, int column)> GetIndicesForCurrentColumn(int column)
-    {
-        var columnIndices = new List<(int row, int column)>();
-        for (var r = 0; r < GridSize; r++)
-        {
-            columnIndices.Add((r, column));
-        }
-
-        return columnIndices;
-    }
-    
     private bool EliminatePotentialValuesFromOtherCells(int row3, int column3, int row1, int column1, bool actualChange)
     {
         var cell1 = cells[row1, column1];

@@ -52,7 +52,7 @@ namespace SudokuSolverCore
         
         private bool FindDoublePairs()
         {
-            var doublePairs= new DoublePairs(Cells);
+            var doublePairs = new DoublePairs(Cells);
             return doublePairs.Handle();
         }
         

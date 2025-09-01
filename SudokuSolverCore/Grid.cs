@@ -9,7 +9,8 @@
 
         internal static readonly IEnumerable<int> AllRows = Enumerable.Range(0, GridSize);
         internal static readonly IEnumerable<int> AllColumns = Enumerable.Range(0, GridSize);
-        internal static readonly IEnumerable<(int row, int column)> AllRegions = [(1, 1), (1, 4), (1, 7), (4, 1), (4, 4), (4, 7), (7, 1), (7, 4), (7, 7)];
+        //internal static readonly IEnumerable<(int row, int column)> AllRegions = [(1, 1), (1, 4), (1, 7), (4, 1), (4, 4), (4, 7), (7, 1), (7, 4), (7, 7)];
+        internal static readonly IEnumerable<int> AllRegions = Enumerable.Range(0, GridSize);
 
         internal Cell[,] Cells { get; } = new Cell[GridSize, GridSize];
 
@@ -101,19 +102,36 @@
 
         public static void ForEachCellInRegionExcept(int row, int column, Action<(int, int)> action)
         {
-            foreach (var p in GetIndicesForRegion(row, column))
+            foreach (var p in GetIndicesForRegion(GetRegionIndex(row,column)))
             {
                 if (p.row != row || p.column != column)
                     action(p);
             }
         }
 
-        public static List<(int row, int column)> GetIndicesForRegion(int row, int column)
+        public static int GetRegionIndex(int row, int column)
         {
-            var region = new List<(int, int)>();
-            
             var regionLine = row / RegionSize;
             var regionColumn = column / RegionSize;
+            
+            return regionLine * RegionSize + regionColumn + 1;
+        }
+
+        public static (int row,int column) GetRegionCoordinates(int region)
+        {
+            var row = ((region-1)/3)*3+1;
+            var column = ((region-1)%3)*3+1;
+            return (row, column);
+        }
+        
+        public static List<(int row, int column)> GetIndicesForRegion(int index)
+        {
+            var coordinates = GetRegionCoordinates(index);
+            
+            var region = new List<(int, int)>();
+            
+            var regionLine = coordinates.row / RegionSize;
+            var regionColumn = coordinates.column / RegionSize;
             
             var lineOffset = regionLine * RegionSize;
             var columnOffset = regionColumn * RegionSize;
@@ -128,6 +146,28 @@
             }
 
             return region;
+        }
+
+        public static List<(int row, int column)> GetIndicesForColumn(int column)
+        {
+            var columnIndices = new List<(int row, int column)>();
+            for (var r = 0; r < GridSize; r++)
+            {
+                columnIndices.Add((r, column));
+            }
+
+            return columnIndices;
+        }
+
+        public static List<(int row, int column)> GetIndicesForRow(int row)
+        {
+            var rowIndices = new List<(int row, int column)>();
+            for (var c = 0; c < GridSize; c++)
+            {
+                rowIndices.Add((row, c));
+            }
+
+            return rowIndices;
         }
     }
 }
