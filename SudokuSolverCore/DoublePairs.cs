@@ -43,6 +43,8 @@ internal class DoublePairs(Cell[,] cells)
 
                             if (cell1.IsEqualTo(cell2))
                             {
+                                bool actualChange = false;
+                                
                                 //elminate potential values from other cells
                                 for (var c3 = 0; c3 < GridSize; c3++)
                                 {
@@ -52,14 +54,17 @@ internal class DoublePairs(Cell[,] cells)
 
                                         for (var i = 0; i < HighestNumber; i++)
                                         {
-                                            if (cell1.PotentialValues[i])
+                                            if (cell1.PotentialValues[i] && cell3.PotentialValues[i])
+                                            {
                                                 cell3.PotentialValues[i] = false;
+                                                actualChange = true;
+                                            }
                                         }
                                     }
                                 }
 
                                 //exit the loop
-                                valueModified = true;
+                                valueModified = actualChange;
                                 break;
                                 
                                 //if there are more twins in one row they will be found in later repetitions
@@ -83,6 +88,8 @@ internal class DoublePairs(Cell[,] cells)
 
                             if (cell1.IsEqualTo(cell2))
                             {
+                                bool actualChange = false;
+                                
                                 //elminate potential values from other cells
                                 for (var r3 = 0; r3 < GridSize; r3++)
                                 {
@@ -92,14 +99,17 @@ internal class DoublePairs(Cell[,] cells)
 
                                         for (var i = 0; i < HighestNumber; i++)
                                         {
-                                            if (cell1.PotentialValues[i])
+                                            if (cell1.PotentialValues[i] && cell3.PotentialValues[i])
+                                            {
                                                 cell3.PotentialValues[i] = false;
+                                                actualChange = true;
+                                            }
                                         }
                                     }
                                 }
 
                                 //exit the loop
-                                valueModified = true;
+                                valueModified = actualChange;
                                 break;
                                 
                                 //if there are more twins in one row they will be found in later repetitions
