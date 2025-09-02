@@ -147,14 +147,15 @@ internal class UniqueValues(Cell[,] cells)
     {
         valueModified = false;
 
-        var i = 0;
-        for (; i < HighestNumber; i++)
+        var index = 1;
+        foreach (var pv in currentCell.PotentialValues)
         {
-            if (currentCell.PotentialValues[i]) 
+            if ((bool)pv) 
                 break;
+            index++;
         }
         
-        currentCell.Value = i+1;
+        currentCell.Value = index;
         valueModified = true;
     }
 }

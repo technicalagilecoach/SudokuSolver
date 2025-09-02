@@ -89,9 +89,10 @@ internal class DoublePairs(Cell[,] cells)
     private static List<((int row, int column), (int row, int column))>  GetIndicesForDistinctPairs(List<(int, int)> indices)
     {
         var pairs = new List<((int row, int column), (int row, int column))>();
-        for (var r1 = 0; r1 < GridSize - 1; r1++)
+
+        foreach (var r1 in AllDigits.SkipLast(1))
         {
-            for (var r2 = r1 + 1; r2 < GridSize; r2++)
+            foreach (var r2 in AllDigits.Skip(1))
             {
                 pairs.Add(((indices[r1].Item1, indices[r1].Item2), (indices[r2].Item1, indices[r2].Item2)));
             }

@@ -5,6 +5,7 @@
 - handling (naked) triples is not implemented
 - handling hidden triples is not implemented
 - make a nicer equality check for BitArrays than AreEqual
+- try to benefit more from the C# Enumerable class
 
 ## Done
 - handling pairs for regions
