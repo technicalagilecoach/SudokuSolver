@@ -12,7 +12,7 @@ internal class DoublePairs(Cell[,] cells)
         var undefinedCells = MarkUndefinedCells();
         var potentialTwins = MarkPotentialTwins(undefinedCells);
 
-        foreach (var row in AllRows)
+        foreach (var row in AllDigits)
         {
             var allCellsOfInterest = GetIndicesForRow(row);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
@@ -20,7 +20,7 @@ internal class DoublePairs(Cell[,] cells)
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);
         }
         
-        foreach (var column in AllColumns)
+        foreach (var column in AllDigits)
         {
             var allCellsOfInterest = GetIndicesForColumn(column);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
@@ -28,7 +28,7 @@ internal class DoublePairs(Cell[,] cells)
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);
         }
         
-        foreach (var region in AllRegions)
+        foreach (var region in AllDigits)
         {
             var allCellsOfInterest = GetIndicesForRegion(region);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
@@ -105,7 +105,7 @@ internal class DoublePairs(Cell[,] cells)
         var cell1 = cells[row1, column1];
         var cell3 = cells[row3, column3];
 
-        for (var i = 0; i < HighestNumber; i++)
+        foreach (var i in AllDigits)
         {
             if (cell1.PotentialValues[i] && cell3.PotentialValues[i])
             {

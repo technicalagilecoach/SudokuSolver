@@ -59,7 +59,7 @@ namespace SudokuSolverCore
         {
             bool equals = true;
             
-            for (var i = 0; i < HighestNumber; i++)
+            foreach (var i in AllDigits)
             {
                 if (PotentialValues[i] == cell.PotentialValues[i]) 
                     continue;

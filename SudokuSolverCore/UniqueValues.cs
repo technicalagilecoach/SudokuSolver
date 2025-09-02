@@ -35,24 +35,24 @@ internal class UniqueValues(Cell[,] cells)
         var valueModified = false;
             
         //rows
-        foreach (var row in AllRows)
+        foreach (var row in AllDigits)
         {
             var values = new int[HighestNumber];
             
-            foreach (var column in AllColumns)
+            foreach (var column in AllDigits)
             {
                 var value = cells[row, column].PotentialValues;
 
-                for (int i = 0; i < HighestNumber; i++)
+                foreach (var i in AllDigits)
                 {
                     if (value[i])
                         values[i]++;
                 }
             }
 
-            foreach (var column in AllColumns)
+            foreach (var column in AllDigits)
             {
-                for (int i = 0; i < HighestNumber; i++)
+                foreach (var i in AllDigits)
                 {
                     if (cells[row, column].Value==Undefined && values[i] == 1 && cells[row,column].PotentialValues[i])
                     {
@@ -65,24 +65,24 @@ internal class UniqueValues(Cell[,] cells)
         }     
         
         //columns
-        foreach (var column in AllColumns)
+        foreach (var column in AllDigits)
         {
             var values = new int[HighestNumber];
             
-            foreach (var row in AllRows)    
+            foreach (var row in AllDigits)    
             {
                 var value = cells[row, column].PotentialValues;
 
-                for (int i = 0; i < HighestNumber; i++)
+                foreach (var i in AllDigits)
                 {
                     if (value[i])
                         values[i]++;
                 }
             }
 
-            foreach (var row in AllRows)
+            foreach (var row in AllDigits)
             {
-                for (int i = 0; i < HighestNumber; i++)
+                foreach (var i in AllDigits)
                 {
                     if (cells[row, column].Value==Undefined && values[i] == 1 && cells[row,column].PotentialValues[i])
                     {
@@ -95,7 +95,7 @@ internal class UniqueValues(Cell[,] cells)
         } 
         
         //regions
-        foreach (var region in AllRegions)
+        foreach (var region in AllDigits)
         {
             var indices = GetIndicesForRegion(region);
             
@@ -105,7 +105,7 @@ internal class UniqueValues(Cell[,] cells)
             {
                 var value = cells[index.Item1, index.Item2].PotentialValues;
 
-                for (int i = 0; i < HighestNumber; i++)
+                foreach (var i in AllDigits)
                 {
                     if (value[i])
                         values[i]++;
@@ -114,7 +114,7 @@ internal class UniqueValues(Cell[,] cells)
 
             foreach (var index in indices)
             {
-                for (int i = 0; i < HighestNumber; i++)
+                foreach (var i in AllDigits)
                 {
                     if (cells[index.Item1, index.Item2].Value==Undefined && values[i] == 1 && cells[index.Item1,index.Item2].PotentialValues[i])
                     {

@@ -32,9 +32,9 @@ internal static class ValidityChecker
     {
         var count = 0;
         
-        foreach (var row in AllRows)
+        foreach (var row in AllDigits)
         {
-            foreach (var column in AllColumns)
+            foreach (var column in AllDigits)
             {
                 if (cells[row, column].Value == Undefined)
                     count++;
@@ -46,11 +46,11 @@ internal static class ValidityChecker
     
     private static bool DistinctValuesInRows(Cell[,] cells)
     {
-        foreach (var row in AllRows)
+        foreach (var row in AllDigits)
         {
             var values = new SortedSet<int>();
             
-            foreach (var column in AllColumns)
+            foreach (var column in AllDigits)
             {
                 var value = cells[row, column].Value;
                 var isNewValue = values.Add(value);
@@ -63,11 +63,11 @@ internal static class ValidityChecker
     
     private static bool DistinctValuesInColumns(Cell[,] cells)
     {
-        foreach (var column in AllColumns)
+        foreach (var column in AllDigits)
         {
             var values = new SortedSet<int>();
             
-            foreach (var row in AllRows)
+            foreach (var row in AllDigits)
             {
                 var value = cells[row, column].Value;
                 var isNewValue = values.Add(value);
@@ -80,7 +80,7 @@ internal static class ValidityChecker
 
     private static bool DistinctValuesInRegions(Cell[,] cells)
     {
-        foreach (var region in AllRegions)
+        foreach (var region in AllDigits)
         {
             var indices = GetIndicesForRegion(region);
 

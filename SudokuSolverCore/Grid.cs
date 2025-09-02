@@ -7,10 +7,7 @@
         public const int RegionSize = 3;
         public const int Undefined = 0;
 
-        internal static readonly IEnumerable<int> AllRows = Enumerable.Range(0, GridSize);
-        internal static readonly IEnumerable<int> AllColumns = Enumerable.Range(0, GridSize);
-        //internal static readonly IEnumerable<(int row, int column)> AllRegions = [(1, 1), (1, 4), (1, 7), (4, 1), (4, 4), (4, 7), (7, 1), (7, 4), (7, 7)];
-        internal static readonly IEnumerable<int> AllRegions = Enumerable.Range(0, GridSize);
+        internal static readonly IEnumerable<int> AllDigits = Enumerable.Range(0, GridSize);
 
         internal Cell[,] Cells { get; } = new Cell[GridSize, GridSize];
 
@@ -31,8 +28,8 @@
 
             var buffer = new StringWriter();
             
-            foreach (var row in AllRows) {
-                foreach (var column in AllColumns) {
+            foreach (var row in AllDigits) {
+                foreach (var column in AllDigits) {
                     buffer.Write((string)Cells[row, column]);
                 } 
 
@@ -57,7 +54,7 @@
                     var pValues = cell.PotentialValues;
 
                     var values = "";
-                    for (var index = 0; index < pValues.Count; index++)
+                    foreach (var index in AllDigits)
                     {
                         var kv = pValues[index];
                         if (kv)
@@ -73,9 +70,9 @@
         
         public static void ForEachCell(Action<int, int> action)
         {
-            foreach (var row in AllRows)
+            foreach (var row in AllDigits)
             {
-                foreach (var column in AllColumns)
+                foreach (var column in AllDigits)
                 {
                     action(row, column);
                 }
@@ -84,7 +81,7 @@
         
         public static void ForEachCellInColumnExcept(int row, Action<int> action)
         {
-            foreach (var r in AllRows)
+            foreach (var r in AllDigits)
             {
                 if (r!=row)
                     action(r);
@@ -93,7 +90,7 @@
         
         public static void ForEachCellInRowExcept(int column, Action<int> action)
         {
-            foreach (var c in AllColumns)
+            foreach (var c in AllDigits)
             {
                 if (c != column)
                     action(c);
@@ -151,7 +148,7 @@
         public static List<(int row, int column)> GetIndicesForColumn(int column)
         {
             var columnIndices = new List<(int row, int column)>();
-            for (var r = 0; r < GridSize; r++)
+            foreach (var r in AllDigits)
             {
                 columnIndices.Add((r, column));
             }
@@ -162,7 +159,7 @@
         public static List<(int row, int column)> GetIndicesForRow(int row)
         {
             var rowIndices = new List<(int row, int column)>();
-            for (var c = 0; c < GridSize; c++)
+            foreach (var c in AllDigits)
             {
                 rowIndices.Add((row, c));
             }
