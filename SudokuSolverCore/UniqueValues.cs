@@ -1,8 +1,9 @@
-using static SudokuSolverCore.Grid;
+using System.Collections;
+using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class UniqueValues(Cell[,] cells)
+internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
 {
     public bool SetUniqueValues()
     {
@@ -24,10 +25,10 @@ internal class UniqueValues(Cell[,] cells)
         if (valueFixed) 
             return;
 
-        if (currentCell.CountPotentialValues() != 1)
+        if (CountPotentialValues(possibleValues, row, column) != 1)
             return;
             
-        SetValue(out valueModified, currentCell);            
+        SetValue(out valueModified, row, column);            
     }
 
     public bool SetHiddenUniqueValues()
@@ -41,7 +42,7 @@ internal class UniqueValues(Cell[,] cells)
             
             foreach (var column in AllDigits)
             {
-                var value = cells[row, column].PotentialValues;
+                var value = possibleValues[row, column];
 
                 foreach (var i in AllDigits)
                 {
@@ -54,7 +55,7 @@ internal class UniqueValues(Cell[,] cells)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (cells[row, column].Value==Undefined && values[i] == 1 && cells[row,column].PotentialValues[i])
+                    if (cells[row, column].Value==Undefined && values[i] == 1 && possibleValues[row,column][i])
                     {
                         cells[row, column].Value = i + 1;
                         valueModified = true;
@@ -71,7 +72,7 @@ internal class UniqueValues(Cell[,] cells)
             
             foreach (var row in AllDigits)    
             {
-                var value = cells[row, column].PotentialValues;
+                var value = possibleValues[row, column];
 
                 foreach (var i in AllDigits)
                 {
@@ -84,7 +85,7 @@ internal class UniqueValues(Cell[,] cells)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (cells[row, column].Value==Undefined && values[i] == 1 && cells[row,column].PotentialValues[i])
+                    if (cells[row, column].Value==Undefined && values[i] == 1 && possibleValues[row,column][i])
                     {
                         cells[row, column].Value = i + 1;
                         valueModified = true;
@@ -103,7 +104,7 @@ internal class UniqueValues(Cell[,] cells)
             
             foreach (var index in indices)
             {
-                var value = cells[index.Item1, index.Item2].PotentialValues;
+                var value = possibleValues[index.Item1, index.Item2];
 
                 foreach (var i in AllDigits)
                 {
@@ -116,7 +117,7 @@ internal class UniqueValues(Cell[,] cells)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (cells[index.Item1, index.Item2].Value==Undefined && values[i] == 1 && cells[index.Item1,index.Item2].PotentialValues[i])
+                    if (cells[index.Item1, index.Item2].Value==Undefined && values[i] == 1 && possibleValues[index.Item1,index.Item2][i])
                     {
                         cells[index.Item1, index.Item2].Value = i + 1;
                         valueModified = true;
@@ -137,25 +138,25 @@ internal class UniqueValues(Cell[,] cells)
         if (valueFixed) 
             return;
 
-        if (currentCell.CountPotentialValues() != 1)
+        if (CountPotentialValues(possibleValues, row, column) != 1)
             return;
             
-        SetValue(out valueModified, currentCell);            
+        SetValue(out valueModified, row, column);            
     }
     
-    private static void SetValue(out bool valueModified, Cell currentCell)
+    private void SetValue(out bool valueModified,  int row, int column)
     {
         valueModified = false;
 
         var index = 1;
-        foreach (var pv in currentCell.PotentialValues)
+        foreach (var pv in possibleValues[row,column])
         {
             if ((bool)pv) 
                 break;
             index++;
         }
         
-        currentCell.Value = index;
+        cells[row,column].Value = index;
         valueModified = true;
     }
 }

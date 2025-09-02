@@ -1,10 +1,12 @@
-﻿using static SudokuSolverCore.Grid;
+﻿using System.Collections;
+using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore
 {
-    public class Solver(Grid grid)
+    public class Solver(Puzzle puzzle)
     {
-        private Cell[,] Cells => grid.Cells;
+        private Cell[,] Cells => puzzle.Cells;
+        private BitArray[,] PossibleValues => puzzle.PossibleValues; 
 
         public void Solve()
         {
@@ -32,27 +34,27 @@ namespace SudokuSolverCore
 
         private void GenerateDebugOutput()
         {
-            var currentState = grid.Print();
+            var currentState = puzzle.Print();
             var spaces = currentState.Count(c => c == ' ');
-            var potentialValues = grid.PrintPotentialValues();
+            var potentialValues = puzzle.PrintPotentialValues();
         }
 
         private bool FindUniqueValues()
         {
-            var uniqueValues = new UniqueValues(Cells);
+            var uniqueValues = new UniqueValues(Cells, PossibleValues);
             return uniqueValues.SetUniqueValues();
         }
 
         private bool FindHiddenUniqueValues()
         {
-            var uniqueValues = new UniqueValues(Cells);
+            var uniqueValues = new UniqueValues(Cells, PossibleValues);
             return uniqueValues.SetHiddenUniqueValues();
         }
 
         
         private bool FindDoublePairs()
         {
-            var doublePairs = new DoublePairs(Cells);
+            var doublePairs = new DoublePairs(Cells, PossibleValues);
             return doublePairs.Handle();
         }
         
@@ -67,15 +69,15 @@ namespace SudokuSolverCore
                 return;
 
             ForEachCellInRowExcept(column, c => {
-                Cells[row, c].PotentialValues[Cells[row, column].Value-1] = false;
+                PossibleValues[row, c][Cells[row, column].Value-1] = false;
             });
 
             ForEachCellInColumnExcept(row, r => {
-                Cells[r, column].PotentialValues[Cells[row, column].Value-1] = false;
+                PossibleValues[r, column][Cells[row, column].Value-1] = false;
             });
 
             ForEachCellInRegionExcept(row, column, tuple => {
-                Cells[tuple.Item1, tuple.Item2].PotentialValues[Cells[row, column].Value-1] = false;    
+                PossibleValues[tuple.Item1, tuple.Item2][Cells[row, column].Value-1] = false;
             });
         }
     }

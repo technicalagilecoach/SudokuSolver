@@ -1,9 +1,9 @@
 using System.Collections;
-using static SudokuSolverCore.Grid;
+using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class DoublePairs(Cell[,] cells)
+internal class DoublePairs(Cell[,] cells, BitArray[,] possibleValues)
 {
     public bool Handle()
     {
@@ -80,9 +80,17 @@ internal class DoublePairs(Cell[,] cells)
 
     private bool CellsAreEqual(((int row, int column), (int row, int column)) pair)
     {
-        var cell1 = cells[pair.Item1.row, pair.Item1.column];
-        var cell2 = cells[pair.Item2.row, pair.Item2.column];
-        var cellsAreEqual = cell1.IsEqualTo(cell2);
+        bool cellsAreEqual = true;
+            
+        foreach (var i in AllDigits)
+        {
+            if (possibleValues[pair.Item1.row, pair.Item1.column][i] == possibleValues[pair.Item2.row, pair.Item2.column][i]) 
+                continue;
+                
+            cellsAreEqual = false;
+            break;
+        }
+        
         return cellsAreEqual;
     }
     
@@ -103,14 +111,11 @@ internal class DoublePairs(Cell[,] cells)
 
     private bool EliminatePotentialValuesFromOtherCells(int row3, int column3, int row1, int column1, bool actualChange)
     {
-        var cell1 = cells[row1, column1];
-        var cell3 = cells[row3, column3];
-
         foreach (var i in AllDigits)
         {
-            if (cell1.PotentialValues[i] && cell3.PotentialValues[i])
+            if (possibleValues[row1, column1][i] && possibleValues[row3, column3][i])
             {
-                cell3.PotentialValues[i] = false;
+                possibleValues[row3, column3][i] = false;
                 actualChange = true;
             }
         }
@@ -126,7 +131,7 @@ internal class DoublePairs(Cell[,] cells)
             if (!undefinedCells[row, column]) 
                 return;
             
-            if (cells[row, column].CountPotentialValues() == 2)
+            if (CountPotentialValues(possibleValues, row, column) == 2)
                 potentialTwins[row, column] = true;
             else
                 potentialTwins[row, column] = false;

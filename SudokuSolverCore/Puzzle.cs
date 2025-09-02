@@ -1,6 +1,8 @@
-﻿namespace SudokuSolverCore
+﻿using System.Collections;
+
+namespace SudokuSolverCore
 {
-    public class Grid
+    public class Puzzle
     {
         public const int GridSize = 9;
         public const int HighestNumber = GridSize;
@@ -10,7 +12,8 @@
         internal static readonly IEnumerable<int> AllDigits = Enumerable.Range(0, GridSize);
 
         internal Cell[,] Cells { get; } = new Cell[GridSize, GridSize];
-
+        public BitArray[,] PossibleValues { get; set; } = new BitArray[GridSize, GridSize];
+        
         public void Init(string puzzle)
         {
             var rows = puzzle.Split('\n');
@@ -19,8 +22,43 @@
             {
                 Cells[row, column] = (rows[row][column]).ToString();
             });
+            
+            ForEachCell((row, column) =>
+            {
+                PossibleValues[row, column] = InitializePossibleValues(row, column);
+            });
         }
 
+        private BitArray InitializePossibleValues(int row, int column)
+        {
+            var potentialValues = new BitArray(GridSize);
+            
+            if (Cells[row,column].Value == Undefined)
+            {
+                potentialValues.SetAll(true);
+            }
+            else
+            {
+                potentialValues.SetAll(false);
+                potentialValues[Cells[row,column].Value-1] = true;
+            }
+            
+            return potentialValues;
+        }
+        
+        public static int CountPotentialValues(BitArray[,] possibleValues, int row, int column)
+        {
+            var count = 0;
+            
+            foreach (bool bit in possibleValues[row, column])
+            {
+                if (bit)
+                    count++;
+            }
+
+            return count;
+        }
+        
         public string Print()
         {
             if (Cells == null)
@@ -51,7 +89,7 @@
                 var cell = Cells[row, column];
                 if (cell.Value == Undefined)
                 {
-                    var pValues = cell.PotentialValues;
+                    var pValues = PossibleValues[row,column];
 
                     var values = "";
                     foreach (var index in AllDigits)

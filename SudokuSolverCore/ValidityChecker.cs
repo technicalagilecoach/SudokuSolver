@@ -1,4 +1,4 @@
-using static SudokuSolverCore.Grid;
+using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 

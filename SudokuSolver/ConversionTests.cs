@@ -1,6 +1,6 @@
 using SudokuSolverCore;
     
-using static SudokuSolverCore.Grid;
+using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverTests
 {
