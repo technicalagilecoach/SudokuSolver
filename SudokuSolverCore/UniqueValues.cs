@@ -9,9 +9,9 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
     {
         var valueModified = false;
             
-        ForEachCell((row, column) =>
+        ForEachCell(position =>
         {
-            SelectUniqueValueForCell(ref valueModified, row, column);
+            SelectUniqueValueForCell(ref valueModified, position.Row, position.Column);
         });
 
         return valueModified;

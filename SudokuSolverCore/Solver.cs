@@ -63,21 +63,21 @@ namespace SudokuSolverCore
             ForEachCell(PropagateUsedValuesForOneCell);
         }
 
-        private void PropagateUsedValuesForOneCell(int row, int column)
+        private void PropagateUsedValuesForOneCell(Position position)
         {
-            if (Cells[row, column].Value == Undefined) 
+            if (Cells[position.Row, position.Column].Value == Undefined) 
                 return;
 
-            ForEachCellInRowExcept(column, c => {
-                PossibleValues[row, c][Cells[row, column].Value-1] = false;
+            ForEachCellInRowExcept(position.Column, c => {
+                PossibleValues[position.Row, c][Cells[position.Row, position.Column].Value-1] = false;
             });
 
-            ForEachCellInColumnExcept(row, r => {
-                PossibleValues[r, column][Cells[row, column].Value-1] = false;
+            ForEachCellInColumnExcept(position.Row, r => {
+                PossibleValues[r, position.Column][Cells[position.Row, position.Column].Value-1] = false;
             });
 
-            ForEachCellInRegionExcept(row, column, tuple => {
-                PossibleValues[tuple.Item1, tuple.Item2][Cells[row, column].Value-1] = false;
+            ForEachCellInRegionExcept(position.Row, position.Column, tuple => {
+                PossibleValues[tuple.Item1, tuple.Item2][Cells[position.Row, position.Column].Value-1] = false;
             });
         }
     }

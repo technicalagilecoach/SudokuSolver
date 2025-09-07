@@ -126,15 +126,15 @@ internal class DoublePairs(Cell[,] cells, BitArray[,] possibleValues)
     private bool[,] MarkPotentialTwins(bool[,] undefinedCells)
     {
         var potentialTwins = new bool[GridSize, GridSize];
-        ForEachCell((row, column) =>
+        ForEachCell(position =>
         {
-            if (!undefinedCells[row, column]) 
+            if (!undefinedCells[position.Row, position.Column]) 
                 return;
             
-            if (CountPotentialValues(possibleValues, row, column) == 2)
-                potentialTwins[row, column] = true;
+            if (CountPotentialValues(possibleValues, position.Row, position.Column) == 2)
+                potentialTwins[position.Row, position.Column] = true;
             else
-                potentialTwins[row, column] = false;
+                potentialTwins[position.Row, position.Column] = false;
         });
         return potentialTwins;
     }
@@ -143,12 +143,12 @@ internal class DoublePairs(Cell[,] cells, BitArray[,] possibleValues)
     {
         var undefinedCells = new bool[GridSize, GridSize];
         
-        ForEachCell((row, column) =>
+        ForEachCell(position =>
         {
-            if (cells[row, column].Value == Undefined)
-                undefinedCells[row, column] = true;
+            if (cells[position.Row, position.Column].Value == Undefined)
+                undefinedCells[position.Row, position.Column] = true;
             else
-                undefinedCells[row, column] = false;
+                undefinedCells[position.Row, position.Column] = false;
         });
         
         return undefinedCells;

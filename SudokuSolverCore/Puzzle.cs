@@ -6,26 +6,27 @@ namespace SudokuSolverCore
     {
         public const int GridSize = 9;
         public const int HighestNumber = GridSize;
-        public const int RegionSize = 3;
+        private const int RegionSize = 3;
         public const int Undefined = 0;
 
         internal static readonly IEnumerable<int> AllDigits = Enumerable.Range(0, GridSize);
 
         internal Cell[,] Cells { get; } = new Cell[GridSize, GridSize];
-        public BitArray[,] PossibleValues { get; set; } = new BitArray[GridSize, GridSize];
+
+        public BitArray[,] PossibleValues { get; } = new BitArray[GridSize, GridSize];
         
         public void Init(string puzzle)
         {
             var rows = puzzle.Split('\n');
             
-            ForEachCell((row, column) =>
+            ForEachCell(position =>
             {
-                Cells[row, column] = (rows[row][column]).ToString();
+                Cells[position.Row, position.Column] = (rows[position.Row][position.Column]).ToString();
             });
             
-            ForEachCell((row, column) =>
+            ForEachCell(position =>
             {
-                PossibleValues[row, column] = InitializePossibleValues(row, column);
+                PossibleValues[position.Row, position.Column] = InitializePossibleValues(position.Row, position.Column);
             });
         }
 
@@ -84,12 +85,12 @@ namespace SudokuSolverCore
 
             var buffer = new StringWriter();
 
-            ForEachCell((row, column) =>
+            ForEachCell(position =>
             {
-                var cell = Cells[row, column];
+                var cell = Cells[position.Row, position.Column];
                 if (cell.Value == Undefined)
                 {
-                    var pValues = PossibleValues[row,column];
+                    var pValues = PossibleValues[position.Row,position.Column];
 
                     var values = "";
                     foreach (var index in AllDigits)
@@ -99,20 +100,20 @@ namespace SudokuSolverCore
                             values += " " + (index + 1);
                     }
 
-                    buffer.Write(row + " " + column + ":" + values + "\n");
+                    buffer.Write(position.Row + " " + position.Column + ":" + values + "\n");
                 }
             });
             
             return buffer.ToString();
         }
-        
-        public static void ForEachCell(Action<int, int> action)
+       
+        public static void ForEachCell(Action<Position> action)
         {
             foreach (var row in AllDigits)
             {
                 foreach (var column in AllDigits)
                 {
-                    action(row, column);
+                    action(new Position(row, column));
                 }
             }
         }

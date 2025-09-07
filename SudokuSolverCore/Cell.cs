@@ -4,7 +4,7 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore
 {
-    internal class Cell
+    public class Cell
     {
         private Cell(int value)
         {
