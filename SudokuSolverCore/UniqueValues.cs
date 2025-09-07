@@ -11,24 +11,24 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
             
         ForEachCell(position =>
         {
-            SelectUniqueValueForCell(ref valueModified, position.Row, position.Column);
+            SelectUniqueValueForCell(ref valueModified, position);
         });
 
         return valueModified;
     }
     
-    private void SelectUniqueValueForCell(ref bool valueModified, int row, int column)
+    private void SelectUniqueValueForCell(ref bool valueModified, Position position)
     {
-        var currentCell = cells[row, column];
+        var currentCell = cells[position.Row, position.Column];
             
         var valueFixed = currentCell.Value != Undefined;
         if (valueFixed) 
             return;
 
-        if (CountPotentialValues(possibleValues, row, column) != 1)
+        if (CountPotentialValues(possibleValues, position) != 1)
             return;
             
-        SetValue(out valueModified, row, column);            
+        SetValue(out valueModified, position.Row, position.Column);            
     }
 
     public bool SetHiddenUniqueValues()
@@ -104,7 +104,7 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
             
             foreach (var index in indices)
             {
-                var value = possibleValues[index.Item1, index.Item2];
+                var value = possibleValues[index.Row, index.Row];
 
                 foreach (var i in AllDigits)
                 {
@@ -117,9 +117,9 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (cells[index.Item1, index.Item2].Value==Undefined && values[i] == 1 && possibleValues[index.Item1,index.Item2][i])
+                    if (cells[index.Row, index.Row].Value==Undefined && values[i] == 1 && possibleValues[index.Row, index.Row][i])
                     {
-                        cells[index.Item1, index.Item2].Value = i + 1;
+                        cells[index.Row, index.Row].Value = i + 1;
                         valueModified = true;
                         break;
                     }
@@ -130,19 +130,19 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
         return valueModified;
     }
     
-    private void SelectHiddenUniqueValueForCell(ref bool valueModified, int row, int column)
-    {
-        var currentCell = cells[row, column];
-            
-        var valueFixed = currentCell.Value != Undefined;
-        if (valueFixed) 
-            return;
-
-        if (CountPotentialValues(possibleValues, row, column) != 1)
-            return;
-            
-        SetValue(out valueModified, row, column);            
-    }
+    // private void SelectHiddenUniqueValueForCell(ref bool valueModified, int row, int column)
+    // {
+    //     var currentCell = cells[row, column];
+    //         
+    //     var valueFixed = currentCell.Value != Undefined;
+    //     if (valueFixed) 
+    //         return;
+    //
+    //     if (CountPotentialValues(possibleValues, row, column) != 1)
+    //         return;
+    //         
+    //     SetValue(out valueModified, row, column);            
+    // }
     
     private void SetValue(out bool valueModified,  int row, int column)
     {

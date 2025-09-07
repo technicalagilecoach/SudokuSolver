@@ -39,8 +39,8 @@ internal class DoublePairs(Cell[,] cells, BitArray[,] possibleValues)
         return valueModified;
     }
 
-    private bool FindTwinsAndEliminateThemFromPotentialValues(List<((int row, int column), (int row, int column))> allPairsOfCells, bool[,] potentialTwins,
-        bool valueModified, List<(int row, int column)> allCellsOfInterest, bool[,] undefinedCells)
+    private bool FindTwinsAndEliminateThemFromPotentialValues(List<(Position, Position)> allPairsOfCells, bool[,] potentialTwins,
+        bool valueModified, List<Position> allCellsOfInterest, bool[,] undefinedCells)
     {
         foreach (var pairOfCells in allPairsOfCells)
         {
@@ -54,37 +54,37 @@ internal class DoublePairs(Cell[,] cells, BitArray[,] possibleValues)
         return valueModified;
     }
 
-    private bool EliminatePotentialValuesFromOtherCells(List<(int row, int column)> allCellsOfInterest, bool[,] undefinedCells,
-        ((int row, int column), (int row, int column)) pairOfCells)
+    private bool EliminatePotentialValuesFromOtherCells(List<Position> allCellsOfInterest, bool[,] undefinedCells,
+        (Position, Position) pairOfCells)
     {
         var actualChange = false;
         
         foreach (var ele in allCellsOfInterest)
         {
             if (UndefinedAndDifferent(undefinedCells, ele, pairOfCells))
-                actualChange = EliminatePotentialValuesFromOtherCells(ele.row, ele.column, pairOfCells.Item1.row, pairOfCells.Item1.column, actualChange);
+                actualChange = EliminatePotentialValuesFromOtherCells(ele.Row, ele.Column, pairOfCells.Item1.Row, pairOfCells.Item1.Column, actualChange);
         }
 
         return actualChange;
     }
 
-    private static bool UndefinedAndDifferent(bool[,] undefinedCells, (int row, int column) ele, ((int row, int column), (int row, int column)) pairOfCells)
+    private static bool UndefinedAndDifferent(bool[,] undefinedCells, Position ele, (Position, Position) pairOfCells)
     {
-        return undefinedCells[ele.row, ele.column] && ele != pairOfCells.Item1 && ele != pairOfCells.Item2;
+        return undefinedCells[ele.Row, ele.Column] && ele != pairOfCells.Item1 && ele != pairOfCells.Item2;
     }
 
-    private static bool ArePotentialTwins(bool[,] potentialTwins, ((int row, int column), (int row, int column)) pair)
+    private static bool ArePotentialTwins(bool[,] potentialTwins, (Position, Position) pair)
     {
-        return potentialTwins[pair.Item1.row, pair.Item1.column] && potentialTwins[pair.Item2.row, pair.Item2.column];
+        return potentialTwins[pair.Item1.Row, pair.Item1.Column] && potentialTwins[pair.Item2.Row, pair.Item2.Column];
     }
 
-    private bool CellsAreEqual(((int row, int column), (int row, int column)) pair)
+    private bool CellsAreEqual((Position, Position) pair)
     {
         bool cellsAreEqual = true;
             
         foreach (var i in AllDigits)
         {
-            if (possibleValues[pair.Item1.row, pair.Item1.column][i] == possibleValues[pair.Item2.row, pair.Item2.column][i]) 
+            if (possibleValues[pair.Item1.Row, pair.Item1.Column][i] == possibleValues[pair.Item2.Row, pair.Item2.Column][i]) 
                 continue;
                 
             cellsAreEqual = false;
@@ -94,15 +94,15 @@ internal class DoublePairs(Cell[,] cells, BitArray[,] possibleValues)
         return cellsAreEqual;
     }
     
-    private static List<((int row, int column), (int row, int column))>  GetIndicesForDistinctPairs(List<(int, int)> indices)
+    private static List<(Position, Position)>  GetIndicesForDistinctPairs(List<Position> indices)
     {
-        var pairs = new List<((int row, int column), (int row, int column))>();
+        var pairs = new List<(Position, Position)>();
 
         foreach (var r1 in AllDigits.SkipLast(1))
         {
             foreach (var r2 in AllDigits.Skip(1))
             {
-                pairs.Add(((indices[r1].Item1, indices[r1].Item2), (indices[r2].Item1, indices[r2].Item2)));
+                pairs.Add((new Position(indices[r1].Row, indices[r1].Column), new Position(indices[r2].Row, indices[r2].Column)));
             }
         }
 
@@ -131,7 +131,7 @@ internal class DoublePairs(Cell[,] cells, BitArray[,] possibleValues)
             if (!undefinedCells[position.Row, position.Column]) 
                 return;
             
-            if (CountPotentialValues(possibleValues, position.Row, position.Column) == 2)
+            if (CountPotentialValues(possibleValues, position) == 2)
                 potentialTwins[position.Row, position.Column] = true;
             else
                 potentialTwins[position.Row, position.Column] = false;

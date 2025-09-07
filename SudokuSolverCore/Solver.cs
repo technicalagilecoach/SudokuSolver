@@ -76,8 +76,8 @@ namespace SudokuSolverCore
                 PossibleValues[r, position.Column][Cells[position.Row, position.Column].Value-1] = false;
             });
 
-            ForEachCellInRegionExcept(position.Row, position.Column, tuple => {
-                PossibleValues[tuple.Item1, tuple.Item2][Cells[position.Row, position.Column].Value-1] = false;
+            ForEachCellInRegionExcept(position, tuple => {
+                PossibleValues[tuple.Row, tuple.Column][Cells[position.Row, position.Column].Value-1] = false;
             });
         }
     }

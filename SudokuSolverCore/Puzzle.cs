@@ -26,32 +26,32 @@ namespace SudokuSolverCore
             
             ForEachCell(position =>
             {
-                PossibleValues[position.Row, position.Column] = InitializePossibleValues(position.Row, position.Column);
+                PossibleValues[position.Row, position.Column] = InitializePossibleValues(position);
             });
         }
 
-        private BitArray InitializePossibleValues(int row, int column)
+        private BitArray InitializePossibleValues(Position position)
         {
             var potentialValues = new BitArray(GridSize);
             
-            if (Cells[row,column].Value == Undefined)
+            if (Cells[position.Row, position.Column].Value == Undefined)
             {
                 potentialValues.SetAll(true);
             }
             else
             {
                 potentialValues.SetAll(false);
-                potentialValues[Cells[row,column].Value-1] = true;
+                potentialValues[Cells[position.Row, position.Column].Value-1] = true;
             }
             
             return potentialValues;
         }
         
-        public static int CountPotentialValues(BitArray[,] possibleValues, int row, int column)
+        public static int CountPotentialValues(BitArray[,] possibleValues, Position position)
         {
             var count = 0;
             
-            foreach (bool bit in possibleValues[row, column])
+            foreach (bool bit in possibleValues[position.Row, position.Column])
             {
                 if (bit)
                     count++;
@@ -136,19 +136,19 @@ namespace SudokuSolverCore
             }
         }
 
-        public static void ForEachCellInRegionExcept(int row, int column, Action<(int, int)> action)
+        public static void ForEachCellInRegionExcept(Position position, Action<Position> action)
         {
-            foreach (var p in GetIndicesForRegion(GetRegionIndex(row,column)))
+            foreach (var p in GetIndicesForRegion(GetRegionIndex(position)))
             {
-                if (p.row != row || p.column != column)
+                if (p.Row != position.Row || p.Column != position.Column)
                     action(p);
             }
         }
 
-        public static int GetRegionIndex(int row, int column)
+        public static int GetRegionIndex(Position position)
         {
-            var regionLine = row / RegionSize;
-            var regionColumn = column / RegionSize;
+            var regionLine = position.Row / RegionSize;
+            var regionColumn = position.Column / RegionSize;
             
             return regionLine * RegionSize + regionColumn + 1;
         }
@@ -160,11 +160,11 @@ namespace SudokuSolverCore
             return (row, column);
         }
         
-        public static List<(int row, int column)> GetIndicesForRegion(int index)
+        public static List<Position> GetIndicesForRegion(int index)
         {
             var coordinates = GetRegionCoordinates(index);
             
-            var region = new List<(int, int)>();
+            var region = new List<Position>();
             
             var regionLine = coordinates.row / RegionSize;
             var regionColumn = coordinates.column / RegionSize;
@@ -177,30 +177,30 @@ namespace SudokuSolverCore
             {
                 foreach (var c in indices)
                 {
-                    region.Add((lineOffset + l, columnOffset + c));
+                    region.Add(new Position(lineOffset + l, columnOffset + c));
                 }
             }
 
             return region;
         }
 
-        public static List<(int row, int column)> GetIndicesForColumn(int column)
+        public static List<Position> GetIndicesForColumn(int column)
         {
-            var columnIndices = new List<(int row, int column)>();
+            var columnIndices = new List<Position>();
             foreach (var r in AllDigits)
             {
-                columnIndices.Add((r, column));
+                columnIndices.Add(new Position(r, column));
             }
 
             return columnIndices;
         }
 
-        public static List<(int row, int column)> GetIndicesForRow(int row)
+        public static List<Position> GetIndicesForRow(int row)
         {
-            var rowIndices = new List<(int row, int column)>();
+            var rowIndices = new List<Position>();
             foreach (var c in AllDigits)
             {
-                rowIndices.Add((row, c));
+                rowIndices.Add(new Position(row, c));
             }
 
             return rowIndices;

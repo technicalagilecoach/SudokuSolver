@@ -13,7 +13,7 @@ namespace SudokuSolverTests
         [DataRow(8, 8, 9)]
         public void RegionIndexForCoordinatesTest(int row, int column, int expectedRegionIndex)
         {
-            var result = GetRegionIndex(row, column);
+            var result = GetRegionIndex(new Position(row, column));
             Assert.AreEqual(expectedRegionIndex, result);
         }
         

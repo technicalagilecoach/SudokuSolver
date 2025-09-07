@@ -88,7 +88,7 @@ internal static class ValidityChecker
             
             foreach (var index in indices)
             {
-                var value = cells[index.Item1, index.Item2].Value;
+                var value = cells[index.Row, index.Column].Value;
                 var isNewValue = values.Add(value);
                 if (!isNewValue)
                     return false;
