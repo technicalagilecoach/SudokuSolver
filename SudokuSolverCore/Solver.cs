@@ -5,7 +5,7 @@ namespace SudokuSolverCore
 {
     public class Solver(Puzzle puzzle)
     {
-        private Cell[,] Cells => puzzle.Cells;
+        private int[,] Cells => puzzle.GetCells();
         private BitArray[,] PossibleValues => puzzle.PossibleValues; 
 
         public void Solve()
@@ -65,19 +65,19 @@ namespace SudokuSolverCore
 
         private void PropagateUsedValuesForOneCell(Position position)
         {
-            if (Cells[position.Row, position.Column].Value == Undefined) 
+            if (Cells[position.Row, position.Column] == Undefined) 
                 return;
 
             ForEachCellInRowExcept(position.Column, c => {
-                PossibleValues[position.Row, c][Cells[position.Row, position.Column].Value-1] = false;
+                PossibleValues[position.Row, c][Cells[position.Row, position.Column]-1] = false;
             });
 
             ForEachCellInColumnExcept(position.Row, r => {
-                PossibleValues[r, position.Column][Cells[position.Row, position.Column].Value-1] = false;
+                PossibleValues[r, position.Column][Cells[position.Row, position.Column]-1] = false;
             });
 
             ForEachCellInRegionExcept(position, tuple => {
-                PossibleValues[tuple.Row, tuple.Column][Cells[position.Row, position.Column].Value-1] = false;
+                PossibleValues[tuple.Row, tuple.Column][Cells[position.Row, position.Column]-1] = false;
             });
         }
     }

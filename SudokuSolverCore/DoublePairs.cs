@@ -3,7 +3,7 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class DoublePairs(Cell[,] cells, BitArray[,] possibleValues)
+internal class DoublePairs(int[,] cells, BitArray[,] possibleValues)
 {
     public bool Handle()
     {
@@ -145,7 +145,7 @@ internal class DoublePairs(Cell[,] cells, BitArray[,] possibleValues)
         
         ForEachCell(position =>
         {
-            if (cells[position.Row, position.Column].Value == Undefined)
+            if (cells[position.Row, position.Column] == Undefined)
                 undefinedCells[position.Row, position.Column] = true;
             else
                 undefinedCells[position.Row, position.Column] = false;

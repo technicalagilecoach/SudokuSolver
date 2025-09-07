@@ -4,17 +4,17 @@ namespace SudokuSolverCore;
 
 internal static class ValidityChecker
 {
-    public static bool Check(Cell[,] cells)
+    public static bool Check(int[,] cells)
     {
         return IsPuzzleSolved(cells) && IsSolutionCorrect(cells);
     }
 
-    private static bool IsPuzzleSolved(Cell[,] cells)
+    private static bool IsPuzzleSolved(int[,] cells)
     {
         return CountUndefinedCells(cells)==0;
     }
 
-    private static bool IsSolutionCorrect(Cell[,] cells)
+    private static bool IsSolutionCorrect(int[,] cells)
     {
         if (!DistinctValuesInRows(cells))
             return false;
@@ -28,7 +28,7 @@ internal static class ValidityChecker
         return true;
     }
 
-    private static int CountUndefinedCells(Cell[,] cells)
+    private static int CountUndefinedCells(int[,] cells)
     {
         var count = 0;
         
@@ -36,7 +36,7 @@ internal static class ValidityChecker
         {
             foreach (var column in AllDigits)
             {
-                if (cells[row, column].Value == Undefined)
+                if (cells[row, column] == Undefined)
                     count++;
             }
         }
@@ -44,7 +44,7 @@ internal static class ValidityChecker
         return count;
     }
     
-    private static bool DistinctValuesInRows(Cell[,] cells)
+    private static bool DistinctValuesInRows(int[,] cells)
     {
         foreach (var row in AllDigits)
         {
@@ -52,7 +52,7 @@ internal static class ValidityChecker
             
             foreach (var column in AllDigits)
             {
-                var value = cells[row, column].Value;
+                var value = cells[row, column];
                 var isNewValue = values.Add(value);
                 if (!isNewValue)
                     return false;
@@ -61,7 +61,7 @@ internal static class ValidityChecker
         return true;
     }
     
-    private static bool DistinctValuesInColumns(Cell[,] cells)
+    private static bool DistinctValuesInColumns(int[,] cells)
     {
         foreach (var column in AllDigits)
         {
@@ -69,7 +69,7 @@ internal static class ValidityChecker
             
             foreach (var row in AllDigits)
             {
-                var value = cells[row, column].Value;
+                var value = cells[row, column];
                 var isNewValue = values.Add(value);
                 if (!isNewValue)
                     return false;
@@ -78,7 +78,7 @@ internal static class ValidityChecker
         return true;
     }
 
-    private static bool DistinctValuesInRegions(Cell[,] cells)
+    private static bool DistinctValuesInRegions(int[,] cells)
     {
         foreach (var region in AllDigits)
         {
@@ -88,7 +88,7 @@ internal static class ValidityChecker
             
             foreach (var index in indices)
             {
-                var value = cells[index.Row, index.Column].Value;
+                var value = cells[index.Row, index.Column];
                 var isNewValue = values.Add(value);
                 if (!isNewValue)
                     return false;

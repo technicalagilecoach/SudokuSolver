@@ -11,7 +11,22 @@ namespace SudokuSolverCore
 
         internal static readonly IEnumerable<int> AllDigits = Enumerable.Range(0, GridSize);
 
-        internal Cell[,] Cells { get; } = new Cell[GridSize, GridSize];
+        private readonly int[,] _cells = new int[GridSize, GridSize];
+
+        public int[,] GetCells()
+        {
+            return _cells;
+        }
+
+        int GetValue(Position position)
+        {
+            return _cells[position.Row, position.Column];
+        }
+
+        void SetValue(Position position, int value)
+        {
+            _cells[position.Row, position.Column] = value;
+        }
 
         public BitArray[,] PossibleValues { get; } = new BitArray[GridSize, GridSize];
         
@@ -21,7 +36,9 @@ namespace SudokuSolverCore
             
             ForEachCell(position =>
             {
-                Cells[position.Row, position.Column] = (rows[position.Row][position.Column]).ToString();
+                string value = (rows[position.Row][position.Column]).ToString();
+                int ival = value == " " ? Undefined : int.Parse(value);
+                SetValue(position, ival);
             });
             
             ForEachCell(position =>
@@ -34,14 +51,14 @@ namespace SudokuSolverCore
         {
             var potentialValues = new BitArray(GridSize);
             
-            if (Cells[position.Row, position.Column].Value == Undefined)
+            if (GetValue(position) == Undefined)
             {
                 potentialValues.SetAll(true);
             }
             else
             {
                 potentialValues.SetAll(false);
-                potentialValues[Cells[position.Row, position.Column].Value-1] = true;
+                potentialValues[GetValue(position) -1] = true;
             }
             
             return potentialValues;
@@ -62,14 +79,11 @@ namespace SudokuSolverCore
         
         public string Print()
         {
-            if (Cells == null)
-                throw new NullReferenceException();
-
             var buffer = new StringWriter();
             
             foreach (var row in AllDigits) {
                 foreach (var column in AllDigits) {
-                    buffer.Write((string)Cells[row, column]);
+                    buffer.Write(GetValue(new Position(row, column)));
                 } 
 
                 buffer.WriteLine();
@@ -80,15 +94,11 @@ namespace SudokuSolverCore
         
         public string PrintPotentialValues()
         {
-            if (Cells == null)
-                throw new NullReferenceException();
-
             var buffer = new StringWriter();
 
             ForEachCell(position =>
             {
-                var cell = Cells[position.Row, position.Column];
-                if (cell.Value == Undefined)
+                if (GetValue(position) == Undefined)
                 {
                     var pValues = PossibleValues[position.Row,position.Column];
 

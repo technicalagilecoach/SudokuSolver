@@ -7,7 +7,7 @@ namespace SudokuSolverTests
     {
         private static string Solve(string puzzle)
         {
-            Puzzle sudokuPuzzle = new();
+            Puzzle sudokuPuzzle = new Puzzle();
             sudokuPuzzle.Init(puzzle);
             Solver solver = new(sudokuPuzzle);
             solver.Solve();

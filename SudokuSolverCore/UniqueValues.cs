@@ -3,7 +3,7 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
+internal class UniqueValues(int[,] cells, BitArray[,] possibleValues)
 {
     public bool SetUniqueValues()
     {
@@ -21,7 +21,7 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
     {
         var currentCell = cells[position.Row, position.Column];
             
-        var valueFixed = currentCell.Value != Undefined;
+        var valueFixed = currentCell != Undefined;
         if (valueFixed) 
             return;
 
@@ -55,9 +55,9 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (cells[row, column].Value==Undefined && values[i] == 1 && possibleValues[row,column][i])
+                    if (cells[row, column]==Undefined && values[i] == 1 && possibleValues[row,column][i])
                     {
-                        cells[row, column].Value = i + 1;
+                        cells[row, column] = i + 1;
                         valueModified = true;
                         break;
                     }
@@ -85,9 +85,9 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (cells[row, column].Value==Undefined && values[i] == 1 && possibleValues[row,column][i])
+                    if (cells[row, column]==Undefined && values[i] == 1 && possibleValues[row,column][i])
                     {
-                        cells[row, column].Value = i + 1;
+                        cells[row, column] = i + 1;
                         valueModified = true;
                         break;
                     }
@@ -117,9 +117,9 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (cells[index.Row, index.Row].Value==Undefined && values[i] == 1 && possibleValues[index.Row, index.Row][i])
+                    if (cells[index.Row, index.Row]==Undefined && values[i] == 1 && possibleValues[index.Row, index.Row][i])
                     {
-                        cells[index.Row, index.Row].Value = i + 1;
+                        cells[index.Row, index.Row] = i + 1;
                         valueModified = true;
                         break;
                     }
@@ -156,7 +156,7 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
             index++;
         }
         
-        cells[position.Row,position.Column].Value = index;
+        cells[position.Row,position.Column] = index;
         valueModified = true;
     }
 }
