@@ -153,11 +153,11 @@ namespace SudokuSolverCore
             return regionLine * RegionSize + regionColumn + 1;
         }
 
-        public static (int row,int column) GetRegionCoordinates(int region)
+        public static Position GetRegionCoordinates(int region)
         {
             var row = ((region-1)/3)*3+1;
             var column = ((region-1)%3)*3+1;
-            return (row, column);
+            return new Position(row, column);
         }
         
         public static List<Position> GetIndicesForRegion(int index)
@@ -166,8 +166,8 @@ namespace SudokuSolverCore
             
             var region = new List<Position>();
             
-            var regionLine = coordinates.row / RegionSize;
-            var regionColumn = coordinates.column / RegionSize;
+            var regionLine = coordinates.Row / RegionSize;
+            var regionColumn = coordinates.Column / RegionSize;
             
             var lineOffset = regionLine * RegionSize;
             var columnOffset = regionColumn * RegionSize;

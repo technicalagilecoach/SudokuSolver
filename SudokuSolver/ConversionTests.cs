@@ -31,8 +31,8 @@ namespace SudokuSolverTests
         {
             var result = GetRegionCoordinates(region);
 
-            Assert.AreEqual(expectedRow, result.row);
-            Assert.AreEqual(expectedColumn, result.column);
+            Assert.AreEqual(expectedRow, result.Row);
+            Assert.AreEqual(expectedColumn, result.Column);
         }
     }
 }

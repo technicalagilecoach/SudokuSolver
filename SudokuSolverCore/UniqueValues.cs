@@ -28,7 +28,7 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
         if (CountPotentialValues(possibleValues, position) != 1)
             return;
             
-        SetValue(out valueModified, position.Row, position.Column);            
+        SetValue(out valueModified, position);            
     }
 
     public bool SetHiddenUniqueValues()
@@ -144,19 +144,19 @@ internal class UniqueValues(Cell[,] cells, BitArray[,] possibleValues)
     //     SetValue(out valueModified, row, column);            
     // }
     
-    private void SetValue(out bool valueModified,  int row, int column)
+    private void SetValue(out bool valueModified, Position position)
     {
         valueModified = false;
 
         var index = 1;
-        foreach (var pv in possibleValues[row,column])
+        foreach (var pv in possibleValues[position.Row,position.Column])
         {
             if ((bool)pv) 
                 break;
             index++;
         }
         
-        cells[row,column].Value = index;
+        cells[position.Row,position.Column].Value = index;
         valueModified = true;
     }
 }

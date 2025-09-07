@@ -62,7 +62,7 @@ internal class DoublePairs(Cell[,] cells, BitArray[,] possibleValues)
         foreach (var ele in allCellsOfInterest)
         {
             if (UndefinedAndDifferent(undefinedCells, ele, pairOfCells))
-                actualChange = EliminatePotentialValuesFromOtherCells(ele.Row, ele.Column, pairOfCells.Item1.Row, pairOfCells.Item1.Column, actualChange);
+                actualChange = EliminatePotentialValuesFromOtherCells(ele, pairOfCells.Item1, actualChange);
         }
 
         return actualChange;
@@ -109,13 +109,13 @@ internal class DoublePairs(Cell[,] cells, BitArray[,] possibleValues)
         return pairs;
     }
 
-    private bool EliminatePotentialValuesFromOtherCells(int row3, int column3, int row1, int column1, bool actualChange)
+    private bool EliminatePotentialValuesFromOtherCells(Position pos1, Position pos2, bool actualChange)
     {
         foreach (var i in AllDigits)
         {
-            if (possibleValues[row1, column1][i] && possibleValues[row3, column3][i])
+            if (possibleValues[pos2.Row, pos2.Column][i] && possibleValues[pos1.Row, pos1.Column][i])
             {
-                possibleValues[row3, column3][i] = false;
+                possibleValues[pos1.Row, pos1.Column][i] = false;
                 actualChange = true;
             }
         }
