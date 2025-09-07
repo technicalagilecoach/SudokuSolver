@@ -1,3 +1,4 @@
+using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
@@ -28,17 +29,14 @@ internal static class ValidityChecker
         return true;
     }
 
-    private static int CountUndefinedCells(int[,] cells)
+    internal static int CountUndefinedCells(int[,] cells)
     {
         var count = 0;
         
-        foreach (var row in AllDigits)
+        foreach (var pos in GetIndicesForAllCells())
         {
-            foreach (var column in AllDigits)
-            {
-                if (cells[row, column] == Undefined)
-                    count++;
-            }
+            if (cells[pos.Row, pos.Column] == Undefined)
+                count++;
         }
 
         return count;

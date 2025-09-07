@@ -1,9 +1,9 @@
-using System.Collections;
+using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class UniqueValues(int[,] cells, BitArray[,] possibleValues)
+internal class UniqueValues(Puzzle puzzle)
 {
     public bool SetUniqueValues()
     {
@@ -19,13 +19,13 @@ internal class UniqueValues(int[,] cells, BitArray[,] possibleValues)
     
     private void SelectUniqueValueForCell(ref bool valueModified, Position position)
     {
-        var currentCell = cells[position.Row, position.Column];
+        var currentCell = puzzle.GetCells()[position.Row, position.Column];
             
         var valueFixed = currentCell != Undefined;
         if (valueFixed) 
             return;
 
-        if (CountPotentialValues(possibleValues, position) != 1)
+        if (CountPossibleValues(puzzle.PossibleValues, position) != 1)
             return;
             
         SetValue(out valueModified, position);            
@@ -42,7 +42,7 @@ internal class UniqueValues(int[,] cells, BitArray[,] possibleValues)
             
             foreach (var column in AllDigits)
             {
-                var value = possibleValues[row, column];
+                var value = puzzle.PossibleValues[row, column];
 
                 foreach (var i in AllDigits)
                 {
@@ -55,9 +55,9 @@ internal class UniqueValues(int[,] cells, BitArray[,] possibleValues)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (cells[row, column]==Undefined && values[i] == 1 && possibleValues[row,column][i])
+                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.PossibleValues[row,column][i])
                     {
-                        cells[row, column] = i + 1;
+                        puzzle.GetCells()[row, column] = i + 1;
                         valueModified = true;
                         break;
                     }
@@ -72,7 +72,7 @@ internal class UniqueValues(int[,] cells, BitArray[,] possibleValues)
             
             foreach (var row in AllDigits)    
             {
-                var value = possibleValues[row, column];
+                var value = puzzle.PossibleValues[row, column];
 
                 foreach (var i in AllDigits)
                 {
@@ -85,9 +85,9 @@ internal class UniqueValues(int[,] cells, BitArray[,] possibleValues)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (cells[row, column]==Undefined && values[i] == 1 && possibleValues[row,column][i])
+                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.PossibleValues[row,column][i])
                     {
-                        cells[row, column] = i + 1;
+                        puzzle.GetCells()[row, column] = i + 1;
                         valueModified = true;
                         break;
                     }
@@ -104,7 +104,7 @@ internal class UniqueValues(int[,] cells, BitArray[,] possibleValues)
             
             foreach (var index in indices)
             {
-                var value = possibleValues[index.Row, index.Row];
+                var value = puzzle.PossibleValues[index.Row, index.Row];
 
                 foreach (var i in AllDigits)
                 {
@@ -117,9 +117,12 @@ internal class UniqueValues(int[,] cells, BitArray[,] possibleValues)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (cells[index.Row, index.Row]==Undefined && values[i] == 1 && possibleValues[index.Row, index.Row][i])
+                    var row = index.Row;
+                    var column = index.Column;
+                    
+                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.PossibleValues[row, column][i])
                     {
-                        cells[index.Row, index.Row] = i + 1;
+                        puzzle.GetCells()[row, column] = i + 1;
                         valueModified = true;
                         break;
                     }
@@ -129,34 +132,25 @@ internal class UniqueValues(int[,] cells, BitArray[,] possibleValues)
 
         return valueModified;
     }
-    
-    // private void SelectHiddenUniqueValueForCell(ref bool valueModified, int row, int column)
-    // {
-    //     var currentCell = cells[row, column];
-    //         
-    //     var valueFixed = currentCell.Value != Undefined;
-    //     if (valueFixed) 
-    //         return;
-    //
-    //     if (CountPotentialValues(possibleValues, row, column) != 1)
-    //         return;
-    //         
-    //     SetValue(out valueModified, row, column);            
-    // }
+
+    private bool IsUndefined(int row, int column)
+    {
+        return puzzle.GetCells()[row, column]==Undefined;
+    }
     
     private void SetValue(out bool valueModified, Position position)
     {
         valueModified = false;
 
         var index = 1;
-        foreach (var pv in possibleValues[position.Row,position.Column])
+        foreach (var pv in puzzle.PossibleValues[position.Row,position.Column])
         {
             if ((bool)pv) 
                 break;
             index++;
         }
         
-        cells[position.Row,position.Column] = index;
+        puzzle.GetCells()[position.Row,position.Column] = index;
         valueModified = true;
     }
 }

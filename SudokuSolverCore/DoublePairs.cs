@@ -1,4 +1,5 @@
 using System.Collections;
+using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
@@ -131,10 +132,7 @@ internal class DoublePairs(int[,] cells, BitArray[,] possibleValues)
             if (!undefinedCells[position.Row, position.Column]) 
                 return;
             
-            if (CountPotentialValues(possibleValues, position) == 2)
-                potentialTwins[position.Row, position.Column] = true;
-            else
-                potentialTwins[position.Row, position.Column] = false;
+            potentialTwins[position.Row, position.Column] = CountPossibleValues(possibleValues, position) == 2;
         });
         return potentialTwins;
     }
@@ -145,12 +143,14 @@ internal class DoublePairs(int[,] cells, BitArray[,] possibleValues)
         
         ForEachCell(position =>
         {
-            if (cells[position.Row, position.Column] == Undefined)
-                undefinedCells[position.Row, position.Column] = true;
-            else
-                undefinedCells[position.Row, position.Column] = false;
+            undefinedCells[position.Row, position.Column] = IsUndefined(position);
         });
         
         return undefinedCells;
+    }
+
+    private bool IsUndefined(Position position)
+    {
+        return cells[position.Row, position.Column] == Undefined;
     }
 }

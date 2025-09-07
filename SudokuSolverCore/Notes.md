@@ -7,6 +7,7 @@
 - make a nicer equality check for BitArrays than AreEqual
 - try to benefit more from the C# Enumerable class
 - move PotentialValues to a separate class -> grid should only hold the actual values
+- calculate indices only once
 
 ## Done
 - handling pairs for regions

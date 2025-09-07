@@ -11,7 +11,7 @@ namespace SudokuSolverTests
             sudokuPuzzle.Init(puzzle);
             Solver solver = new(sudokuPuzzle);
             solver.Solve();
-            return sudokuPuzzle.Print();
+            return Printers.Print(sudokuPuzzle);
         }
 
         [TestMethod]

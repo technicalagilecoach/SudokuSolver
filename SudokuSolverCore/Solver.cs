@@ -1,5 +1,8 @@
 ﻿using System.Collections;
+using static SudokuSolverCore.IndicesAndIterators;
+using static SudokuSolverCore.Printers;
 using static SudokuSolverCore.Puzzle;
+using static SudokuSolverCore.ValidityChecker;
 
 namespace SudokuSolverCore
 {
@@ -10,8 +13,7 @@ namespace SudokuSolverCore
 
         public void Solve()
         {
-            var valueModified = true;
-            const bool debug = false;
+            bool valueModified;
             
             do
             {
@@ -23,31 +25,37 @@ namespace SudokuSolverCore
                 
                 if (!valueModified)
                     valueModified = FindDoublePairs();
-                
-                if (debug)
-                    GenerateDebugOutput();
             } while (valueModified);
-            
-            if (!ValidityChecker.Check(Cells))
+
+            if (!Check(Cells))
+            {
                 GenerateDebugOutput();
+            }
+
+            GenerateDebugOutput();
         }
 
         private void GenerateDebugOutput()
         {
-            var currentState = puzzle.Print();
-            var spaces = currentState.Count(c => c == ' ');
-            var potentialValues = puzzle.PrintPotentialValues();
+            var currentState = Print(puzzle);
+            Console.WriteLine(currentState);
+            
+            var spaces = CountUndefinedCells(puzzle.GetCells());
+            Console.WriteLine(spaces);
+            
+            var potentialValues = PrintPotentialValues(puzzle);
+            Console.WriteLine(potentialValues);
         }
 
         private bool FindUniqueValues()
         {
-            var uniqueValues = new UniqueValues(Cells, PossibleValues);
+            var uniqueValues = new UniqueValues(puzzle);
             return uniqueValues.SetUniqueValues();
         }
 
         private bool FindHiddenUniqueValues()
         {
-            var uniqueValues = new UniqueValues(Cells, PossibleValues);
+            var uniqueValues = new UniqueValues(puzzle);
             return uniqueValues.SetHiddenUniqueValues();
         }
 

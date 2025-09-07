@@ -13,7 +13,7 @@ namespace SudokuSolverTests
         [DataRow(8, 8, 9)]
         public void RegionIndexForCoordinatesTest(int row, int column, int expectedRegionIndex)
         {
-            var result = GetRegionIndex(new Position(row, column));
+            var result = IndicesAndIterators.GetRegionIndex(new Position(row, column));
             Assert.AreEqual(expectedRegionIndex, result);
         }
         
@@ -29,7 +29,7 @@ namespace SudokuSolverTests
         [DataRow(9, 7, 7)]
         public void CoordinatesForRegionIndexTest(int region, int expectedRow, int expectedColumn)
         {
-            var result = GetRegionCoordinates(region);
+            var result = IndicesAndIterators.GetRegionCoordinates(region);
 
             Assert.AreEqual(expectedRow, result.Row);
             Assert.AreEqual(expectedColumn, result.Column);
