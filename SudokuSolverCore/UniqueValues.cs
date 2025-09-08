@@ -38,7 +38,7 @@ internal class UniqueValues(Puzzle puzzle)
         //rows
         foreach (var row in AllDigits)
         {
-            var values = new int[HighestNumber];
+            var values = new int[GridSize];
             
             foreach (var column in AllDigits)
             {
@@ -68,7 +68,7 @@ internal class UniqueValues(Puzzle puzzle)
         //columns
         foreach (var column in AllDigits)
         {
-            var values = new int[HighestNumber];
+            var values = new int[GridSize];
             
             foreach (var row in AllDigits)    
             {
@@ -100,7 +100,7 @@ internal class UniqueValues(Puzzle puzzle)
         {
             var indices = GetIndicesForRegion(region);
             
-            var values = new int[HighestNumber];
+            var values = new int[GridSize];
             
             foreach (var index in indices)
             {

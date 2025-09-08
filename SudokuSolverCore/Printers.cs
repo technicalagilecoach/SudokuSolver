@@ -1,6 +1,6 @@
 namespace SudokuSolverCore;
 
-public class Printers
+public static class Printers
 {
     public static string Print(Puzzle puzzle)
     {
@@ -19,7 +19,7 @@ public class Printers
         return buffer.ToString();
     }
 
-    public static string PrintPotentialValues(Puzzle puzzle)
+    private static string PrintPotentialValues(Puzzle puzzle)
     {
         var buffer = new StringWriter();
 
@@ -42,5 +42,17 @@ public class Printers
         });
             
         return buffer.ToString();
+    }
+
+    public static void PrintDebugOutput(Puzzle puzzle)
+    {
+        var currentState = Print(puzzle);
+        Console.WriteLine(currentState);
+            
+        var spaces = ValidityChecker.CountUndefinedCells(puzzle.GetCells());
+        Console.WriteLine(spaces);
+            
+        var potentialValues = PrintPotentialValues(puzzle);
+        Console.WriteLine(potentialValues);
     }
 }

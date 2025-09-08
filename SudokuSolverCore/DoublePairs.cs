@@ -81,7 +81,7 @@ internal class DoublePairs(int[,] cells, BitArray[,] possibleValues)
 
     private bool CellsAreEqual((Position, Position) pair)
     {
-        bool cellsAreEqual = true;
+        var cellsAreEqual = true;
             
         foreach (var i in AllDigits)
         {

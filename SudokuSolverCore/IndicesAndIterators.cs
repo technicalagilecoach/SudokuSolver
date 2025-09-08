@@ -1,6 +1,6 @@
 namespace SudokuSolverCore;
 
-public class IndicesAndIterators
+public static class IndicesAndIterators
 {
     public static void ForEachCell(Action<Position> action)
     {
@@ -47,8 +47,8 @@ public class IndicesAndIterators
 
     public static Position GetRegionCoordinates(int region)
     {
-        var row = ((region-1)/3)*3+1;
-        var column = ((region-1)%3)*3+1;
+        var row = (region-1)/3*3+1;
+        var column = (region-1)%3*3+1;
         return new Position(row, column);
     }
 
@@ -89,7 +89,7 @@ public class IndicesAndIterators
     
     public static List<Position> GetIndicesForRegion(int index)
     {
-        var coordinates = IndicesAndIterators.GetRegionCoordinates(index);
+        var coordinates = GetRegionCoordinates(index);
             
         var region = new List<Position>();
             
