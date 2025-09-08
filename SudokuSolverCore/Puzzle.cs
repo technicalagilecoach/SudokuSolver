@@ -11,26 +11,14 @@ public class Puzzle
 
     internal static readonly IEnumerable<int> AllDigits = Enumerable.Range(0, GridSize);
 
-    private readonly int[,] _cells = new int[GridSize, GridSize];
-    public BitArray[,] PossibleValues { get; } = new BitArray[GridSize, GridSize];
-        
-        
-    public int[,] GetCells()
-    {
-        return _cells;
-    }
+    public readonly int[,] Cells = new int[GridSize, GridSize];
+    public BitArray[,] Candidates { get; } = new BitArray[GridSize, GridSize];
 
-    public int GetValue(Position position)
+    public bool IsUndefined(Position position)
     {
-        return _cells[position.Row, position.Column];
+        return Cells[position.Row, position.Column] == Undefined;
     }
-
-    private void SetValue(Position position, int value)
-    {
-        _cells[position.Row, position.Column] = value;
-    }
-        
-        
+    
     public void Init(string puzzle)
     {
         var rows = puzzle.Split('\n');
@@ -39,37 +27,37 @@ public class Puzzle
         {
             var value = rows[position.Row][position.Column].ToString();
             var v = value == " " ? Undefined : int.Parse(value);
-            SetValue(position, v);
+            Cells[position.Row, position.Column] = v;
         });
 
         ForEachCell(position =>
         {
-            PossibleValues[position.Row, position.Column] = InitializePossibleValues(position);
+            Candidates[position.Row, position.Column] = InitializeCandidates(position);
         });
     }
 
-    private BitArray InitializePossibleValues(Position position)
+    private BitArray InitializeCandidates(Position position)
     {
         var potentialValues = new BitArray(GridSize);
             
-        if (GetValue(position) == Undefined)
+        if (Cells[position.Row, position.Column] == Undefined)
         {
             potentialValues.SetAll(true);
         }
         else
         {
             potentialValues.SetAll(false);
-            potentialValues[GetValue(position) -1] = true;
+            potentialValues[Cells[position.Row, position.Column] -1] = true;
         }
             
         return potentialValues;
     }
         
-    public static int CountPossibleValues(BitArray[,] possibleValues, Position position)
+    public static int CountCandidates(BitArray[,] candidates, Position position)
     {
         var count = 0;
             
-        foreach (bool bit in possibleValues[position.Row, position.Column])
+        foreach (bool bit in candidates[position.Row, position.Column])
         {
             if (bit)
                 count++;

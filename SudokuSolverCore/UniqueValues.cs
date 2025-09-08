@@ -19,13 +19,13 @@ internal class UniqueValues(Puzzle puzzle)
     
     private void SelectUniqueValueForCell(ref bool valueModified, Position position)
     {
-        var currentCell = puzzle.GetCells()[position.Row, position.Column];
+        var currentCell = puzzle.Cells[position.Row, position.Column];
             
         var valueFixed = currentCell != Undefined;
         if (valueFixed) 
             return;
 
-        if (CountPossibleValues(puzzle.PossibleValues, position) != 1)
+        if (CountCandidates(puzzle.Candidates, position) != 1)
             return;
             
         SetValue(out valueModified, position);            
@@ -42,7 +42,7 @@ internal class UniqueValues(Puzzle puzzle)
             
             foreach (var column in AllDigits)
             {
-                var value = puzzle.PossibleValues[row, column];
+                var value = puzzle.Candidates[row, column];
 
                 foreach (var i in AllDigits)
                 {
@@ -55,9 +55,9 @@ internal class UniqueValues(Puzzle puzzle)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.PossibleValues[row,column][i])
+                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.Candidates[row,column][i])
                     {
-                        puzzle.GetCells()[row, column] = i + 1;
+                        puzzle.Cells[row, column] = i + 1;
                         valueModified = true;
                         break;
                     }
@@ -72,7 +72,7 @@ internal class UniqueValues(Puzzle puzzle)
             
             foreach (var row in AllDigits)    
             {
-                var value = puzzle.PossibleValues[row, column];
+                var value = puzzle.Candidates[row, column];
 
                 foreach (var i in AllDigits)
                 {
@@ -85,9 +85,9 @@ internal class UniqueValues(Puzzle puzzle)
             {
                 foreach (var i in AllDigits)
                 {
-                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.PossibleValues[row,column][i])
+                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.Candidates[row,column][i])
                     {
-                        puzzle.GetCells()[row, column] = i + 1;
+                        puzzle.Cells[row, column] = i + 1;
                         valueModified = true;
                         break;
                     }
@@ -104,7 +104,7 @@ internal class UniqueValues(Puzzle puzzle)
             
             foreach (var index in indices)
             {
-                var value = puzzle.PossibleValues[index.Row, index.Row];
+                var value = puzzle.Candidates[index.Row, index.Row];
 
                 foreach (var i in AllDigits)
                 {
@@ -120,9 +120,9 @@ internal class UniqueValues(Puzzle puzzle)
                     var row = index.Row;
                     var column = index.Column;
                     
-                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.PossibleValues[row, column][i])
+                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.Candidates[row, column][i])
                     {
-                        puzzle.GetCells()[row, column] = i + 1;
+                        puzzle.Cells[row, column] = i + 1;
                         valueModified = true;
                         break;
                     }
@@ -135,7 +135,7 @@ internal class UniqueValues(Puzzle puzzle)
 
     private bool IsUndefined(int row, int column)
     {
-        return puzzle.GetCells()[row, column]==Undefined;
+        return puzzle.Cells[row, column]==Undefined;
     }
     
     private void SetValue(out bool valueModified, Position position)
@@ -143,14 +143,14 @@ internal class UniqueValues(Puzzle puzzle)
         valueModified = false;
 
         var index = 1;
-        foreach (var pv in puzzle.PossibleValues[position.Row,position.Column])
+        foreach (var pv in puzzle.Candidates[position.Row,position.Column])
         {
             if ((bool)pv) 
                 break;
             index++;
         }
         
-        puzzle.GetCells()[position.Row,position.Column] = index;
+        puzzle.Cells[position.Row,position.Column] = index;
         valueModified = true;
     }
 }

@@ -4,7 +4,7 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class DoublePairs(int[,] cells, BitArray[,] possibleValues)
+internal class DoublePairs(int[,] cells, BitArray[,] candidates)
 {
     public bool Handle()
     {
@@ -85,7 +85,7 @@ internal class DoublePairs(int[,] cells, BitArray[,] possibleValues)
             
         foreach (var i in AllDigits)
         {
-            if (possibleValues[pair.Item1.Row, pair.Item1.Column][i] == possibleValues[pair.Item2.Row, pair.Item2.Column][i]) 
+            if (candidates[pair.Item1.Row, pair.Item1.Column][i] == candidates[pair.Item2.Row, pair.Item2.Column][i]) 
                 continue;
                 
             cellsAreEqual = false;
@@ -114,9 +114,9 @@ internal class DoublePairs(int[,] cells, BitArray[,] possibleValues)
     {
         foreach (var i in AllDigits)
         {
-            if (possibleValues[pos2.Row, pos2.Column][i] && possibleValues[pos1.Row, pos1.Column][i])
+            if (candidates[pos2.Row, pos2.Column][i] && candidates[pos1.Row, pos1.Column][i])
             {
-                possibleValues[pos1.Row, pos1.Column][i] = false;
+                candidates[pos1.Row, pos1.Column][i] = false;
                 actualChange = true;
             }
         }
@@ -132,7 +132,7 @@ internal class DoublePairs(int[,] cells, BitArray[,] possibleValues)
             if (!undefinedCells[position.Row, position.Column]) 
                 return;
             
-            potentialTwins[position.Row, position.Column] = CountPossibleValues(possibleValues, position) == 2;
+            potentialTwins[position.Row, position.Column] = CountCandidates(candidates, position) == 2;
         });
         return potentialTwins;
     }

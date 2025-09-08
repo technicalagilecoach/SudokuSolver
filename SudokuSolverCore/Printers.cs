@@ -9,7 +9,8 @@ public static class Printers
         foreach (var row in Puzzle.AllDigits) {
             foreach (var column in Puzzle.AllDigits)
             {
-                var v = puzzle.GetValue(new Position(row, column));
+                Position position = new Position(row, column);
+                var v = puzzle.Cells[position.Row, position.Column];
                 buffer.Write(v == Puzzle.Undefined ? " ":v);
             } 
 
@@ -25,9 +26,9 @@ public static class Printers
 
         IndicesAndIterators.ForEachCell(position =>
         {
-            if (puzzle.GetValue(position) == Puzzle.Undefined)
+            if (puzzle.Cells[position.Row, position.Column] == Puzzle.Undefined)
             {
-                var pValues = puzzle.PossibleValues[position.Row,position.Column];
+                var pValues = puzzle.Candidates[position.Row,position.Column];
 
                 var values = "";
                 foreach (var index in Puzzle.AllDigits)
@@ -49,7 +50,7 @@ public static class Printers
         var currentState = Print(puzzle);
         Console.WriteLine(currentState);
             
-        var spaces = ValidityChecker.CountUndefinedCells(puzzle.GetCells());
+        var spaces = ValidityChecker.CountUndefinedCells(puzzle.Cells);
         Console.WriteLine(spaces);
             
         var potentialValues = PrintPotentialValues(puzzle);

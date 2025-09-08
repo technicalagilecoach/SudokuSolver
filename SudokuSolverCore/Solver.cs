@@ -1,15 +1,14 @@
 ﻿using System.Collections;
 using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Printers;
-using static SudokuSolverCore.Puzzle;
 using static SudokuSolverCore.ValidityChecker;
 
 namespace SudokuSolverCore;
 
 public class Solver(Puzzle puzzle)
 {
-    private int[,] Cells => puzzle.GetCells();
-    private BitArray[,] PossibleValues => puzzle.PossibleValues; 
+    private int[,] Cells => puzzle.Cells;
+    private BitArray[,] Candidates => puzzle.Candidates; 
 
     public void Solve()
     {
@@ -27,7 +26,7 @@ public class Solver(Puzzle puzzle)
                 valueModified = FindDoublePairs();
         } while (valueModified);
 
-        if (!Check(puzzle.GetCells()))
+        if (!Check(puzzle.Cells))
             PrintDebugOutput(puzzle);
     }
 
@@ -45,7 +44,7 @@ public class Solver(Puzzle puzzle)
         
     private bool FindDoublePairs()
     {
-        var doublePairs = new DoublePairs(Cells, PossibleValues);
+        var doublePairs = new DoublePairs(Cells, Candidates);
         return doublePairs.Handle();
     }
         
@@ -56,19 +55,17 @@ public class Solver(Puzzle puzzle)
 
     private void PropagateUsedValuesForOneCell(Position position)
     {
-        if (Cells[position.Row, position.Column] == Undefined) 
+        if (puzzle.IsUndefined(position)) 
             return;
 
-        ForEachCellInRowExcept(position.Column, c => {
-            PossibleValues[position.Row, c][Cells[position.Row, position.Column]-1] = false;
-        });
-
-        ForEachCellInColumnExcept(position.Row, r => {
-            PossibleValues[r, position.Column][Cells[position.Row, position.Column]-1] = false;
-        });
-
-        ForEachCellInRegionExcept(position, tuple => {
-            PossibleValues[tuple.Row, tuple.Column][Cells[position.Row, position.Column]-1] = false;
-        });
+        ForEachCellInRowExcept(position.Column, column => { RemoveCandidate(position, Candidates[position.Row, column]); });
+        ForEachCellInColumnExcept(position.Row, row => { RemoveCandidate(position, Candidates[row, position.Column]); });
+        ForEachCellInRegionExcept(position, tuple => { RemoveCandidate(position, Candidates[tuple.Row,tuple.Column]); });
     }
+
+    private void RemoveCandidate(Position position, BitArray digits)
+    {
+        digits[Cells[position.Row, position.Column]-1] = false;
+    }
+
 }
