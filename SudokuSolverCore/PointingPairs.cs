@@ -14,25 +14,23 @@ public class PointingPairs(int[,] cells, BitArray[,] candidates)
         {
             var positions = GetIndicesForRegion(region);
             
-            //rows
-            valueModified = HandlePointingPairsInRows(positions, region, valueModified);
-
-            //columns
-            valueModified = HandlePointingPairsInColumns(positions, region, valueModified);
+            HandlePointingPairsInRows(positions, region, ref valueModified);
+            HandlePointingPairsInColumns(positions, region, ref valueModified);
         }
 
         return valueModified;
     }
 
-    private bool HandlePointingPairsInRows(List<Position> positions, int region, bool valueModified)
+    private void HandlePointingPairsInRows(List<Position> positions, int region, ref bool valueModified)
     {
         var valuesRows = new int[RegionSize,GridSize];
 
         var encounteredColumns = new HashSet<int>();
             
-        for (int rIndex = 0; rIndex < GridSize; rIndex++)
+        for (var rIndex = 0; rIndex < GridSize; rIndex++)
         {
-            var rowPositions = positions.Where(position =>  position.Row % 3 == rIndex );
+            var index = rIndex;
+            var rowPositions = positions.Where(position =>  position.Row % 3 == index );
         
             foreach (var position in rowPositions)
             {
@@ -53,40 +51,38 @@ public class PointingPairs(int[,] cells, BitArray[,] candidates)
         var pointingPairsInRows = new List<(int, int)>();
         foreach (var digit in AllDigits)
         { 
-            var result = TernaryXOR(valuesRows[0,digit], valuesRows[1,digit], valuesRows[2,digit]);
+            var result = OnlyOnePositive(valuesRows[0,digit], valuesRows[1,digit], valuesRows[2,digit]);
             if (result)
             {
                 var positiveIndex = valuesRows[0, digit] > 0 ? 0 : (valuesRows[1, digit] > 0 ? 1 : 2);
-                Position pos = GetRegionCoordinates(region);
+                var pos = GetRegionCoordinates(region);
                 pointingPairsInRows.Add((digit, pos.Row+positiveIndex));                    
             }
         }
 
-        foreach (var ele in pointingPairsInRows)
+        foreach (var (digit, row) in pointingPairsInRows)
         {
-            var row = ele.Item2;
             foreach (var column in AllColumns)
             {
-                if (cells[row, column] == Undefined && !encounteredColumns.Contains(column) && candidates[row,column][ele.Item1])
+                if (cells[row, column] == Undefined && !encounteredColumns.Contains(column) && candidates[row,column][digit])
                 {
-                    candidates[row,column][ele.Item1] = false;
+                    candidates[row,column][digit] = false;
                     valueModified = true;
                 }
             }
         }
-
-        return valueModified;
     }
 
-    private bool HandlePointingPairsInColumns(List<Position> positions, int region, bool valueModified)
+    private void HandlePointingPairsInColumns(List<Position> positions, int region, ref bool valueModified)
     {
         var valuesColumns = new int[RegionSize,GridSize];
             
         var encounteredRows = new HashSet<int>();
             
-        for (int cIndex = 0; cIndex < GridSize; cIndex++)
+        for (var cIndex = 0; cIndex < GridSize; cIndex++)
         {
-            var columnPositions = positions.Where(position =>  position.Column % 3 == cIndex );
+            var index = cIndex;
+            var columnPositions = positions.Where(position =>  position.Column % 3 == index );
         
             foreach (var position in columnPositions)
             {
@@ -107,38 +103,39 @@ public class PointingPairs(int[,] cells, BitArray[,] candidates)
         var pointingPairsInColumns = new List<(int, int)>();
         foreach (var digit in AllDigits)
         { 
-            var result = TernaryXOR(valuesColumns[0,digit], valuesColumns[1,digit], valuesColumns[2,digit]);
+            var result = OnlyOnePositive(valuesColumns[0,digit], valuesColumns[1,digit], valuesColumns[2,digit]);
             if (result)
             {
                 var positiveIndex = valuesColumns[0, digit] > 0 ? 0 : (valuesColumns[1, digit] > 0 ? 1 : 2);
-                Position pos = GetRegionCoordinates(region);
+                var pos = GetRegionCoordinates(region);
                 pointingPairsInColumns.Add((digit, pos.Column+positiveIndex));                    
             }
         }
             
-        foreach (var ele in pointingPairsInColumns)
+        foreach (var (digit, column) in pointingPairsInColumns)
         {
-            var column = ele.Item2;
             foreach (var row in AllRows)
             {
-                if (cells[row, column] == Undefined && !encounteredRows.Contains(row) && candidates[row,column][ele.Item1])
+                if (cells[row, column] == Undefined && !encounteredRows.Contains(row) && candidates[row,column][digit])
                 {
-                    candidates[row,column][ele.Item1] = false;
+                    candidates[row,column][digit] = false;
                     valueModified = true;
                 }
             }
         }
-
-        return valueModified;
     }
 
-    private static bool TernaryXOR(int a, int b, int c)
+    private static bool OnlyOnePositive(int a, int b, int c)
     {
-        return TernaryXOR(a>0,b>0,c>0);
-    }
+        int positive = 0;
 
-    public static bool TernaryXOR(bool a, bool b, bool c)
-    { 
-        return (!a&&!b&&c)||(!a&&b&&!c)||(a&&!b&&!c);
+        if (a > 0)
+            positive++;
+        if (b > 0)
+            positive++;
+        if (c > 0)
+            positive++;
+        
+        return positive==1;
     }
 }

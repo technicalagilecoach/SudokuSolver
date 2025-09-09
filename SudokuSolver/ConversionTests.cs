@@ -32,19 +32,4 @@ public class ConversionTests
         Assert.AreEqual(expectedRow, result.Row);
         Assert.AreEqual(expectedColumn, result.Column);
     }
-
-    [TestMethod]
-    [DataRow(false, false, false, false)]
-    [DataRow(false, false,  true,  true)]
-    [DataRow(false,  true, false,  true)]
-    [DataRow(false,  true,  true, false)]
-    [DataRow( true, false, false,  true)]
-    [DataRow( true, false,  true, false)]
-    [DataRow( true,  true, false, false)]
-    [DataRow( true,  true,  true, false)]
-    public void TernaryXorTest(bool a, bool b, bool c, bool expected)
-    {
-        var result = PointingPairs.TernaryXOR(a, b, c);
-        Assert.AreEqual(expected, result);
-    }
 }

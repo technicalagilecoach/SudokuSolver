@@ -99,9 +99,9 @@ internal class UniqueValues(Puzzle puzzle)
         return values;
     }
 
-    private int SetValue(Position position, int digit)
+    private void SetValue(Position position, int digit)
     {
-        return puzzle.Cells[position.Row, position.Column] = digit + 1;
+        puzzle.Cells[position.Row, position.Column] = digit + 1;
     }
 
     private BitArray Candidate(Position position)
