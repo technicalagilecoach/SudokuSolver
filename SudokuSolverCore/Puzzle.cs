@@ -9,16 +9,34 @@ public class Puzzle
     public const int RegionSize = 3;
     public const int Undefined = 0;
 
+    internal static readonly IEnumerable<int> AllColumns = Enumerable.Range(0, GridSize);
+    internal static readonly IEnumerable<int> AllRows = Enumerable.Range(0, GridSize);
+    internal static readonly IEnumerable<int> AllRegions = Enumerable.Range(0, GridSize);
     internal static readonly IEnumerable<int> AllDigits = Enumerable.Range(0, GridSize);
 
-    public readonly int[,] Cells = new int[GridSize, GridSize];
+    public int[,] Cells { get; } = new int[GridSize, GridSize];
     public BitArray[,] Candidates { get; } = new BitArray[GridSize, GridSize];
 
     public bool IsUndefined(Position position)
     {
-        return Cells[position.Row, position.Column] == Undefined;
+        return GetValue(position) == Undefined;
     }
-    
+
+    public int GetValue(Position position)
+    {
+        return Cells[position.Row, position.Column];
+    }
+
+    public void SetValue(Position position, int value)
+    {
+        Cells[position.Row, position.Column] = value;
+    }
+
+    public void SetCandidates(Position position, BitArray candidates)
+    {
+        Candidates[position.Row, position.Column] = candidates;
+    }
+
     public void Init(string puzzle)
     {
         var rows = puzzle.Split('\n');
@@ -27,30 +45,30 @@ public class Puzzle
         {
             var value = rows[position.Row][position.Column].ToString();
             var v = value == " " ? Undefined : int.Parse(value);
-            Cells[position.Row, position.Column] = v;
+            SetValue(position, v);
         });
 
         ForEachCell(position =>
         {
-            Candidates[position.Row, position.Column] = InitializeCandidates(position);
+            SetCandidates(position, InitializeCandidates(position));
         });
     }
 
     private BitArray InitializeCandidates(Position position)
     {
-        var potentialValues = new BitArray(GridSize);
+        var candidates = new BitArray(GridSize);
             
-        if (Cells[position.Row, position.Column] == Undefined)
+        if (IsUndefined(position))
         {
-            potentialValues.SetAll(true);
+            candidates.SetAll(true);
         }
         else
         {
-            potentialValues.SetAll(false);
-            potentialValues[Cells[position.Row, position.Column] -1] = true;
+            candidates.SetAll(false);
+            candidates[Cells[position.Row, position.Column] - 1] = true;
         }
             
-        return potentialValues;
+        return candidates;
     }
         
     public static int CountCandidates(BitArray[,] candidates, Position position)

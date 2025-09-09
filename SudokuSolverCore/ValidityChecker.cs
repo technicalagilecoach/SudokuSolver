@@ -15,7 +15,7 @@ internal static class ValidityChecker
         return CountUndefinedCells(cells)==0;
     }
 
-    private static bool IsSolutionCorrect(int[,] cells)
+    public static bool IsSolutionCorrect(int[,] cells)
     {
         if (!DistinctValuesInRows(cells))
             return false;
@@ -44,16 +44,19 @@ internal static class ValidityChecker
     
     private static bool DistinctValuesInRows(int[,] cells)
     {
-        foreach (var row in AllDigits)
+        foreach (var row in AllRows)
         {
             var values = new SortedSet<int>();
             
-            foreach (var column in AllDigits)
+            foreach (var column in AllColumns)
             {
                 var value = cells[row, column];
-                var isNewValue = values.Add(value);
-                if (!isNewValue)
-                    return false;
+                if (value != Undefined)
+                {
+                    var isNewValue = values.Add(value);
+                    if (!isNewValue)
+                        return false;
+                }
             }
         }        
         return true;
@@ -61,16 +64,19 @@ internal static class ValidityChecker
     
     private static bool DistinctValuesInColumns(int[,] cells)
     {
-        foreach (var column in AllDigits)
+        foreach (var column in AllColumns)
         {
             var values = new SortedSet<int>();
             
-            foreach (var row in AllDigits)
+            foreach (var row in AllRows)
             {
                 var value = cells[row, column];
-                var isNewValue = values.Add(value);
-                if (!isNewValue)
-                    return false;
+                if (value != Undefined)
+                {
+                    var isNewValue = values.Add(value);
+                    if (!isNewValue)
+                        return false;
+                }
             }
         }        
         return true;
@@ -78,7 +84,7 @@ internal static class ValidityChecker
 
     private static bool DistinctValuesInRegions(int[,] cells)
     {
-        foreach (var region in AllDigits)
+        foreach (var region in AllRegions)
         {
             var indices = GetIndicesForRegion(region);
 
@@ -87,9 +93,12 @@ internal static class ValidityChecker
             foreach (var index in indices)
             {
                 var value = cells[index.Row, index.Column];
-                var isNewValue = values.Add(value);
-                if (!isNewValue)
-                    return false;
+                if (value != Undefined)
+                {
+                    var isNewValue = values.Add(value);
+                    if (!isNewValue)
+                        return false;
+                }
             }
         }
 

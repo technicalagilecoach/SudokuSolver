@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Printers;
 using static SudokuSolverCore.ValidityChecker;
@@ -24,6 +25,10 @@ public class Solver(Puzzle puzzle)
                 
             if (!valueModified)
                 valueModified = FindDoublePairs();
+            
+            if (!IsSolutionCorrect(puzzle.Cells))
+                PrintDebugOutput(puzzle);
+            
         } while (valueModified);
 
         if (!Check(puzzle.Cells))
@@ -58,14 +63,23 @@ public class Solver(Puzzle puzzle)
         if (puzzle.IsUndefined(position)) 
             return;
 
-        ForEachCellInRowExcept(position.Column, column => { RemoveCandidate(position, Candidates[position.Row, column]); });
-        ForEachCellInColumnExcept(position.Row, row => { RemoveCandidate(position, Candidates[row, position.Column]); });
-        ForEachCellInRegionExcept(position, tuple => { RemoveCandidate(position, Candidates[tuple.Row,tuple.Column]); });
+        ForEachCellInRowExcept(position.Column, column =>
+        {
+            RemoveCandidate(position, Candidates[position.Row, column]);
+        });
+        ForEachCellInColumnExcept(position.Row, row =>
+        {
+            RemoveCandidate(position, Candidates[row, position.Column]);
+        });
+        ForEachCellInRegionExcept(position, tuple =>
+        {
+            RemoveCandidate(position, Candidates[tuple.Row,tuple.Column]);
+        });
     }
 
     private void RemoveCandidate(Position position, BitArray digits)
     {
-        digits[Cells[position.Row, position.Column]-1] = false;
+        var digit = Cells[position.Row, position.Column];  
+        digits[digit-1] = false;
     }
-
 }

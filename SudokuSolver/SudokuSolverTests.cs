@@ -161,4 +161,94 @@ public class SolveSudokuPuzzle
         var result = Solve(puzzle);
         Assert.IsFalse(result.Contains(' '));
     }
+
+    [TestMethod]
+    [Ignore]
+    public void SolveGrid03()
+    {
+        const string puzzle =   "000000907\n"
+                              + "000420180\n"
+                              + "000705026\n"
+                              + "100904000\n"
+                              + "050000040\n"
+                              + "000507009\n"
+                              + "920108000\n"
+                              + "034059000\n"
+                              + "507000000\n";
+        
+        var result = Solve(puzzle);
+        Assert.IsFalse(result.Contains(' '));
+    }
+    
+    [TestMethod]
+    [Ignore]
+    public void SolveGrid07()
+    {
+        const string puzzle =   "043080250\n"
+                              + "600000000\n"
+                              + "000001094\n"
+                              + "900004070\n"
+                              + "000608000\n"
+                              + "010200003\n"
+                              + "820500000\n"
+                              + "000000005\n"
+                              + "034090710\n";
+        var result = Solve(puzzle);
+        Assert.IsFalse(result.Contains(' '));
+    }
+
+    [TestMethod]
+    [Ignore]
+    public void SolvePuzzlesFromFile()
+    {
+        const string filename = "/home/armin/src/SudokuSolver/0096_sudoku.txt";
+        
+        List<List<string>> allPuzzles = ReadPuzzlesFromFile(filename);
+
+        var solvablePuzzles = new int[allPuzzles.Count];
+        
+        for (var index = 0; index < allPuzzles.Count; index++)
+        {
+            var puzzle = allPuzzles[index];
+            var puzzleAsString = string.Join("\n", puzzle);
+            var result = Solve(puzzleAsString);
+
+            var count = 0;
+            foreach (var c in result) {
+                if (c==' ')
+                    count++;
+            }
+
+            solvablePuzzles[index] = count; //!result.Contains(' ');
+        }
+    }
+
+    private static List<List<string>> ReadPuzzlesFromFile(string filename)
+    {
+        List<List<string>> allPuzzles = new List<List<string>>();
+        
+        using StreamReader reader = new(filename);
+
+        string text = reader.ReadToEnd();
+        List<string> allLines = text.Split("\n").ToList();
+        
+        int numOfPuzzles = allLines.Count/10;
+
+        for (int i = 0; i < numOfPuzzles; i++)
+        {
+            int offset = i*10;
+            List<string> puzzle = new List<string>();
+            
+            for (int j = offset; j < 10+offset; j++)
+            {
+                if (j%10!=0) {
+                    puzzle.Add(allLines[j]);
+                }
+            }
+            
+            allPuzzles.Add(puzzle);
+        }
+
+        return allPuzzles;
+    }
 }

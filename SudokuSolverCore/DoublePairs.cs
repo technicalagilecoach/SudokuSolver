@@ -1,4 +1,5 @@
 using System.Collections;
+using System.ComponentModel.Design;
 using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Puzzle;
 
@@ -13,7 +14,7 @@ internal class DoublePairs(int[,] cells, BitArray[,] candidates)
         var undefinedCells = MarkUndefinedCells();
         var potentialTwins = MarkPotentialTwins(undefinedCells);
 
-        foreach (var row in AllDigits)
+        foreach (var row in AllRows)
         {
             var allCellsOfInterest = GetIndicesForRow(row);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
@@ -21,7 +22,7 @@ internal class DoublePairs(int[,] cells, BitArray[,] candidates)
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);
         }
         
-        foreach (var column in AllDigits)
+        foreach (var column in AllColumns)
         {
             var allCellsOfInterest = GetIndicesForColumn(column);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
@@ -29,7 +30,7 @@ internal class DoublePairs(int[,] cells, BitArray[,] candidates)
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);
         }
         
-        foreach (var region in AllDigits)
+        foreach (var region in AllRegions)
         {
             var allCellsOfInterest = GetIndicesForRegion(region);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
@@ -99,11 +100,12 @@ internal class DoublePairs(int[,] cells, BitArray[,] candidates)
     {
         var pairs = new List<(Position, Position)>();
 
-        foreach (var r1 in AllDigits.SkipLast(1))
+        foreach (var pos1 in indices.SkipLast(1))
         {
-            foreach (var r2 in AllDigits.Skip(1))
+            foreach (var pos2 in indices.Skip(1))
             {
-                pairs.Add((new Position(indices[r1].Row, indices[r1].Column), new Position(indices[r2].Row, indices[r2].Column)));
+                if (!pos1.Equals(pos2))
+                    pairs.Add((pos1,pos2));
             }
         }
 

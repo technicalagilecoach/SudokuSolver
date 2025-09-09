@@ -1,13 +1,17 @@
 # Notes
 
 ## To Do
-- handling hidden pairs is not implemented
-- handling (naked) triples is not implemented
-- handling hidden triples is not implemented
+
 - make a nicer equality check for BitArrays than AreEqual
 - try to benefit more from the C# Enumerable class
 - move PotentialValues to a separate class -> grid should only hold the actual values
+- unify indices (digits from 1 to 9, row/column/region indices 0 to 8)
 - calculate indices only once
+- implement more strategies
+  - hidden pairs
+  - (naked) triples
+  - hidden triples
+  - pointing pairs
 
 ## Done
 - handling pairs for regions

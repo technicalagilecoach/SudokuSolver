@@ -1,3 +1,4 @@
+using System.Collections;
 using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Puzzle;
 
@@ -35,97 +36,44 @@ internal class UniqueValues(Puzzle puzzle)
     {
         var valueModified = false;
             
-        //rows
-        foreach (var row in AllDigits)
+        foreach (var row in AllRows)
         {
-            var values = new int[GridSize];
-            
-            foreach (var column in AllDigits)
-            {
-                var value = puzzle.Candidates[row, column];
-
-                foreach (var i in AllDigits)
-                {
-                    if (value[i])
-                        values[i]++;
-                }
-            }
-
-            foreach (var column in AllDigits)
-            {
-                foreach (var i in AllDigits)
-                {
-                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.Candidates[row,column][i])
-                    {
-                        puzzle.Cells[row, column] = i + 1;
-                        valueModified = true;
-                        break;
-                    }
-                }
-            }
+            var positions = GetIndicesForRow(row);
+          
+            var values = CountDigitsInArea(positions);
+            valueModified = UpdateValues(positions, values, valueModified);
         }     
         
-        //columns
-        foreach (var column in AllDigits)
+        foreach (var column in AllColumns)
         {
-            var values = new int[GridSize];
+            var positions = GetIndicesForColumn(column);
             
-            foreach (var row in AllDigits)    
-            {
-                var value = puzzle.Candidates[row, column];
-
-                foreach (var i in AllDigits)
-                {
-                    if (value[i])
-                        values[i]++;
-                }
-            }
-
-            foreach (var row in AllDigits)
-            {
-                foreach (var i in AllDigits)
-                {
-                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.Candidates[row,column][i])
-                    {
-                        puzzle.Cells[row, column] = i + 1;
-                        valueModified = true;
-                        break;
-                    }
-                }
-            }
+            var values = CountDigitsInArea(positions);
+            valueModified = UpdateValues(positions, values, valueModified);
         } 
         
-        //regions
-        foreach (var region in AllDigits)
+        foreach (var region in AllRegions)
         {
-            var indices = GetIndicesForRegion(region);
+            var positions = GetIndicesForRegion(region+1);
             
-            var values = new int[GridSize];
-            
-            foreach (var index in indices)
-            {
-                var value = puzzle.Candidates[index.Row, index.Row];
+            var values = CountDigitsInArea(positions);
+            valueModified = UpdateValues(positions, values, valueModified);
+        }
 
-                foreach (var i in AllDigits)
-                {
-                    if (value[i])
-                        values[i]++;
-                }
-            }
+        return valueModified;
+    }
 
-            foreach (var index in indices)
+    private bool UpdateValues(List<Position> positions, int[] values, bool valueModified)
+    {
+        foreach (var position in positions)
+        {
+            foreach (var digit in AllDigits)
             {
-                foreach (var i in AllDigits)
+                if (IsUndefined(position) && values[digit] == 1 && Candidate(position)[digit])
                 {
-                    var row = index.Row;
-                    var column = index.Column;
-                    
-                    if (IsUndefined(row, column) && values[i] == 1 && puzzle.Candidates[row, column][i])
-                    {
-                        puzzle.Cells[row, column] = i + 1;
-                        valueModified = true;
-                        break;
-                    }
+                    SetValue(position, digit);
+                    valueModified = true;
+                    break;
                 }
             }
         }
@@ -133,9 +81,36 @@ internal class UniqueValues(Puzzle puzzle)
         return valueModified;
     }
 
-    private bool IsUndefined(int row, int column)
+    private int[] CountDigitsInArea(List<Position> positions)
     {
-        return puzzle.Cells[row, column]==Undefined;
+        var values = new int[GridSize];
+        
+        foreach (var position in positions)
+        {
+            var value = Candidate(position);
+            foreach (var digit in AllDigits)
+            {
+                if (value[digit])
+                    values[digit]++;
+            }
+        }
+        
+        return values;
+    }
+
+    private int SetValue(Position position, int digit)
+    {
+        return puzzle.Cells[position.Row, position.Column] = digit + 1;
+    }
+
+    private BitArray Candidate(Position position)
+    {
+        return puzzle.Candidates[position.Row, position.Column];
+    }
+
+    private bool IsUndefined(Position position)
+    {
+        return puzzle.Cells[position.Row, position.Column]==Undefined;
     }
     
     private void SetValue(out bool valueModified, Position position)
