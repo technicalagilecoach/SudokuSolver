@@ -163,7 +163,7 @@ public class SolveSudokuPuzzle
     }
 
     [TestMethod]
-    [Ignore]
+    //[Ignore]
     public void SolveGrid03()
     {
         const string puzzle =   "000000907\n"
@@ -176,8 +176,19 @@ public class SolveSudokuPuzzle
                               + "034059000\n"
                               + "507000000\n";
         
+        const string expectedSolution =   "462831957\n"
+                                        + "795426183\n"
+                                        + "381795426\n"
+                                        + "173984265\n"
+                                        + "659312748\n"
+                                        + "248567319\n"
+                                        + "926178534\n"
+                                        + "834259671\n"
+                                        + "517643892\n";
+            
         var result = Solve(puzzle);
         Assert.IsFalse(result.Contains(' '));
+        Assert.AreEqual(expectedSolution, result);
     }
     
     [TestMethod]

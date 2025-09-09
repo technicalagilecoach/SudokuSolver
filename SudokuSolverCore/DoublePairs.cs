@@ -1,5 +1,4 @@
 using System.Collections;
-using System.ComponentModel.Design;
 using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Puzzle;
 

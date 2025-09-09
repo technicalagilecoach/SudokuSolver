@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics;
 using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Puzzle;
 
@@ -54,7 +55,7 @@ internal class UniqueValues(Puzzle puzzle)
         
         foreach (var region in AllRegions)
         {
-            var positions = GetIndicesForRegion(region+1);
+            var positions = GetIndicesForRegion(region);
             
             var values = CountDigitsInArea(positions);
             valueModified = UpdateValues(positions, values, valueModified);
@@ -105,6 +106,8 @@ internal class UniqueValues(Puzzle puzzle)
 
     private BitArray Candidate(Position position)
     {
+        Debug.Assert(position.Row >= 0 && position.Row < GridSize);
+        Debug.Assert(position.Column >= 0 && position.Column < GridSize);
         return puzzle.Candidates[position.Row, position.Column];
     }
 

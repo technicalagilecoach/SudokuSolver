@@ -27,7 +27,7 @@ public static class IndicesAndIterators
                 action(c);
         }
     }
-
+    
     public static void ForEachCellInRegionExcept(Position position, Action<Position> action)
     {
         foreach (var p in GetIndicesForRegion(GetRegionIndex(position)))
@@ -42,13 +42,13 @@ public static class IndicesAndIterators
         var regionLine = position.Row / Puzzle.RegionSize;
         var regionColumn = position.Column / Puzzle.RegionSize;
             
-        return regionLine * Puzzle.RegionSize + regionColumn + 1;
+        return regionLine * Puzzle.RegionSize + regionColumn;
     }
 
     public static Position GetRegionCoordinates(int region)
     {
-        var row = (region-1)/3*3+1;
-        var column = (region-1)%3*3+1;
+        var row = region / 3 * 3;//+1;
+        var column = region % 3 * 3;//+1;
         return new Position(row, column);
     }
 

@@ -26,6 +26,9 @@ public class Solver(Puzzle puzzle)
             if (!valueModified)
                 valueModified = FindDoublePairs();
             
+            if (!valueModified)
+                valueModified = FindPointingPairs();
+            
             if (!IsSolutionCorrect(puzzle.Cells))
                 PrintDebugOutput(puzzle);
             
@@ -52,7 +55,13 @@ public class Solver(Puzzle puzzle)
         var doublePairs = new DoublePairs(Cells, Candidates);
         return doublePairs.Handle();
     }
-        
+     
+    private bool FindPointingPairs()
+    {
+        var pointingPairs = new PointingPairs(Cells, Candidates);
+        return pointingPairs.Handle();
+    }
+    
     private void PropagateValues()
     {
         ForEachCell(PropagateUsedValuesForOneCell);

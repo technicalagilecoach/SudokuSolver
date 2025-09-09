@@ -1,7 +1,6 @@
 # Notes
 
 ## To Do
-
 - make a nicer equality check for BitArrays than AreEqual
 - try to benefit more from the C# Enumerable class
 - move PotentialValues to a separate class -> grid should only hold the actual values
@@ -11,10 +10,10 @@
   - hidden pairs
   - (naked) triples
   - hidden triples
-  - pointing pairs
 
 ## Done
 - handling pairs for regions
+- pointing pairs strategy implemented
 
 ## Ideas 
 - row, columns and regions can be treated equally when using a container with all cells/indices of that region
