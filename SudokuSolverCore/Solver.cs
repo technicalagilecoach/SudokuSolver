@@ -26,6 +26,9 @@ public class Solver(Puzzle puzzle)
             if (!valueModified)
                 valueModified = FindDoublePairs();
             
+            //if (!valueModified)
+            //    valueModified = FindHiddenDoublePairs();
+            
             if (!valueModified)
                 valueModified = FindPointingPairs();
             
@@ -56,6 +59,12 @@ public class Solver(Puzzle puzzle)
         return doublePairs.Handle();
     }
      
+    private bool FindHiddenDoublePairs()
+    {
+        var doublePairs = new HiddenDoublePairs(Cells, Candidates);
+        return doublePairs.Handle();
+    }
+    
     private bool FindPointingPairs()
     {
         var pointingPairs = new PointingPairs(Cells, Candidates);
