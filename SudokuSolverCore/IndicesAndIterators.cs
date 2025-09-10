@@ -115,12 +115,12 @@ public static class IndicesAndIterators
     {
         var pairs = new List<(Position, Position)>();
 
-        foreach (var pos1 in indices.SkipLast(1))
+        for (var i = 0; i < indices.Count-1; i++)
         {
-            foreach (var pos2 in indices.Skip(1))
+            for (var j = i; j < indices.Count; j++)
             {
-                if (!pos1.Equals(pos2))
-                    pairs.Add((pos1,pos2));
+                if (i!=j)
+                    pairs.Add((indices[i], indices[j]));
             }
         }
 
