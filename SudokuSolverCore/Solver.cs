@@ -9,66 +9,80 @@ namespace SudokuSolverCore;
 public class Solver(Puzzle puzzle)
 {
     private int[,] Cells => puzzle.Cells;
-    private BitArray[,] Candidates => puzzle.Candidates; 
+    private BitArray[,] Candidates => puzzle.Candidates;
+    
+    private bool _valueModified = false;
 
+    private List<string> _executedStrategies = [];
+    private List<List<string>> _executionProtocol = [];
+    private readonly bool _performChecks = true;
+    
     public void Solve()
     {
-        bool valueModified;
-            
         do
         {
+            _valueModified = false;
+            
             PropagateValues();
-            valueModified = FindUniqueValues();
-
-            if (!valueModified)
-                valueModified = FindHiddenUniqueValues();
-                
-            if (!valueModified)
-                valueModified = FindDoublePairs();
             
-            //if (!valueModified)
-            //    valueModified = FindHiddenDoublePairs();
-            
-            if (!valueModified)
-                valueModified = FindPointingPairs();
-            
-            if (!IsSolutionCorrect(puzzle.Cells))
-                PrintDebugOutput(puzzle);
-            
-        } while (valueModified);
+            Execute(UniqueValues);
+            Execute(HiddenUniqueValues);
+            Execute(DoublePairs);
+            Execute(HiddenDoublePairs);
+            Execute(PointingPairs);
+    
+            UpdateProtocol();
+        } while (_valueModified);
 
         if (!Check(puzzle.Cells))
             PrintDebugOutput(puzzle);
     }
 
-    private bool FindUniqueValues()
+    private void UpdateProtocol()
     {
-        var uniqueValues = new UniqueValues(puzzle);
-        return uniqueValues.SetUniqueValues();
+        _executionProtocol.Add(_executedStrategies);
+        _executedStrategies = [];
     }
 
-    private bool FindHiddenUniqueValues()
+    private void CheckConsistency()
     {
-        var uniqueValues = new UniqueValues(puzzle);
-        return uniqueValues.SetHiddenUniqueValues();
+        if (_performChecks && !IsSolutionCorrect(puzzle.Cells))
+            PrintDebugOutput(puzzle);
     }
-        
-    private bool FindDoublePairs()
+
+    public void Execute(Func<bool> fun)
     {
-        var doublePairs = new DoublePairs(Cells, Candidates);
-        return doublePairs.Handle();
-    }
-     
-    private bool FindHiddenDoublePairs()
-    {
-        var doublePairs = new HiddenDoublePairs(Cells, Candidates);
-        return doublePairs.Handle();
+        if (!_valueModified)
+        {
+            _valueModified = fun();
+            CheckConsistency();
+            _executedStrategies.Add(fun.Method.Name);
+        }
     }
     
-    private bool FindPointingPairs()
+    private bool UniqueValues()
     {
-        var pointingPairs = new PointingPairs(Cells, Candidates);
-        return pointingPairs.Handle();
+        return new UniqueValues(Cells, Candidates).SetUniqueValues();
+    }
+
+    private bool HiddenUniqueValues()
+    {
+        return new UniqueValues(Cells, Candidates).SetHiddenUniqueValues();
+    }
+        
+    private bool DoublePairs()
+    {
+        return new DoublePairs(Cells, Candidates).Handle();
+    }
+     
+    private bool HiddenDoublePairs()
+    {
+        return new HiddenDoublePairs(Cells, Candidates).Handle();
+    }
+    
+    private bool PointingPairs()
+    {
+        return new PointingPairs(Cells, Candidates).Handle();
     }
     
     private void PropagateValues()

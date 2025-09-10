@@ -86,7 +86,9 @@ internal class HiddenDoublePairs(int[,] cells, BitArray[,] candidates)
             {
                 if (IsUndefined(cell) && cell != twin.Item1 && cell != twin.Item2)
                 {
+                    var old = candidates[cell.Row, cell.Column];
                     candidates[cell.Row, cell.Column].And(filter);
+                    valueModified = !candidates[cell.Row, cell.Column].Equals(old);
                 }
             }
         }

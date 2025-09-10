@@ -5,7 +5,7 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class UniqueValues(Puzzle puzzle)
+internal class UniqueValues(int[,] cells, BitArray[,] candidates)
 {
     public bool SetUniqueValues()
     {
@@ -21,13 +21,13 @@ internal class UniqueValues(Puzzle puzzle)
     
     private void SelectUniqueValueForCell(ref bool valueModified, Position position)
     {
-        var currentCell = puzzle.Cells[position.Row, position.Column];
+        var currentCell = cells[position.Row, position.Column];
             
         var valueFixed = currentCell != Undefined;
         if (valueFixed) 
             return;
 
-        if (CountCandidates(puzzle.Candidates, position) != 1)
+        if (CountCandidates(candidates, position) != 1)
             return;
             
         SetValue(out valueModified, position);            
@@ -101,19 +101,19 @@ internal class UniqueValues(Puzzle puzzle)
 
     private void SetValue(Position position, int digit)
     {
-        puzzle.Cells[position.Row, position.Column] = digit + 1;
+        cells[position.Row, position.Column] = digit + 1;
     }
 
     private BitArray Candidate(Position position)
     {
         Debug.Assert(position.Row >= 0 && position.Row < GridSize);
         Debug.Assert(position.Column >= 0 && position.Column < GridSize);
-        return puzzle.Candidates[position.Row, position.Column];
+        return candidates[position.Row, position.Column];
     }
 
     private bool IsUndefined(Position position)
     {
-        return puzzle.Cells[position.Row, position.Column]==Undefined;
+        return cells[position.Row, position.Column]==Undefined;
     }
     
     private void SetValue(out bool valueModified, Position position)
@@ -121,14 +121,14 @@ internal class UniqueValues(Puzzle puzzle)
         valueModified = false;
 
         var index = 1;
-        foreach (var pv in puzzle.Candidates[position.Row,position.Column])
+        foreach (var pv in candidates[position.Row,position.Column])
         {
             if ((bool)pv) 
                 break;
             index++;
         }
         
-        puzzle.Cells[position.Row,position.Column] = index;
+        cells[position.Row,position.Column] = index;
         valueModified = true;
     }
 }
