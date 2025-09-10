@@ -83,24 +83,6 @@ internal class HiddenDoublePairs(int[,] cells, BitArray[,] candidates)
         return valueModified;
     }
 
-
-  
-    private static List<(Position, Position)>  GetIndicesForDistinctPairs(List<Position> indices)
-    {
-        var pairs = new List<(Position, Position)>();
-
-        foreach (var pos1 in indices.SkipLast(1))
-        {
-            foreach (var pos2 in indices.Skip(1))
-            {
-                if (!pos1.Equals(pos2))
-                    pairs.Add((pos1,pos2));
-            }
-        }
-
-        return pairs;
-    }
-
     private bool IsUndefined(Position position)
     {
         return cells[position.Row, position.Column] == Undefined;

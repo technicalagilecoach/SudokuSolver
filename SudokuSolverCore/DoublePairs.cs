@@ -94,22 +94,6 @@ internal class DoublePairs(int[,] cells, BitArray[,] candidates)
         
         return cellsAreEqual;
     }
-    
-    private static List<(Position, Position)>  GetIndicesForDistinctPairs(List<Position> indices)
-    {
-        var pairs = new List<(Position, Position)>();
-
-        foreach (var pos1 in indices.SkipLast(1))
-        {
-            foreach (var pos2 in indices.Skip(1))
-            {
-                if (!pos1.Equals(pos2))
-                    pairs.Add((pos1,pos2));
-            }
-        }
-
-        return pairs;
-    }
 
     private bool EliminatePotentialValuesFromOtherCells(Position pos1, Position pos2, bool actualChange)
     {
