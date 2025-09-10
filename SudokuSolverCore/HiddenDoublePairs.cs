@@ -55,7 +55,7 @@ internal class HiddenDoublePairs(int[,] cells, BitArray[,] candidates)
 
         var candidatesForPairs = new BitArray(digits.Select(digit => digits[digit] == 2).ToArray());
 
-        var foundTwins = new List<(Position, Position)>();
+        var foundTwins = new List<(Position, Position, BitArray)>();
         
         foreach (var pair in allPairsOfCells)
         {
@@ -74,12 +74,23 @@ internal class HiddenDoublePairs(int[,] cells, BitArray[,] candidates)
 
             if (count == 2)
             {
-                foundTwins.Add(pair);
+                foundTwins.Add((pair.Item1, pair.Item2, result));
             }
         }
 
-        //ToDo: Remove Candidates
-        
+        foreach (var twin in foundTwins)
+        {
+            var filter = twin.Item3.Not();
+            
+            foreach (var cell in allCellsOfInterest)
+            {
+                if (IsUndefined(cell) && cell != twin.Item1 && cell != twin.Item2)
+                {
+                    candidates[cell.Row, cell.Column].And(filter);
+                }
+            }
+        }
+
         return valueModified;
     }
 
