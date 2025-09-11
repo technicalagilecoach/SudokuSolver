@@ -44,8 +44,6 @@ public class SolveSudokuPuzzle
         Assert.AreEqual(expectedSolution, result);
     }
 
-
-
     [TestMethod]
     public void SolveMediumPuzzle()
     {
@@ -163,7 +161,7 @@ public class SolveSudokuPuzzle
     }
 
     [TestMethod]
-    [Ignore]
+    //[Ignore]
     public void SolveGrid03()
     {
         const string puzzle =   "000000907\n"

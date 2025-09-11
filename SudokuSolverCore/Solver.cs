@@ -13,9 +13,10 @@ public class Solver(Puzzle puzzle)
     
     private bool _valueModified = false;
 
-    private List<string> _executedStrategies = [];
-    private List<List<string>> _executionProtocol = [];
+    private List<(string,bool)> _executedStrategies = [];
+    private List<List<(string,bool)>> _executionProtocol = [];
     private readonly bool _performChecks = true;
+    private int _round = 0;
     
     public void Solve()
     {
@@ -42,21 +43,31 @@ public class Solver(Puzzle puzzle)
     {
         _executionProtocol.Add(_executedStrategies);
         _executedStrategies = [];
+        _round++;
     }
 
     private void CheckConsistency()
     {
-        if (_performChecks && !IsSolutionCorrect(puzzle.Cells))
+        if (IsInConsistent())
             PrintDebugOutput(puzzle);
+    }
+
+    private bool IsInConsistent()
+    {
+        return _performChecks && !IsSolutionCorrect(puzzle.Cells);
     }
 
     public void Execute(Func<bool> fun)
     {
         if (!_valueModified)
         {
+            var before = IsInConsistent();
             _valueModified = fun();
-            CheckConsistency();
-            _executedStrategies.Add(fun.Method.Name);
+            var after = IsInConsistent();
+            var gotWorse = (!before)&&after;
+            if (gotWorse)
+                PrintDebugOutput(puzzle);
+            _executedStrategies.Add((fun.Method.Name, gotWorse));
         }
     }
     
