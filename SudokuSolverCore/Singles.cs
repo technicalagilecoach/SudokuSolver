@@ -5,9 +5,9 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class UniqueValues(int[,] cells, BitArray[,] candidates)
+internal class Singles(int[,] cells, BitArray[,] candidates)
 {
-    public bool SetUniqueValues()
+    public bool HandleNakedSingles()
     {
         var valueModified = false;
             
@@ -33,7 +33,7 @@ internal class UniqueValues(int[,] cells, BitArray[,] candidates)
         SetValue(out valueModified, position);            
     }
 
-    public bool SetHiddenUniqueValues()
+    public bool HandleHiddenSingles()
     {
         var valueModified = false;
             

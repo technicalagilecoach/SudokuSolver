@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics;
 using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Printers;
 using static SudokuSolverCore.ValidityChecker;
@@ -24,12 +23,12 @@ public class Solver(Puzzle puzzle)
         {
             _valueModified = false;
             
-            PropagateValues();
+            PruneCandidates();
             
-            Execute(UniqueValues);
-            Execute(HiddenUniqueValues);
-            Execute(DoublePairs);
-            Execute(HiddenDoublePairs);
+            Execute(NakedSingles);
+            Execute(HiddenSingles);
+            Execute(NakedPairs);
+            Execute(HiddenPairs);
             Execute(PointingPairs);
     
             UpdateProtocol();
@@ -71,24 +70,24 @@ public class Solver(Puzzle puzzle)
         }
     }
     
-    private bool UniqueValues()
+    private bool NakedSingles()
     {
-        return new UniqueValues(Cells, Candidates).SetUniqueValues();
+        return new Singles(Cells, Candidates).HandleNakedSingles();
     }
 
-    private bool HiddenUniqueValues()
+    private bool HiddenSingles()
     {
-        return new UniqueValues(Cells, Candidates).SetHiddenUniqueValues();
+        return new Singles(Cells, Candidates).HandleHiddenSingles();
     }
         
-    private bool DoublePairs()
+    private bool NakedPairs()
     {
-        return new DoublePairs(Cells, Candidates).Handle();
+        return new NakedPairs(Cells, Candidates).Handle();
     }
      
-    private bool HiddenDoublePairs()
+    private bool HiddenPairs()
     {
-        return new HiddenDoublePairs(Cells, Candidates).Handle();
+        return new HiddenPairs(Cells, Candidates).Handle();
     }
     
     private bool PointingPairs()
@@ -96,12 +95,12 @@ public class Solver(Puzzle puzzle)
         return new PointingPairs(Cells, Candidates).Handle();
     }
     
-    private void PropagateValues()
+    private void PruneCandidates()
     {
-        ForEachCell(PropagateUsedValuesForOneCell);
+        ForEachCell(RemoveCandidatesBasedOnSingle);
     }
 
-    private void PropagateUsedValuesForOneCell(Position position)
+    private void RemoveCandidatesBasedOnSingle(Position position)
     {
         if (puzzle.IsUndefined(position)) 
             return;

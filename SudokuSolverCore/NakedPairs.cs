@@ -4,7 +4,7 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class DoublePairs(int[,] cells, BitArray[,] candidates)
+internal class NakedPairs(int[,] cells, BitArray[,] candidates)
 {
     public bool Handle()
     {

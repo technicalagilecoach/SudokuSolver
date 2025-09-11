@@ -4,7 +4,7 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class HiddenDoublePairs(int[,] cells, BitArray[,] candidates)
+internal class HiddenPairs(int[,] cells, BitArray[,] candidates)
 {
     public bool Handle()
     {
