@@ -30,7 +30,7 @@ internal class Singles(int[,] cells, BitArray[,] candidates)
         if (CountCandidates(candidates, position) != 1)
             return;
             
-        SetValue(out valueModified, position);            
+        SetValue(position, out valueModified);            
     }
 
     public bool HandleHiddenSingles()
@@ -72,7 +72,7 @@ internal class Singles(int[,] cells, BitArray[,] candidates)
             {
                 if (IsUndefined(position) && values[digit] == 1 && Candidate(position)[digit])
                 {
-                    SetValue(position, digit);
+                    cells[position.Row, position.Column] = digit + 1;
                     valueModified = true;
                     break;
                 }
@@ -99,11 +99,6 @@ internal class Singles(int[,] cells, BitArray[,] candidates)
         return values;
     }
 
-    private void SetValue(Position position, int digit)
-    {
-        cells[position.Row, position.Column] = digit + 1;
-    }
-
     private BitArray Candidate(Position position)
     {
         Debug.Assert(position.Row >= 0 && position.Row < GridSize);
@@ -116,15 +111,19 @@ internal class Singles(int[,] cells, BitArray[,] candidates)
         return cells[position.Row, position.Column]==Undefined;
     }
     
-    private void SetValue(out bool valueModified, Position position)
+    private void SetValue(Position position, out bool valueModified)
     {
         valueModified = false;
 
         var index = 1;
-        foreach (var pv in candidates[position.Row,position.Column])
+        foreach (var pv in candidates[position.Row, position.Column])
         {
-            if ((bool)pv) 
+            if ((bool)pv)
+            {
+                candidates[position.Row, position.Column][index-1] = false;
                 break;
+            }
+
             index++;
         }
         

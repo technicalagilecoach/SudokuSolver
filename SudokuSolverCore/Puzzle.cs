@@ -27,11 +27,6 @@ public class Puzzle
         return Cells[position.Row, position.Column];
     }
 
-    public void SetValue(Position position, int value)
-    {
-        Cells[position.Row, position.Column] = value;
-    }
-
     public void SetCandidates(Position position, BitArray candidates)
     {
         Candidates[position.Row, position.Column] = candidates;
@@ -45,7 +40,7 @@ public class Puzzle
         {
             var value = rows[position.Row][position.Column].ToString();
             var v = value == " " ? Undefined : int.Parse(value);
-            SetValue(position, v);
+            Cells[position.Row, position.Column] = v;
         });
 
         ForEachCell(position =>
