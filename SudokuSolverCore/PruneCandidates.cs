@@ -7,33 +7,46 @@ public class PruneCandidates(Puzzle puzzle) : Strategy(puzzle)
 {
     public bool Handle()
     {
-        ForEachCell(RemoveCandidatesBasedOnSingle);
-        return false;
+        var candidatesModified = false;
+        
+        ForEachCell(position => RemoveCandidatesBasedOnFixedValues(position, ref candidatesModified));
+        
+        return candidatesModified;
     }
 
-    private void RemoveCandidatesBasedOnSingle(Position position)
+    private void RemoveCandidatesBasedOnFixedValues(Position position, ref bool candidatesModified)
     {
         if (IsUndefined(position)) 
             return;
 
+        bool modified = candidatesModified;
+        
         ForEachCellInRowExcept(position.Column, column =>
         {
-            RemoveCandidate(position, Candidates[position.Row, column]);
+            RemoveCandidate(position, Candidates[position.Row, column], out modified);
         });
         ForEachCellInColumnExcept(position.Row, row =>
         {
-            RemoveCandidate(position, Candidates[row, position.Column]);
+            RemoveCandidate(position, Candidates[row, position.Column], out modified);
         });
         ForEachCellInBoxExcept(position, tuple =>
         {
-            RemoveCandidate(position, Candidates[tuple.Row,tuple.Column]);
+            RemoveCandidate(position, Candidates[tuple.Row,tuple.Column], out modified);
         });
+        
+        candidatesModified = candidatesModified || modified;
     }
 
-    private void RemoveCandidate(Position position, BitArray digits)
+    private void RemoveCandidate(Position position, BitArray digits, out bool candidatesModified)
     {
-        var digit = Cells[position.Row, position.Column];  
-        digits[digit-1] = false;
+        var digit = Cells[position.Row, position.Column];
+
+        candidatesModified = false;
+        if (digits[digit - 1])
+        {
+            digits[digit - 1] = false;
+            candidatesModified = true;
+        }
     }
     
 }
