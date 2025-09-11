@@ -28,9 +28,9 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);
         }
         
-        foreach (var region in AllRegions)
+        foreach (var box in AllBoxes)
         {
-            var allCellsOfInterest = GetIndicesForRegion(region);
+            var allCellsOfInterest = GetIndicesForBox(box);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
             
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);

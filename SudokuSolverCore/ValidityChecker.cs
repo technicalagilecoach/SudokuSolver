@@ -23,7 +23,7 @@ internal static class ValidityChecker
         if (!DistinctValuesInColumns(cells))
             return false;
         
-        if (!DistinctValuesInRegions(cells))
+        if (!DistinctValuesInBoxes(cells))
             return false;
         
         return true;
@@ -82,11 +82,11 @@ internal static class ValidityChecker
         return true;
     }
 
-    private static bool DistinctValuesInRegions(int[,] cells)
+    private static bool DistinctValuesInBoxes(int[,] cells)
     {
-        foreach (var region in AllRegions)
+        foreach (var box in AllBoxes)
         {
-            var indices = GetIndicesForRegion(region);
+            var indices = GetIndicesForBox(box);
 
             var values = new SortedSet<int>();
             

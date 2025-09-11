@@ -26,9 +26,9 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, valueModified, allCellsOfInterest);
         }
         
-        foreach (var region in AllRegions)
+        foreach (var box in AllBoxes)
         {
-            var allCellsOfInterest = GetIndicesForRegion(region);
+            var allCellsOfInterest = GetIndicesForBox(box);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
             
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, valueModified, allCellsOfInterest);

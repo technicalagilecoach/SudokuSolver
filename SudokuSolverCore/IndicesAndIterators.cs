@@ -28,27 +28,27 @@ public static class IndicesAndIterators
         }
     }
     
-    public static void ForEachCellInRegionExcept(Position position, Action<Position> action)
+    public static void ForEachCellInBoxExcept(Position position, Action<Position> action)
     {
-        foreach (var p in GetIndicesForRegion(GetRegionIndex(position)))
+        foreach (var p in GetIndicesForBox(GetBoxIndex(position)))
         {
             if (p.Row != position.Row || p.Column != position.Column)
                 action(p);
         }
     }
 
-    public static int GetRegionIndex(Position position)
+    public static int GetBoxIndex(Position position)
     {
-        var regionLine = position.Row / Puzzle.RegionSize;
-        var regionColumn = position.Column / Puzzle.RegionSize;
+        var boxLine = position.Row / Puzzle.BoxSize;
+        var boxColumn = position.Column / Puzzle.BoxSize;
             
-        return regionLine * Puzzle.RegionSize + regionColumn;
+        return boxLine * Puzzle.BoxSize + boxColumn;
     }
 
-    public static Position GetRegionCoordinates(int region)
+    public static Position GetBoxCoordinates(int box)
     {
-        var row = region / 3 * 3;//+1;
-        var column = region % 3 * 3;//+1;
+        var row = box / 3 * 3;//+1;
+        var column = box % 3 * 3;//+1;
         return new Position(row, column);
     }
 
@@ -87,28 +87,28 @@ public static class IndicesAndIterators
         return columnIndices;
     }
     
-    public static List<Position> GetIndicesForRegion(int index)
+    public static List<Position> GetIndicesForBox(int index)
     {
-        var coordinates = GetRegionCoordinates(index);
+        var coordinates = GetBoxCoordinates(index);
             
-        var region = new List<Position>();
+        var box = new List<Position>();
             
-        var regionLine = coordinates.Row / Puzzle.RegionSize;
-        var regionColumn = coordinates.Column / Puzzle.RegionSize;
+        var boxLine = coordinates.Row / Puzzle.BoxSize;
+        var boxColumn = coordinates.Column / Puzzle.BoxSize;
             
-        var lineOffset = regionLine * Puzzle.RegionSize;
-        var columnOffset = regionColumn * Puzzle.RegionSize;
+        var lineOffset = boxLine * Puzzle.BoxSize;
+        var columnOffset = boxColumn * Puzzle.BoxSize;
 
-        var indices = Enumerable.Range(0, Puzzle.RegionSize).ToList();
+        var indices = Enumerable.Range(0, Puzzle.BoxSize).ToList();
         foreach (var l in indices)
         {
             foreach (var c in indices)
             {
-                region.Add(new Position(lineOffset + l, columnOffset + c));
+                box.Add(new Position(lineOffset + l, columnOffset + c));
             }
         }
 
-        return region;
+        return box;
     }
 
     public static List<(Position, Position)>  GetIndicesForDistinctPairs(List<Position> indices)

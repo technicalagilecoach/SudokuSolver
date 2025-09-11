@@ -6,12 +6,12 @@ namespace SudokuSolverCore;
 public class Puzzle
 {
     public const int GridSize = 9;
-    public const int RegionSize = 3;
+    public const int BoxSize = 3;
     public const int Undefined = 0;
 
     internal static readonly IEnumerable<int> AllColumns = Enumerable.Range(0, GridSize);
     internal static readonly IEnumerable<int> AllRows = Enumerable.Range(0, GridSize);
-    internal static readonly IEnumerable<int> AllRegions = Enumerable.Range(0, GridSize);
+    internal static readonly IEnumerable<int> AllBoxes = Enumerable.Range(0, GridSize);
     internal static readonly IEnumerable<int> AllDigits = Enumerable.Range(0, GridSize);
 
     public int[,] Cells { get; } = new int[GridSize, GridSize];

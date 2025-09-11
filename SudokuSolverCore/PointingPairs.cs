@@ -9,20 +9,20 @@ public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
     {
         var valueModified = false;
 
-        foreach (var region in AllRegions)
+        foreach (var box in AllBoxes)
         {
-            var positions = GetIndicesForRegion(region);
+            var positions = GetIndicesForBox(box);
             
-            HandlePointingPairsInRows(positions, region, ref valueModified);
-            HandlePointingPairsInColumns(positions, region, ref valueModified);
+            HandlePointingPairsInRows(positions, box, ref valueModified);
+            HandlePointingPairsInColumns(positions, box, ref valueModified);
         }
 
         return valueModified;
     }
 
-    private void HandlePointingPairsInRows(List<Position> positions, int region, ref bool valueModified)
+    private void HandlePointingPairsInRows(List<Position> positions, int box, ref bool valueModified)
     {
-        var valuesRows = new int[RegionSize,GridSize];
+        var valuesRows = new int[BoxSize,GridSize];
 
         var encounteredColumns = new HashSet<int>();
             
@@ -54,7 +54,7 @@ public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
             if (result)
             {
                 var positiveIndex = valuesRows[0, digit] > 0 ? 0 : (valuesRows[1, digit] > 0 ? 1 : 2);
-                var pos = GetRegionCoordinates(region);
+                var pos = GetBoxCoordinates(box);
                 pointingPairsInRows.Add((digit, pos.Row+positiveIndex));                    
             }
         }
@@ -72,9 +72,9 @@ public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
         }
     }
 
-    private void HandlePointingPairsInColumns(List<Position> positions, int region, ref bool valueModified)
+    private void HandlePointingPairsInColumns(List<Position> positions, int box, ref bool valueModified)
     {
-        var valuesColumns = new int[RegionSize,GridSize];
+        var valuesColumns = new int[BoxSize,GridSize];
             
         var encounteredRows = new HashSet<int>();
             
@@ -106,7 +106,7 @@ public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
             if (result)
             {
                 var positiveIndex = valuesColumns[0, digit] > 0 ? 0 : (valuesColumns[1, digit] > 0 ? 1 : 2);
-                var pos = GetRegionCoordinates(region);
+                var pos = GetBoxCoordinates(box);
                 pointingPairsInColumns.Add((digit, pos.Column+positiveIndex));                    
             }
         }

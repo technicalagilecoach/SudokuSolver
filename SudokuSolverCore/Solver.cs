@@ -113,7 +113,7 @@ public class Solver(Puzzle puzzle)
         {
             RemoveCandidate(position, Candidates[row, position.Column]);
         });
-        ForEachCellInRegionExcept(position, tuple =>
+        ForEachCellInBoxExcept(position, tuple =>
         {
             RemoveCandidate(position, Candidates[tuple.Row,tuple.Column]);
         });

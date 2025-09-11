@@ -9,10 +9,10 @@ public class ConversionTests
     [DataRow(1, 1, 0)]
     [DataRow(2, 4, 1)]
     [DataRow(8, 8, 8)]
-    public void RegionIndexForCoordinatesTest(int row, int column, int expectedRegionIndex)
+    public void BoxIndexForCoordinatesTest(int row, int column, int expectedBoxIndex)
     {
-        var result = IndicesAndIterators.GetRegionIndex(new Position(row, column));
-        Assert.AreEqual(expectedRegionIndex, result);
+        var result = IndicesAndIterators.GetBoxIndex(new Position(row, column));
+        Assert.AreEqual(expectedBoxIndex, result);
     }
         
     [TestMethod]
@@ -25,9 +25,9 @@ public class ConversionTests
     [DataRow(6, 6, 0)]
     [DataRow(7, 6, 3)]
     [DataRow(8, 6, 6)]
-    public void CoordinatesForRegionIndexTest(int region, int expectedRow, int expectedColumn)
+    public void CoordinatesForBoxIndexTest(int box, int expectedRow, int expectedColumn)
     {
-        var result = IndicesAndIterators.GetRegionCoordinates(region);
+        var result = IndicesAndIterators.GetBoxCoordinates(box);
 
         Assert.AreEqual(expectedRow, result.Row);
         Assert.AreEqual(expectedColumn, result.Column);

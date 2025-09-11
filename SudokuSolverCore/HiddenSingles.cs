@@ -25,9 +25,9 @@ internal class HiddenSingles(Puzzle puzzle) : Strategy(puzzle)
             valueModified = UpdateValues(positions, values, valueModified);
         } 
         
-        foreach (var region in AllRegions)
+        foreach (var box in AllBoxes)
         {
-            var positions = GetIndicesForRegion(region);
+            var positions = GetIndicesForBox(box);
             
             var values = CountDigitsInArea(positions);
             valueModified = UpdateValues(positions, values, valueModified);
