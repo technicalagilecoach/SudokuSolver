@@ -72,12 +72,12 @@ public class Solver(Puzzle puzzle)
     
     private bool NakedSingles()
     {
-        return new Singles(puzzle).HandleNakedSingles();
+        return new NakedSingles(puzzle).Handle();
     }
 
     private bool HiddenSingles()
     {
-        return new Singles(puzzle).HandleHiddenSingles();
+        return new HiddenSingles(puzzle).Handle();
     }
         
     private bool NakedPairs()
