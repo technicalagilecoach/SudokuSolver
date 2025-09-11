@@ -9,6 +9,14 @@ public static class IndicesAndIterators
             action(pos);
         }
     }
+    
+    public static void ForEachCellInArea(List<Position> positions, Action<Position> action)
+    {
+        foreach (var position in positions)
+        {
+            action(position);
+        }
+    }
 
     public static void ForEachCellInColumnExcept(int row, Action<int> action)
     {

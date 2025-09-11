@@ -12,62 +12,40 @@ internal class HiddenSingles(Puzzle puzzle) : Strategy(puzzle)
         foreach (var row in AllRows)
         {
             var positions = GetIndicesForRow(row);
-          
-            var values = CountDigitsInArea(positions);
-            valueModified = UpdateValues(positions, values, valueModified);
+            var distribution = CountDigitDistributionInArea(positions);
+            ForEachCellInArea(positions, position => FixSingularValue(distribution, out valueModified, position));
         }     
         
         foreach (var column in AllColumns)
         {
             var positions = GetIndicesForColumn(column);
-            
-            var values = CountDigitsInArea(positions);
-            valueModified = UpdateValues(positions, values, valueModified);
+            var distribution = CountDigitDistributionInArea(positions);
+            ForEachCellInArea(positions, position => FixSingularValue(distribution, out valueModified, position));
         } 
         
         foreach (var box in AllBoxes)
         {
             var positions = GetIndicesForBox(box);
-            
-            var values = CountDigitsInArea(positions);
-            valueModified = UpdateValues(positions, values, valueModified);
+            var distribution = CountDigitDistributionInArea(positions);
+            ForEachCellInArea(positions, position => FixSingularValue(distribution, out valueModified, position));
         }
 
         return valueModified;
     }
 
-    private bool UpdateValues(List<Position> positions, int[] values, bool valueModified)
+    private void FixSingularValue(int[] values, out bool valueModified, Position position)
     {
-        foreach (var position in positions)
+        foreach (var digit in AllDigits)
         {
-            foreach (var digit in AllDigits)
+            var isSingularDigit = values[digit] == 1;
+            if (IsUndefined(position) && isSingularDigit && IsCandidate(position, digit))
             {
-                if (IsUndefined(position) && values[digit] == 1 && GetCandidates(position)[digit])
-                {
-                    Cells[position.Row, position.Column] = digit + 1;
-                    valueModified = true;
-                    break;
-                }
+                SetValue(position, digit);
+                valueModified = true;
+                break;
             }
         }
 
-        return valueModified;
-    }
-
-    private int[] CountDigitsInArea(List<Position> positions)
-    {
-        var values = new int[GridSize];
-        
-        foreach (var position in positions)
-        {
-            var value = GetCandidates(position);
-            foreach (var digit in AllDigits)
-            {
-                if (value[digit])
-                    values[digit]++;
-            }
-        }
-        
-        return values;
+        valueModified = false;
     }
 }

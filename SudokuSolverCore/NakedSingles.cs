@@ -24,7 +24,7 @@ public class NakedSingles(Puzzle puzzle) : Strategy(puzzle)
         if (CountCandidates(position) != 1)
             return;
 
-        SetValue(position, GetDigitOfFirstCandidate(position));
+        SetValue(position, GetIndexOfFirstCandidate(position));
 
         count++;
     }
