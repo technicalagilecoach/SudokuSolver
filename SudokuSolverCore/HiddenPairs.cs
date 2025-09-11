@@ -15,7 +15,7 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
             var allCellsOfInterest = GetIndicesForRow(row);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
 
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, valueModified, allCellsOfInterest);
+            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, valueModified);
         }
         
         foreach (var column in AllColumns)
@@ -23,7 +23,7 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
             var allCellsOfInterest = GetIndicesForColumn(column);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
             
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, valueModified, allCellsOfInterest);
+            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, valueModified);
         }
         
         foreach (var box in AllBoxes)
@@ -31,13 +31,14 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
             var allCellsOfInterest = GetIndicesForBox(box);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
             
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, valueModified, allCellsOfInterest);
+            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, valueModified);
         }
         
         return valueModified;
     }
 
-    private bool FindTwinsAndEliminateThemFromPotentialValues(List<(Position, Position)> allPairsOfCells, bool valueModified, List<Position> allCellsOfInterest)
+    private bool FindTwinsAndEliminateThemFromPotentialValues(List<(Position, Position)> allPairsOfCells,
+        List<Position> allCellsOfInterest, bool valueModified)
     {
         var digits = new int[GridSize];
 

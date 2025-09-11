@@ -9,7 +9,9 @@ public class PruneCandidates(Puzzle puzzle) : Strategy(puzzle)
     {
         var candidatesModified = false;
         
-        ForEachCell(position => RemoveCandidatesBasedOnFixedValues(position, ref candidatesModified));
+        ForEachCell(position => 
+            RemoveCandidatesBasedOnFixedValues(position, ref candidatesModified)
+        );
         
         return candidatesModified;
     }

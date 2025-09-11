@@ -10,13 +10,13 @@ public class NakedSingles(Puzzle puzzle) : Strategy(puzzle)
             
         ForEachCell(position =>
         {
-            SelectUniqueValueForCell(ref valueModified, position);
+            SelectUniqueValueForCell(position, ref valueModified);
         });
 
         return valueModified;
     }
     
-    private void SelectUniqueValueForCell(ref bool valueModified, Position position)
+    private void SelectUniqueValueForCell(Position position, ref bool valueModified)
     {
         if (!IsUndefined(position)) 
             return;

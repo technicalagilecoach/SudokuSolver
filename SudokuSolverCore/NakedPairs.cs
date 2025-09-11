@@ -17,7 +17,7 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
             var allCellsOfInterest = GetIndicesForRow(row);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
 
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);
+            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, allCellsOfInterest, undefinedCells, valueModified);
         }
         
         foreach (var column in AllColumns)
@@ -25,7 +25,7 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
             var allCellsOfInterest = GetIndicesForColumn(column);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
             
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);
+            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, allCellsOfInterest, undefinedCells, valueModified);
         }
         
         foreach (var box in AllBoxes)
@@ -33,14 +33,16 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
             var allCellsOfInterest = GetIndicesForBox(box);
             var allPairsOfCells = GetIndicesForDistinctPairs(allCellsOfInterest);
             
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, valueModified, allCellsOfInterest, undefinedCells);
+            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, allCellsOfInterest, undefinedCells, valueModified);
         }
         
         return valueModified;
     }
 
-    private bool FindTwinsAndEliminateThemFromPotentialValues(List<(Position, Position)> allPairsOfCells, bool[,] potentialTwins,
-        bool valueModified, List<Position> allCellsOfInterest, bool[,] undefinedCells)
+    private bool FindTwinsAndEliminateThemFromPotentialValues(List<(Position, Position)> allPairsOfCells,
+        bool[,] potentialTwins,
+        List<Position> allCellsOfInterest, bool[,] undefinedCells,
+        bool valueModified)
     {
         foreach (var pairOfCells in allPairsOfCells)
         {
