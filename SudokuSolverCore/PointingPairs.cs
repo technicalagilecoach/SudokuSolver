@@ -4,8 +4,7 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-public class PointingPairs(int[,] cells, BitArray[,] candidates)
-{
+public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
     public bool Handle()
     {
         var valueModified = false;
@@ -34,11 +33,11 @@ public class PointingPairs(int[,] cells, BitArray[,] candidates)
         
             foreach (var position in rowPositions)
             {
-                if (cells[position.Row, position.Column] == Undefined)
+                if (Cells[position.Row, position.Column] == Undefined)
                 {
                     encounteredColumns.Add(position.Column);
                         
-                    var value = candidates[position.Row, position.Column];
+                    var value = Candidates[position.Row, position.Column];
                     foreach (var digit in AllDigits)
                     {
                         if (value[digit])
@@ -64,9 +63,9 @@ public class PointingPairs(int[,] cells, BitArray[,] candidates)
         {
             foreach (var column in AllColumns)
             {
-                if (cells[row, column] == Undefined && !encounteredColumns.Contains(column) && candidates[row,column][digit])
+                if (Cells[row, column] == Undefined && !encounteredColumns.Contains(column) && Candidates[row,column][digit])
                 {
-                    candidates[row,column][digit] = false;
+                    Candidates[row,column][digit] = false;
                     valueModified = true;
                 }
             }
@@ -86,11 +85,11 @@ public class PointingPairs(int[,] cells, BitArray[,] candidates)
         
             foreach (var position in columnPositions)
             {
-                if (cells[position.Row, position.Column] == Undefined)
+                if (Cells[position.Row, position.Column] == Undefined)
                 {
                     encounteredRows.Add(position.Row);
                     
-                    var value = candidates[position.Row, position.Column];
+                    var value = Candidates[position.Row, position.Column];
                     foreach (var digit in AllDigits)
                     {
                         if (value[digit])
@@ -116,9 +115,9 @@ public class PointingPairs(int[,] cells, BitArray[,] candidates)
         {
             foreach (var row in AllRows)
             {
-                if (cells[row, column] == Undefined && !encounteredRows.Contains(row) && candidates[row,column][digit])
+                if (Cells[row, column] == Undefined && !encounteredRows.Contains(row) && Candidates[row,column][digit])
                 {
-                    candidates[row,column][digit] = false;
+                    Candidates[row,column][digit] = false;
                     valueModified = true;
                 }
             }

@@ -4,7 +4,7 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class HiddenPairs(int[,] cells, BitArray[,] candidates)
+internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
 {
     public bool Handle()
     {
@@ -47,7 +47,7 @@ internal class HiddenPairs(int[,] cells, BitArray[,] candidates)
             {
                 foreach (var digit in AllDigits)
                 {
-                    if (candidates[cell.Row, cell.Column][digit])
+                    if (Candidates[cell.Row, cell.Column][digit])
                         digits[digit]++;
                 }
             }
@@ -60,8 +60,8 @@ internal class HiddenPairs(int[,] cells, BitArray[,] candidates)
         foreach (var pair in allPairsOfCells)
         {
             BitArray result = new BitArray(GridSize,true);
-            var c1 = candidates[pair.Item1.Row, pair.Item1.Column];
-            var c2 = candidates[pair.Item2.Row, pair.Item2.Column];
+            var c1 = Candidates[pair.Item1.Row, pair.Item1.Column];
+            var c2 = Candidates[pair.Item2.Row, pair.Item2.Column];
             
             result.And(c1).And(c2).And(candidatesForPairs);
 
@@ -86,9 +86,9 @@ internal class HiddenPairs(int[,] cells, BitArray[,] candidates)
             {
                 if (IsUndefined(cell) && cell != twin.Item1 && cell != twin.Item2)
                 {
-                    var old = candidates[cell.Row, cell.Column];
-                    candidates[cell.Row, cell.Column].And(filter);
-                    valueModified = !candidates[cell.Row, cell.Column].Equals(old);
+                    var old = Candidates[cell.Row, cell.Column];
+                    Candidates[cell.Row, cell.Column].And(filter);
+                    valueModified = !Candidates[cell.Row, cell.Column].Equals(old);
                 }
             }
         }
@@ -98,6 +98,6 @@ internal class HiddenPairs(int[,] cells, BitArray[,] candidates)
 
     private bool IsUndefined(Position position)
     {
-        return cells[position.Row, position.Column] == Undefined;
+        return Cells[position.Row, position.Column] == Undefined;
     }
 }

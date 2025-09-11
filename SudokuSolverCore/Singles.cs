@@ -5,7 +5,7 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class Singles(int[,] cells, BitArray[,] candidates)
+internal class Singles(Puzzle puzzle) : Strategy(puzzle)
 {
     public bool HandleNakedSingles()
     {
@@ -21,13 +21,13 @@ internal class Singles(int[,] cells, BitArray[,] candidates)
     
     private void SelectUniqueValueForCell(ref bool valueModified, Position position)
     {
-        var currentCell = cells[position.Row, position.Column];
+        var currentCell = Cells[position.Row, position.Column];
             
         var valueFixed = currentCell != Undefined;
         if (valueFixed) 
             return;
 
-        if (CountCandidates(position, candidates) != 1)
+        if (CountCandidates(position, Candidates) != 1)
             return;
             
         SetValue(position, out valueModified);            
@@ -72,7 +72,7 @@ internal class Singles(int[,] cells, BitArray[,] candidates)
             {
                 if (IsUndefined(position) && values[digit] == 1 && Candidate(position)[digit])
                 {
-                    cells[position.Row, position.Column] = digit + 1;
+                    Cells[position.Row, position.Column] = digit + 1;
                     valueModified = true;
                     break;
                 }
@@ -103,12 +103,12 @@ internal class Singles(int[,] cells, BitArray[,] candidates)
     {
         Debug.Assert(position.Row >= 0 && position.Row < GridSize);
         Debug.Assert(position.Column >= 0 && position.Column < GridSize);
-        return candidates[position.Row, position.Column];
+        return Candidates[position.Row, position.Column];
     }
 
     private bool IsUndefined(Position position)
     {
-        return cells[position.Row, position.Column]==Undefined;
+        return Cells[position.Row, position.Column]==Undefined;
     }
     
     private void SetValue(Position position, out bool valueModified)
@@ -116,18 +116,18 @@ internal class Singles(int[,] cells, BitArray[,] candidates)
         valueModified = false;
 
         var index = 1;
-        foreach (var pv in candidates[position.Row, position.Column])
+        foreach (var pv in Candidates[position.Row, position.Column])
         {
             if ((bool)pv)
             {
-                candidates[position.Row, position.Column][index-1] = false;
+                Candidates[position.Row, position.Column][index-1] = false;
                 break;
             }
 
             index++;
         }
         
-        cells[position.Row,position.Column] = index;
+        Cells[position.Row,position.Column] = index;
         valueModified = true;
     }
 }

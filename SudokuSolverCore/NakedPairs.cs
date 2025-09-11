@@ -4,8 +4,7 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class NakedPairs(int[,] cells, BitArray[,] candidates)
-{
+internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
     public bool Handle()
     {
         var valueModified = false;
@@ -85,7 +84,7 @@ internal class NakedPairs(int[,] cells, BitArray[,] candidates)
             
         foreach (var i in AllDigits)
         {
-            if (candidates[pair.Item1.Row, pair.Item1.Column][i] == candidates[pair.Item2.Row, pair.Item2.Column][i]) 
+            if (Candidates[pair.Item1.Row, pair.Item1.Column][i] == Candidates[pair.Item2.Row, pair.Item2.Column][i]) 
                 continue;
                 
             cellsAreEqual = false;
@@ -99,9 +98,9 @@ internal class NakedPairs(int[,] cells, BitArray[,] candidates)
     {
         foreach (var i in AllDigits)
         {
-            if (candidates[pos2.Row, pos2.Column][i] && candidates[pos1.Row, pos1.Column][i])
+            if (Candidates[pos2.Row, pos2.Column][i] && Candidates[pos1.Row, pos1.Column][i])
             {
-                candidates[pos1.Row, pos1.Column][i] = false;
+                Candidates[pos1.Row, pos1.Column][i] = false;
                 actualChange = true;
             }
         }
@@ -117,7 +116,7 @@ internal class NakedPairs(int[,] cells, BitArray[,] candidates)
             if (!undefinedCells[position.Row, position.Column]) 
                 return;
             
-            potentialTwins[position.Row, position.Column] = CountCandidates(position, candidates) == 2;
+            potentialTwins[position.Row, position.Column] = CountCandidates(position, Candidates) == 2;
         });
         return potentialTwins;
     }
@@ -136,6 +135,6 @@ internal class NakedPairs(int[,] cells, BitArray[,] candidates)
 
     private bool IsUndefined(Position position)
     {
-        return cells[position.Row, position.Column] == Undefined;
+        return Cells[position.Row, position.Column] == Undefined;
     }
 }

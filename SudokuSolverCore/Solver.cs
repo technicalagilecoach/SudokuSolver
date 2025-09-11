@@ -72,27 +72,27 @@ public class Solver(Puzzle puzzle)
     
     private bool NakedSingles()
     {
-        return new Singles(Cells, Candidates).HandleNakedSingles();
+        return new Singles(puzzle).HandleNakedSingles();
     }
 
     private bool HiddenSingles()
     {
-        return new Singles(Cells, Candidates).HandleHiddenSingles();
+        return new Singles(puzzle).HandleHiddenSingles();
     }
         
     private bool NakedPairs()
     {
-        return new NakedPairs(Cells, Candidates).Handle();
+        return new NakedPairs(puzzle).Handle();
     }
      
     private bool HiddenPairs()
     {
-        return new HiddenPairs(Cells, Candidates).Handle();
+        return new HiddenPairs(puzzle).Handle();
     }
     
     private bool PointingPairs()
     {
-        return new PointingPairs(Cells, Candidates).Handle();
+        return new PointingPairs(puzzle).Handle();
     }
     
     private void PruneCandidates()
