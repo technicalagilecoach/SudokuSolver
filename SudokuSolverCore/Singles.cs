@@ -21,10 +21,7 @@ internal class Singles(Puzzle puzzle) : Strategy(puzzle)
     
     private void SelectUniqueValueForCell(ref bool valueModified, Position position)
     {
-        var currentCell = Cells[position.Row, position.Column];
-            
-        var valueFixed = currentCell != Undefined;
-        if (valueFixed) 
+        if (!IsUndefined(position)) 
             return;
 
         if (CountCandidates(position, Candidates) != 1)
@@ -70,7 +67,7 @@ internal class Singles(Puzzle puzzle) : Strategy(puzzle)
         {
             foreach (var digit in AllDigits)
             {
-                if (IsUndefined(position) && values[digit] == 1 && Candidate(position)[digit])
+                if (IsUndefined(position) && values[digit] == 1 && GetCandidates(position)[digit])
                 {
                     Cells[position.Row, position.Column] = digit + 1;
                     valueModified = true;
@@ -88,7 +85,7 @@ internal class Singles(Puzzle puzzle) : Strategy(puzzle)
         
         foreach (var position in positions)
         {
-            var value = Candidate(position);
+            var value = GetCandidates(position);
             foreach (var digit in AllDigits)
             {
                 if (value[digit])
@@ -97,11 +94,6 @@ internal class Singles(Puzzle puzzle) : Strategy(puzzle)
         }
         
         return values;
-    }
-
-    private BitArray Candidate(Position position)
-    {
-        return Candidates[position.Row, position.Column];
     }
     
     private void SetValue(Position position, out bool valueModified)

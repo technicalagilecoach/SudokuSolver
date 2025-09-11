@@ -1,3 +1,4 @@
+using System.Collections;
 using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Puzzle;
 
@@ -36,7 +37,7 @@ public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
                 {
                     encounteredColumns.Add(position.Column);
                         
-                    var value = Candidates[position.Row, position.Column];
+                    var value = GetCandidates(position);
                     foreach (var digit in AllDigits)
                     {
                         if (value[digit])
@@ -84,11 +85,11 @@ public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
         
             foreach (var position in columnPositions)
             {
-                if (Cells[position.Row, position.Column] == Undefined)
+                if (IsUndefined(position))
                 {
                     encounteredRows.Add(position.Row);
                     
-                    var value = Candidates[position.Row, position.Column];
+                    var value = GetCandidates(position);
                     foreach (var digit in AllDigits)
                     {
                         if (value[digit])
@@ -114,7 +115,7 @@ public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
         {
             foreach (var row in AllRows)
             {
-                if (Cells[row, column] == Undefined && !encounteredRows.Contains(row) && Candidates[row,column][digit])
+                if (IsUndefined(row, column) && !encounteredRows.Contains(row) && Candidates[row,column][digit])
                 {
                     Candidates[row,column][digit] = false;
                     valueModified = true;
@@ -122,6 +123,7 @@ public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
             }
         }
     }
+
 
     private static bool OnlyOnePositive(int a, int b, int c)
     {
