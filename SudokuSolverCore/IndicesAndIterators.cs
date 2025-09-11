@@ -12,7 +12,7 @@ public static class IndicesAndIterators
 
     public static void ForEachCellInColumnExcept(int row, Action<int> action)
     {
-        foreach (var r in Puzzle.AllDigits)
+        foreach (var r in Puzzle.AllRows)
         {
             if (r!=row)
                 action(r);
@@ -21,7 +21,7 @@ public static class IndicesAndIterators
 
     public static void ForEachCellInRowExcept(int column, Action<int> action)
     {
-        foreach (var c in Puzzle.AllDigits)
+        foreach (var c in Puzzle.AllColumns)
         {
             if (c != column)
                 action(c);

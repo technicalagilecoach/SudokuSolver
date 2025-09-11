@@ -23,8 +23,7 @@ public class Solver(Puzzle puzzle)
         {
             _valueModified = false;
             
-            PruneCandidates();
-            
+            Execute(PruneCandidates);
             Execute(NakedSingles);
             Execute(HiddenSingles);
             Execute(NakedPairs);
@@ -47,11 +46,11 @@ public class Solver(Puzzle puzzle)
 
     private void CheckConsistency()
     {
-        if (IsInConsistent())
+        if (IsInconsistent())
             PrintDebugOutput(puzzle);
     }
 
-    private bool IsInConsistent()
+    private bool IsInconsistent()
     {
         return _performChecks && !IsSolutionCorrect(puzzle.Cells);
     }
@@ -60,14 +59,19 @@ public class Solver(Puzzle puzzle)
     {
         if (!_valueModified)
         {
-            var before = IsInConsistent();
+            var before = IsInconsistent();
             _valueModified = fun();
-            var after = IsInConsistent();
+            var after = IsInconsistent();
             var gotWorse = (!before)&&after;
             if (gotWorse)
                 PrintDebugOutput(puzzle);
             _executedStrategies.Add((fun.Method.Name, gotWorse));
         }
+    }
+    
+    private bool PruneCandidates()
+    {
+        return new PruneCandidates(puzzle).Handle();
     }
     
     private bool NakedSingles()
@@ -93,35 +97,5 @@ public class Solver(Puzzle puzzle)
     private bool PointingPairs()
     {
         return new PointingPairs(puzzle).Handle();
-    }
-    
-    private void PruneCandidates()
-    {
-        ForEachCell(RemoveCandidatesBasedOnSingle);
-    }
-
-    private void RemoveCandidatesBasedOnSingle(Position position)
-    {
-        if (puzzle.IsUndefined(position)) 
-            return;
-
-        ForEachCellInRowExcept(position.Column, column =>
-        {
-            RemoveCandidate(position, Candidates[position.Row, column]);
-        });
-        ForEachCellInColumnExcept(position.Row, row =>
-        {
-            RemoveCandidate(position, Candidates[row, position.Column]);
-        });
-        ForEachCellInBoxExcept(position, tuple =>
-        {
-            RemoveCandidate(position, Candidates[tuple.Row,tuple.Column]);
-        });
-    }
-
-    private void RemoveCandidate(Position position, BitArray digits)
-    {
-        var digit = Cells[position.Row, position.Column];  
-        digits[digit-1] = false;
     }
 }

@@ -1,13 +1,14 @@
 # Notes
 
 ## To Do
-- calculate indices only once
 - extract duplicate code into common helper functions
 - check if existing strategies work as intended/identify test puzzles where the strategy is needed
 - implement more strategies
   - hidden pairs
   - (naked) triples
   - hidden triples
+- calculate indices only once
+- perform pruning etc. only based on actually changed cells
 - make a nicer equality check for BitArrays than AreEqual
 - try to benefit more from the C# Enumerable class
 
