@@ -16,6 +16,12 @@ public class Strategy(Puzzle puzzle)
     {
         return Cells[position.Row, position.Column]==Puzzle.Undefined;
     }
+
+    protected void SetValue(Position position, int digit)
+    {
+        Cells[position.Row,position.Column] = digit;
+        Candidates[position.Row,position.Column].SetAll(false);
+    }
     
     protected BitArray GetCandidates(Position position)
     {
@@ -33,5 +39,22 @@ public class Strategy(Puzzle puzzle)
         }
 
         return count;
+    }
+    
+    protected int GetDigitOfFirstCandidate(Position position)
+    {
+        var index = 1;
+        foreach (var pv in Candidates[position.Row, position.Column])
+        {
+            if ((bool)pv)
+            {
+                Candidates[position.Row, position.Column][index-1] = false;
+                break;
+            }
+
+            index++;
+        }
+
+        return index;
     }
 }

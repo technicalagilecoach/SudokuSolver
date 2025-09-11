@@ -6,44 +6,26 @@ public class NakedSingles(Puzzle puzzle) : Strategy(puzzle)
 {
     public bool Handle()
     {
-        var valueModified = false;
-            
+        var count = 0;
+        
         ForEachCell(position =>
         {
-            SelectUniqueValueForCell(position, ref valueModified);
+            SelectUniqueValueForCell(position, ref count);
         });
 
-        return valueModified;
+        return count > 0;
     }
     
-    private void SelectUniqueValueForCell(Position position, ref bool valueModified)
+    private void SelectUniqueValueForCell(Position position, ref int count)
     {
         if (!IsUndefined(position)) 
             return;
 
         if (CountCandidates(position) != 1)
             return;
-            
-        SetValue(position, out valueModified);            
-    }
-    
-    private void SetValue(Position position, out bool valueModified)
-    {
-        valueModified = false;
 
-        var index = 1;
-        foreach (var pv in Candidates[position.Row, position.Column])
-        {
-            if ((bool)pv)
-            {
-                Candidates[position.Row, position.Column][index-1] = false;
-                break;
-            }
+        SetValue(position, GetDigitOfFirstCandidate(position));
 
-            index++;
-        }
-        
-        Cells[position.Row,position.Column] = index;
-        valueModified = true;
+        count++;
     }
 }

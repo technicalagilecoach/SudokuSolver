@@ -13,6 +13,7 @@
 - try to benefit more from the C# Enumerable class
 
 ## Done
+- improved check for modification in NakedSingles by counting how many values are set
 - extract common base class for different strategies
 - unify indices (digits from 1 to 9, row/column/box indices 0 to 8)
 - move PotentialValues to a separate class
