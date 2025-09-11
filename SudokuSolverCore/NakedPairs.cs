@@ -132,9 +132,4 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
         
         return undefinedCells;
     }
-
-    private bool IsUndefined(Position position)
-    {
-        return Cells[position.Row, position.Column] == Undefined;
-    }
 }

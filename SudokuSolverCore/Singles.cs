@@ -106,10 +106,7 @@ internal class Singles(Puzzle puzzle) : Strategy(puzzle)
         return Candidates[position.Row, position.Column];
     }
 
-    private bool IsUndefined(Position position)
-    {
-        return Cells[position.Row, position.Column]==Undefined;
-    }
+
     
     private void SetValue(Position position, out bool valueModified)
     {

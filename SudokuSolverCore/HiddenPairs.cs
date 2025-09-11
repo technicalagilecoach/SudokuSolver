@@ -95,9 +95,4 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
 
         return valueModified;
     }
-
-    private bool IsUndefined(Position position)
-    {
-        return Cells[position.Row, position.Column] == Undefined;
-    }
 }
