@@ -101,12 +101,8 @@ internal class Singles(Puzzle puzzle) : Strategy(puzzle)
 
     private BitArray Candidate(Position position)
     {
-        Debug.Assert(position.Row >= 0 && position.Row < GridSize);
-        Debug.Assert(position.Column >= 0 && position.Column < GridSize);
         return Candidates[position.Row, position.Column];
     }
-
-
     
     private void SetValue(Position position, out bool valueModified)
     {
