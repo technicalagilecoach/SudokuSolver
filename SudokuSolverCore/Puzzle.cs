@@ -56,17 +56,4 @@ public class Puzzle
             
         return candidates;
     }
-        
-    public static int CountCandidates(Position position, BitArray[,] candidates)
-    {
-        var count = 0;
-            
-        foreach (bool bit in candidates[position.Row, position.Column])
-        {
-            if (bit)
-                count++;
-        }
-
-        return count;
-    }
 }

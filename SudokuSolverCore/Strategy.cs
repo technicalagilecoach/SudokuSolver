@@ -21,4 +21,17 @@ public class Strategy(Puzzle puzzle)
     {
         return Candidates[position.Row, position.Column];
     }
+
+    protected int CountCandidates(Position position)
+    {
+        var count = 0;
+            
+        foreach (bool bit in Candidates[position.Row, position.Column])
+        {
+            if (bit)
+                count++;
+        }
+
+        return count;
+    }
 }

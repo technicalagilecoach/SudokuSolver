@@ -21,7 +21,7 @@ public class NakedSingles(Puzzle puzzle) : Strategy(puzzle)
         if (!IsUndefined(position)) 
             return;
 
-        if (CountCandidates(position, Candidates) != 1)
+        if (CountCandidates(position) != 1)
             return;
             
         SetValue(position, out valueModified);            

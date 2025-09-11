@@ -116,7 +116,7 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
             if (!undefinedCells[position.Row, position.Column]) 
                 return;
             
-            potentialTwins[position.Row, position.Column] = CountCandidates(position, Candidates) == 2;
+            potentialTwins[position.Row, position.Column] = CountCandidates(position) == 2;
         });
         return potentialTwins;
     }
