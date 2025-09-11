@@ -28,7 +28,7 @@ public class Solver(Puzzle puzzle)
             Execute(NakedSingles);
             Execute(HiddenSingles);
             Execute(NakedPairs);
-            Execute(HiddenPairs);
+            //Execute(HiddenPairs);
             Execute(PointingPairs);
     
             UpdateProtocol();
