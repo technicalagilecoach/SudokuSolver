@@ -27,7 +27,7 @@ internal class Singles(int[,] cells, BitArray[,] candidates)
         if (valueFixed) 
             return;
 
-        if (CountCandidates(candidates, position) != 1)
+        if (CountCandidates(position, candidates) != 1)
             return;
             
         SetValue(position, out valueModified);            

@@ -19,17 +19,7 @@ public class Puzzle
 
     public bool IsUndefined(Position position)
     {
-        return GetValue(position) == Undefined;
-    }
-
-    public int GetValue(Position position)
-    {
-        return Cells[position.Row, position.Column];
-    }
-
-    public void SetCandidates(Position position, BitArray candidates)
-    {
-        Candidates[position.Row, position.Column] = candidates;
+        return Cells[position.Row, position.Column] == Undefined;
     }
 
     public void Init(string puzzle)
@@ -38,14 +28,15 @@ public class Puzzle
 
         ForEachCell(position =>
         {
-            var value = rows[position.Row][position.Column].ToString();
-            var v = value == " " ? Undefined : int.Parse(value);
-            Cells[position.Row, position.Column] = v;
+            var symbol = rows[position.Row][position.Column].ToString();
+            var digit = symbol == " " ? Undefined : int.Parse(symbol);
+            Cells[position.Row, position.Column] = digit;
         });
 
         ForEachCell(position =>
         {
-            SetCandidates(position, InitializeCandidates(position));
+            BitArray candidates = InitializeCandidates(position);
+            Candidates[position.Row, position.Column] = candidates;
         });
     }
 
@@ -66,7 +57,7 @@ public class Puzzle
         return candidates;
     }
         
-    public static int CountCandidates(BitArray[,] candidates, Position position)
+    public static int CountCandidates(Position position, BitArray[,] candidates)
     {
         var count = 0;
             

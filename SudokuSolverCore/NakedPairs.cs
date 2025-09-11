@@ -117,7 +117,7 @@ internal class NakedPairs(int[,] cells, BitArray[,] candidates)
             if (!undefinedCells[position.Row, position.Column]) 
                 return;
             
-            potentialTwins[position.Row, position.Column] = CountCandidates(candidates, position) == 2;
+            potentialTwins[position.Row, position.Column] = CountCandidates(position, candidates) == 2;
         });
         return potentialTwins;
     }
