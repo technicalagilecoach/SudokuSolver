@@ -34,8 +34,8 @@ public class Solver(Puzzle puzzle)
             UpdateProtocol();
         } while (_valueModified);
 
-        if (!Check(puzzle.Cells))
-            PrintDebugOutput(puzzle);
+        //if (!Check(puzzle.Cells))
+        //    PrintDebugOutput(puzzle);
     }
 
     private void UpdateProtocol()
@@ -47,8 +47,8 @@ public class Solver(Puzzle puzzle)
 
     private void CheckConsistency()
     {
-        if (IsInconsistent())
-            PrintDebugOutput(puzzle);
+        //if (IsInconsistent())
+        //    PrintDebugOutput(puzzle);
     }
 
     private bool IsInconsistent()
@@ -64,8 +64,8 @@ public class Solver(Puzzle puzzle)
             _valueModified = fun();
             var after = IsInconsistent();
             var gotWorse = (!before)&&after;
-            if (gotWorse)
-                PrintDebugOutput(puzzle);
+            //if (gotWorse)
+            //    PrintDebugOutput(puzzle);
             _executedStrategies.Add((fun.Method.Name, gotWorse));
         }
     }

@@ -210,12 +210,14 @@ public class SolveSudokuPuzzle
     [Ignore]
     public void SolvePuzzlesFromFile()
     {
-        const string filename = "/home/armin/src/SudokuSolver/0096_sudoku.txt";
-        
+        //const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/0096_sudoku.txt";
+        const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/Just17.txt";
+        //const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/top50000.txt";
+
         List<List<string>> allPuzzles = ReadPuzzlesFromFile(filename);
 
         var solvablePuzzles = new int[allPuzzles.Count];
-        
+
         for (var index = 0; index < allPuzzles.Count; index++)
         {
             var puzzle = allPuzzles[index];
@@ -239,23 +241,45 @@ public class SolveSudokuPuzzle
         using StreamReader reader = new(filename);
 
         string text = reader.ReadToEnd();
-        List<string> allLines = text.Split("\n").ToList();
         
-        int numOfPuzzles = allLines.Count/10;
+        char[] separators = new char[] { '\n', '\r' };
+        List<string> allLines = text.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-        for (int i = 0; i < numOfPuzzles; i++)
+        if (allLines[0].Length == 81)
         {
-            int offset = i*10;
-            List<string> puzzle = new List<string>();
-            
-            for (int j = offset; j < 10+offset; j++)
+            int numOfPuzzles = allLines.Count;
+
+            for (int i = 0; i < numOfPuzzles; i++)
             {
-                if (j%10!=0) {
-                    puzzle.Add(allLines[j]);
+                List<string> puzzle = new List<string>();
+
+                for (int j = 0; j < 9; j++)
+                {
+                    puzzle.Add(allLines[i].Substring(9 * j, 9));
                 }
+
+                allPuzzles.Add(puzzle);
             }
-            
-            allPuzzles.Add(puzzle);
+        }
+        else
+        {
+            int numOfPuzzles = allLines.Count / 10;
+
+            for (int i = 0; i < numOfPuzzles; i++)
+            {
+                int offset = i * 10;
+                List<string> puzzle = new List<string>();
+
+                for (int j = offset; j < 10 + offset; j++)
+                {
+                    if (j % 10 != 0)
+                    {
+                        puzzle.Add(allLines[j]);
+                    }
+                }
+
+                allPuzzles.Add(puzzle);
+            }
         }
 
         return allPuzzles;
