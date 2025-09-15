@@ -5,13 +5,14 @@ namespace SudokuSolverTests;
 [TestClass]
 public class SolveSudokuPuzzle
 {
-    private static string Solve(string puzzle)
+    private static bool Solve(string puzzle, out string solution)
     {
         var sudokuPuzzle = new Puzzle();
         sudokuPuzzle.Init(puzzle);
         Solver solver = new(sudokuPuzzle);
-        solver.Solve();
-        return Printers.Print(sudokuPuzzle);
+        var result = solver.Solve();
+        solution = Printers.Print(sudokuPuzzle);
+        return result;
     }
 
     [TestMethod]
@@ -39,8 +40,8 @@ public class SolveSudokuPuzzle
                                         "238761495\n" +
                                         "567429813\n";
 
-        var result = Solve(easyPuzzle);
-        Assert.IsFalse(result.Contains(' '));
+        var solved = Solve(easyPuzzle, out var result);
+        Assert.IsTrue(solved);
         Assert.AreEqual(expectedSolution, result);
     }
 
@@ -69,8 +70,8 @@ public class SolveSudokuPuzzle
                                         "261789435\n"+
                                         "435162978\n";
 
-        var result = Solve(mediumPuzzle);
-        Assert.IsFalse(result.Contains(' '));
+        var solved = Solve(mediumPuzzle, out var result);
+        Assert.IsTrue(solved);
         Assert.AreEqual(expectedSolution, result);
     }
 
@@ -99,8 +100,8 @@ public class SolveSudokuPuzzle
                                           + "475368129\n"
                                           + "263519784\n";
             
-        var result = Solve(puzzle);
-        Assert.IsFalse(result.Contains(' '));
+        var solved = Solve(puzzle, out var result);
+        Assert.IsTrue(solved);
         Assert.AreEqual(expectedSolution, result);
     }
 
@@ -119,8 +120,8 @@ public class SolveSudokuPuzzle
                                       + "     84  \n"
                                       + "  5 2    \n";
            
-        var result = Solve(puzzle);
-        Assert.IsFalse(result.Contains(' '));
+        var solved = Solve(puzzle, out var result);
+        Assert.IsTrue(solved);
     }
         
         
@@ -138,8 +139,8 @@ public class SolveSudokuPuzzle
                                     + " 4      7\n"
                                     + "  7   3  \n";
            
-        var result = Solve(puzzle);
-        Assert.IsFalse(result.Contains(' '));
+        var solved = Solve(puzzle, out var result);
+        Assert.IsTrue(solved);
     }
         
     [TestMethod]
@@ -156,8 +157,8 @@ public class SolveSudokuPuzzle
                                   + "  4    3 \n"
                                   + "     97  \n";
            
-        var result = Solve(puzzle);
-        Assert.IsFalse(result.Contains(' '));
+        var solved = Solve(puzzle, out var result);
+        Assert.IsTrue(solved);
     }
 
     [TestMethod]
@@ -184,8 +185,8 @@ public class SolveSudokuPuzzle
                                         + "834259671\n"
                                         + "517643892\n";
             
-        var result = Solve(puzzle);
-        Assert.IsFalse(result.Contains(' '));
+        var solved = Solve(puzzle, out var result);
+        Assert.IsTrue(solved);
         Assert.AreEqual(expectedSolution, result);
     }
     
@@ -202,27 +203,27 @@ public class SolveSudokuPuzzle
                               + "820500000\n"
                               + "000000005\n"
                               + "034090710\n";
-        var result = Solve(puzzle);
-        Assert.IsFalse(result.Contains(' '));
+        var solved = Solve(puzzle, out var result);
+        Assert.IsTrue(solved);
     }
 
     [TestMethod]
-    //[Ignore]
+    [Ignore]
     public void SolvePuzzlesFromFile()
     {
-        //const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/0096_sudoku.txt";
-        const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/Just17.txt";
+        const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/0096_sudoku.txt";
+        //const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/Just17.txt";
         //const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/top50000.txt";
 
         List<List<string>> allPuzzles = ReadPuzzlesFromFile(filename);
 
         var unsolvedCells = new int[allPuzzles.Count];
 
-        for (var index = 0; index < 1000 /*allPuzzles.Count*/; index++)
+        for (var index = 0; index < allPuzzles.Count; index++)
         {
             var puzzle = allPuzzles[index];
             var puzzleAsString = string.Join("\n", puzzle);
-            var result = Solve(puzzleAsString);
+            var solved = Solve(puzzleAsString, out var result);
 
             var count = 0;
             foreach (var c in result) {

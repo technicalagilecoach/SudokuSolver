@@ -12,34 +12,53 @@ public class Solver(Puzzle puzzle)
     
     private bool _valueModified = false;
 
+    private readonly bool _generateProtocol = false;
     private List<(string,bool)> _executedStrategies = [];
     private List<List<(string,bool)>> _executionProtocol = [];
-    private readonly bool _performChecks = true;
     private int _round = 0;
+
+    private readonly bool _generateDebugOutput = false;
+    private readonly bool _performChecks = false;
+    private List<string> _puzzleStates = new List<string>();
     
-    public void Solve()
+    
+    public bool Solve()
     {
         do
         {
             _valueModified = false;
+
+            if (_generateDebugOutput)
+                _puzzleStates.Add(Print(puzzle));
             
+            if (_performChecks&&IsInconsistent())
+            {
+                
+            }
+
             Execute(PruneCandidates);
             Execute(NakedSingles);
             
-            Execute(HiddenSingles);
-            Execute(NakedPairs);
+            //Execute(HiddenSingles);
+            //Execute(NakedPairs);
             //Execute(HiddenPairs);
             Execute(PointingPairs);
     
             UpdateProtocol();
         } while (_valueModified);
 
-        //if (!Check(puzzle.Cells))
-        //    PrintDebugOutput(puzzle);
+        var isCorrect = Check(Cells);
+        
+        if (_generateDebugOutput&&!isCorrect)
+            PrintDebugOutput(puzzle);
+        
+        return isCorrect;
     }
 
     private void UpdateProtocol()
     {
+        if (!_generateProtocol) return;
+        
         _executionProtocol.Add(_executedStrategies);
         _executedStrategies = [];
         _round++;
@@ -47,8 +66,8 @@ public class Solver(Puzzle puzzle)
 
     private void CheckConsistency()
     {
-        //if (IsInconsistent())
-        //    PrintDebugOutput(puzzle);
+        if (IsInconsistent())
+            PrintDebugOutput(puzzle);
     }
 
     private bool IsInconsistent()
@@ -60,12 +79,22 @@ public class Solver(Puzzle puzzle)
     {
         if (!_valueModified)
         {
-            var before = IsInconsistent();
+            var before = false;
+            var gotWorse = false;
+            
+            if (_generateProtocol)
+                before = IsInconsistent();
+            
             _valueModified = fun();
-            var after = IsInconsistent();
-            var gotWorse = (!before)&&after;
-            //if (gotWorse)
-            //    PrintDebugOutput(puzzle);
+
+            if (_generateProtocol)
+            {
+                var after  = IsInconsistent();
+                gotWorse = (!before) && after;
+                if (gotWorse)
+                    PrintDebugOutput(puzzle);
+            }
+
             _executedStrategies.Add((fun.Method.Name, gotWorse));
         }
     }
