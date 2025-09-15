@@ -1,18 +1,23 @@
 # Notes
 
 ## To Do
+- improve statistics, error checking and debug support
+  - should be helpful
+  - can be activated on demand (impact on solver performance)
+  - tradeoff with different diagnostic levels
+- clean up code to read in sets of puzzles
 - extract duplicate code into common helper functions
 - check if existing strategies work as intended/identify test puzzles where the strategy is needed
 - implement more strategies
   - hidden pairs
   - (naked) triples
   - hidden triples
-- calculate indices only once
 - perform pruning etc. only based on actually changed cells
 - make a nicer equality check for BitArrays than AreEqual
 - try to benefit more from the C# Enumerable class
 
 ## Done
+- calculate indices only once -> as expected this has a big impact on performance as proven with profiling
 - improved check for modification in NakedSingles by counting how many values are set
 - extract common base class for different strategies
 - unify indices (digits from 1 to 9, row/column/box indices 0 to 8)
