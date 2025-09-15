@@ -24,7 +24,11 @@ public class Puzzle
 
     public void Init(string puzzle)
     {
-        var rows = puzzle.Split('\n');
+        var rows = new List<string>();
+        for (var row = 0; row < GridSize; row++)
+        {
+            rows.Add(puzzle.Substring(GridSize * row, GridSize));
+        }
 
         ForEachCell(position =>
         {
