@@ -207,7 +207,7 @@ public class SolveSudokuPuzzle
     }
 
     [TestMethod]
-    [Ignore]
+    //[Ignore]
     public void SolvePuzzlesFromFile()
     {
         //const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/0096_sudoku.txt";
@@ -218,7 +218,7 @@ public class SolveSudokuPuzzle
 
         var unsolvedCells = new int[allPuzzles.Count];
 
-        for (var index = 0; index < allPuzzles.Count; index++)
+        for (var index = 0; index < 1000 /*allPuzzles.Count*/; index++)
         {
             var puzzle = allPuzzles[index];
             var puzzleAsString = string.Join("\n", puzzle);

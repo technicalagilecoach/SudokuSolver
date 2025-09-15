@@ -2,6 +2,12 @@ namespace SudokuSolverCore;
 
 public static class IndicesAndIterators
 {
+    private static readonly Dictionary<int,List<Position>> IndicesForRow = new();
+    private static readonly Dictionary<int,List<Position>> IndicesForColumn = new();
+    private static readonly Dictionary<int,List<Position>> IndicesForBox = new();
+    
+    private static readonly List<Position> IndicesForAllCells = [];
+    
     public static void ForEachCell(Action<Position> action)
     {
         foreach (var pos in GetIndicesForAllCells())
@@ -62,48 +68,68 @@ public static class IndicesAndIterators
 
     public static List<Position> GetIndicesForAllCells()
     {
-        var indices = new List<Position>();
+        if (IndicesForAllCells.Count!=0)
+                return IndicesForAllCells;
+
         foreach (var row in Puzzle.AllDigits)
         {
             foreach (var column in Puzzle.AllDigits)
             {
-                indices.Add(new Position(row, column));
+                IndicesForAllCells.Add(new Position(row, column));
             }
         }
-        return indices;
+        
+        return IndicesForAllCells;
     }
 
     public static List<Position> GetIndicesForRow(int row)
     {
+        if (IndicesForRow.ContainsKey(row))
+        {
+            return IndicesForRow[row];
+        }
+        
         var rowIndices = new List<Position>();
         foreach (var c in Puzzle.AllDigits)
         {
             rowIndices.Add(new Position(row, c));
         }
 
+        IndicesForRow.Add(row, rowIndices);
         return rowIndices;
     }
     
     public static List<Position> GetIndicesForColumn(int column)
     {
+        if (IndicesForColumn.ContainsKey(column))
+        {
+            return IndicesForColumn[column];
+        }
+        
         var columnIndices = new List<Position>();
         foreach (var r in Puzzle.AllDigits)
         {
             columnIndices.Add(new Position(r, column));
         }
 
+        IndicesForColumn.Add(column, columnIndices);
         return columnIndices;
     }
     
     public static List<Position> GetIndicesForBox(int index)
     {
+        if (IndicesForBox.ContainsKey(index))
+        {
+            return IndicesForBox[index];
+        }
+
         var coordinates = GetBoxCoordinates(index);
-            
+
         var box = new List<Position>();
-            
+
         var boxLine = coordinates.Row / Puzzle.BoxSize;
         var boxColumn = coordinates.Column / Puzzle.BoxSize;
-            
+
         var lineOffset = boxLine * Puzzle.BoxSize;
         var columnOffset = boxColumn * Puzzle.BoxSize;
 
@@ -115,7 +141,8 @@ public static class IndicesAndIterators
                 box.Add(new Position(lineOffset + l, columnOffset + c));
             }
         }
-
+        
+        IndicesForBox.Add(index, box);
         return box;
     }
 
