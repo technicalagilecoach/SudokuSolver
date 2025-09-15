@@ -147,30 +147,24 @@ public static class IndicesAndIterators
         IndicesForBox.Add(index, box);
         return box;
     }
-
-    public static List<(Position, Position)>  GetIndicesForDistinctPairs(List<Position> indices)
-    {
-        var pairs = new List<(Position, Position)>();
-
-        for (var i = 0; i < indices.Count-1; i++)
-        {
-            for (var j = i; j < indices.Count; j++)
-            {
-                if (i!=j)
-                    pairs.Add((indices[i], indices[j]));
-            }
-        }
-
-        return pairs;
-    }
     
-    public static List<(Position, Position)> GetIndicesForDistinctPairs(int areaType, int index, List<Position> indices)
+    public static List<(Position, Position)> GetIndicesForDistinctPairs(int areaType, int index)
     {
-        return GetIndicesForDistinctPairs(indices);
-        
         if (IndicesForDistinctPairs.Count != 0)
         {
             return IndicesForDistinctPairs[areaType][index];
+        }
+        
+        var allCellsOfInterest = new List<Position>();
+
+        switch (areaType)
+        {
+            case 0:
+                allCellsOfInterest = GetIndicesForRow(index); break;
+            case 1:
+                allCellsOfInterest = GetIndicesForColumn(index); break;
+            case 2:
+                allCellsOfInterest = GetIndicesForBox(index); break;
         }
 
         for (var area = 0; area < 3; area++)
@@ -181,12 +175,12 @@ public static class IndicesAndIterators
             {
                 IndicesForDistinctPairs[area].Add(new List<(Position, Position)>());
 
-                for (var i = 0; i < indices.Count-1; i++)
+                for (var i = 0; i < allCellsOfInterest.Count-1; i++)
                 {
-                    for (var j = i; j < indices.Count; j++)
+                    for (var j = i; j < allCellsOfInterest.Count; j++)
                     {
                         if (i!=j)
-                            IndicesForDistinctPairs[area][idx].Add((indices[i], indices[j]));
+                            IndicesForDistinctPairs[area][idx].Add((allCellsOfInterest[i], allCellsOfInterest[j]));
                     }
                 }
             }

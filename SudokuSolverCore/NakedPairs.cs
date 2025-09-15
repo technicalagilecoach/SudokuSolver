@@ -15,7 +15,7 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
         foreach (var row in AllRows)
         {
             var allCellsOfInterest = GetIndicesForRow(row);
-            var allPairsOfCells = GetIndicesForDistinctPairs(0, row, allCellsOfInterest);
+            var allPairsOfCells = GetIndicesForDistinctPairs(0, row);
 
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, allCellsOfInterest, undefinedCells, valueModified);
         }
@@ -23,7 +23,7 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
         foreach (var column in AllColumns)
         {
             var allCellsOfInterest = GetIndicesForColumn(column);
-            var allPairsOfCells = GetIndicesForDistinctPairs(1, column, allCellsOfInterest);
+            var allPairsOfCells = GetIndicesForDistinctPairs(1, column);
             
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, allCellsOfInterest, undefinedCells, valueModified);
         }
@@ -31,7 +31,7 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
         foreach (var box in AllBoxes)
         {
             var allCellsOfInterest = GetIndicesForBox(box);
-            var allPairsOfCells = GetIndicesForDistinctPairs(2, box, allCellsOfInterest);
+            var allPairsOfCells = GetIndicesForDistinctPairs(2, box);
             
             valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, allCellsOfInterest, undefinedCells, valueModified);
         }
