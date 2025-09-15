@@ -8,6 +8,8 @@ public static class IndicesAndIterators
     
     private static readonly List<Position> IndicesForAllCells = [];
     
+    private static readonly Dictionary<int, List<List<(Position, Position)>>> IndicesForDistinctPairs = new();
+    
     public static void ForEachCell(Action<Position> action)
     {
         foreach (var pos in GetIndicesForAllCells())
@@ -160,5 +162,36 @@ public static class IndicesAndIterators
         }
 
         return pairs;
+    }
+    
+    public static List<(Position, Position)> GetIndicesForDistinctPairs(int areaType, int index, List<Position> indices)
+    {
+        return GetIndicesForDistinctPairs(indices);
+        
+        if (IndicesForDistinctPairs.Count != 0)
+        {
+            return IndicesForDistinctPairs[areaType][index];
+        }
+
+        for (var area = 0; area < 3; area++)
+        {
+            IndicesForDistinctPairs[area] = new List<List<(Position, Position)>>();
+            
+            for (var idx = 0; idx < Puzzle.GridSize; idx++)
+            {
+                IndicesForDistinctPairs[area].Add(new List<(Position, Position)>());
+
+                for (var i = 0; i < indices.Count-1; i++)
+                {
+                    for (var j = i; j < indices.Count; j++)
+                    {
+                        if (i!=j)
+                            IndicesForDistinctPairs[area][idx].Add((indices[i], indices[j]));
+                    }
+                }
+            }
+        }
+        
+        return IndicesForDistinctPairs[areaType][index];
     }
 }
