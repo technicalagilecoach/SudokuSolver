@@ -216,7 +216,7 @@ public class SolveSudokuPuzzle
 
         List<List<string>> allPuzzles = ReadPuzzlesFromFile(filename);
 
-        var solvablePuzzles = new int[allPuzzles.Count];
+        var unsolvedCells = new int[allPuzzles.Count];
 
         for (var index = 0; index < allPuzzles.Count; index++)
         {
@@ -230,8 +230,11 @@ public class SolveSudokuPuzzle
                     count++;
             }
 
-            solvablePuzzles[index] = count; //!result.Contains(' ');
+            unsolvedCells[index] = count;
         }
+        
+        var numberOfUnsolvedPuzzles = unsolvedCells.Count(c => c!=0);
+        Console.WriteLine(numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.");
     }
 
     private static List<List<string>> ReadPuzzlesFromFile(string filename)
@@ -242,7 +245,7 @@ public class SolveSudokuPuzzle
 
         string text = reader.ReadToEnd();
         
-        char[] separators = new char[] { '\n', '\r' };
+        char[] separators = ['\n', '\r'];
         List<string> allLines = text.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
 
         if (allLines[0].Length == 81)
