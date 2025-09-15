@@ -208,7 +208,7 @@ public class SolveSudokuPuzzle
     }
 
     [TestMethod]
-    [Ignore]
+    //[Ignore]
     public void SolvePuzzlesFromFile()
     {
         const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/0096_sudoku.txt";
@@ -217,24 +217,26 @@ public class SolveSudokuPuzzle
 
         var allPuzzles = PuzzleReader.ReadPuzzlesFromFile(filename);
 
-        var unsolvedCells = new int[allPuzzles.Count];
+        var numberOfUnsolvedCells = new List<int>();
 
-        for (var index = 0; index < allPuzzles.Count; index++)
+        foreach (var puzzle in allPuzzles)
         {
-            var puzzle = allPuzzles[index];
-            var puzzleAsString = string.Join("\n", puzzle);
-            var solved = Solve(puzzleAsString, out var result);
-
-            var count = 0;
-            foreach (var c in result) {
-                if (c==' ')
-                    count++;
-            }
-
-            unsolvedCells[index] = count;
+            SolvePuzzle(puzzle, numberOfUnsolvedCells);
         }
         
-        var numberOfUnsolvedPuzzles = unsolvedCells.Count(c => c!=0);
+        var numberOfUnsolvedPuzzles = numberOfUnsolvedCells.Count(c => c!=0);
+        
         Console.WriteLine(numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.");
+    }
+
+    private static void SolvePuzzle(string puzzle, List<int> numberOfUnsolvedCells)
+    {
+        var puzzleAsString = string.Join("\n", puzzle);
+        var solved = Solve(puzzleAsString, out var result);
+
+        var count = 0;
+        if (!solved)
+            count = result.Count(c => c == ' ');
+        numberOfUnsolvedCells.Add(count);
     }
 }
