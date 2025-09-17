@@ -4,13 +4,18 @@ public static class Printers
 {
     public static string Print(Puzzle puzzle)
     {
+        return PrintCells(puzzle.Cells);
+    }
+
+    public static string PrintCells(int[,] cells)
+    {
         var buffer = new StringWriter();
             
         foreach (var row in Puzzle.AllDigits) {
             foreach (var column in Puzzle.AllDigits)
             {
                 Position position = new Position(row, column);
-                var v = puzzle.Cells[position.Row, position.Column];
+                var v = cells[position.Row, position.Column];
                 buffer.Write(v == Puzzle.Undefined ? " ":v);
             } 
 
