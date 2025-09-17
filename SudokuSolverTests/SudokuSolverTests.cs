@@ -1,34 +1,37 @@
-using SudokuSolverCore;
+using static SudokuSolverTests.TestHelpers;
 
 namespace SudokuSolverTests;
 
 [TestClass]
 public class SolveSudokuPuzzle
 {
-    private static bool Solve(string puzzle, out string solution)
+    private static void CompareWithExpectedSolution(string easyPuzzle, string expectedSolution)
     {
-        var sudokuPuzzle = new Puzzle();
-        sudokuPuzzle.Init(puzzle);
-        Solver solver = new(sudokuPuzzle);
-        var result = solver.Solve();
-        solution = Printers.Print(sudokuPuzzle);
-        return result;
+        var result = Solve(easyPuzzle, out var solved);
+        Assert.IsTrue(solved);
+        Assert.AreEqual(expectedSolution, result);
     }
-
+    
+    private static void CheckForSolvability(string puzzle)
+    {
+        Solve(puzzle, out var solved);
+        Assert.IsTrue(solved);
+    }
+    
     [TestMethod]
     public void SolveEasyPuzzle()
     {
         //https://sudoku-puzzles.net/sudoku-easy
         //unit propagation is sufficient for solution
-        const string easyPuzzle = " 7 583 2 \n" +
-                                  " 592  3  \n" +
-                                  "34   65 7\n" +
-                                  "795   632\n" +
-                                  "  36971  \n" +
-                                  "68   27  \n" +
-                                  "914835 76\n" +
-                                  " 3 7 1495\n" +
-                                  "567429 13\n";
+        const string puzzle = " 7 583 2 \n" +
+                              " 592  3  \n" +
+                              "34   65 7\n" +
+                              "795   632\n" +
+                              "  36971  \n" +
+                              "68   27  \n" +
+                              "914835 76\n" +
+                              " 3 7 1495\n" +
+                              "567429 13\n";
 
         const string expectedSolution = "176583924\n" +
                                         "859274361\n" +
@@ -40,9 +43,7 @@ public class SolveSudokuPuzzle
                                         "238761495\n" +
                                         "567429813\n";
 
-        var solved = Solve(easyPuzzle, out var result);
-        Assert.IsTrue(solved);
-        Assert.AreEqual(expectedSolution, result);
+        CompareWithExpectedSolution(puzzle, expectedSolution);
     }
 
     [TestMethod]
@@ -50,15 +51,15 @@ public class SolveSudokuPuzzle
     {
         //https://sudoku-puzzles.net/sudoku-medium/620/
         //unit propagation is sufficient for solution
-        const string mediumPuzzle = " 92 3 1 4\n" +
-                                    " 4   1  9\n" +
-                                    "  8 947  \n" +
-                                    "3 96  8 1\n" +
-                                    "87 3  69 \n" +
-                                    " 1   8  7\n" +
-                                    "     3 1 \n" +
-                                    "2  78 435\n" +
-                                    "  51     \n";
+        const string puzzle = " 92 3 1 4\n" +
+                              " 4   1  9\n" +
+                              "  8 947  \n" +
+                              "3 96  8 1\n" +
+                              "87 3  69 \n" +
+                              " 1   8  7\n" +
+                              "     3 1 \n" +
+                              "2  78 435\n" +
+                              "  51     \n";
 
         const string expectedSolution = "792536184\n"+
                                         "643871529\n"+
@@ -70,9 +71,7 @@ public class SolveSudokuPuzzle
                                         "261789435\n"+
                                         "435162978\n";
 
-        var solved = Solve(mediumPuzzle, out var result);
-        Assert.IsTrue(solved);
-        Assert.AreEqual(expectedSolution, result);
+        CompareWithExpectedSolution(puzzle, expectedSolution);
     }
 
     [TestMethod]
@@ -80,7 +79,7 @@ public class SolveSudokuPuzzle
     {
         //https://sudoku-puzzles.net/sudoku-hard/580/
         //double pairs needed for solution
-        const string puzzle =   "   9 2  7\n"
+        const string puzzle =     "   9 2  7\n"
                                 + "  467 8  \n"
                                 + " 3  8 5  \n"
                                 + "   853 1 \n"
@@ -90,7 +89,7 @@ public class SolveSudokuPuzzle
                                 + " 75 6  2 \n"
                                 + "2  5   8 \n";
 
-        const string expectedSolution =   "518932647\n"
+        const string expectedSolution =     "518932647\n"
                                           + "924675831\n"
                                           + "637481592\n"
                                           + "792853416\n"
@@ -100,9 +99,7 @@ public class SolveSudokuPuzzle
                                           + "475368129\n"
                                           + "263519784\n";
             
-        var solved = Solve(puzzle, out var result);
-        Assert.IsTrue(solved);
-        Assert.AreEqual(expectedSolution, result);
+        CompareWithExpectedSolution(puzzle, expectedSolution);
     }
 
     [TestMethod]
@@ -110,55 +107,51 @@ public class SolveSudokuPuzzle
     public void SolveExtremePuzzle()
     {
         //puzzle from https://sudoku.com/extreme/
-        const string puzzle =         " 62 1  8 \n"
-                                      + "       13\n"
-                                      + "  1 94   \n"
-                                      + "5 74    2\n"
-                                      + "9   81   \n"
-                                      + "   7    6\n"
-                                      + "       6 \n"
-                                      + "     84  \n"
-                                      + "  5 2    \n";
-           
-        var solved = Solve(puzzle, out var result);
-        Assert.IsTrue(solved);
+        const string puzzle =   " 62 1  8 \n"
+                              + "       13\n"
+                              + "  1 94   \n"
+                              + "5 74    2\n"
+                              + "9   81   \n"
+                              + "   7    6\n"
+                              + "       6 \n"
+                              + "     84  \n"
+                              + "  5 2    \n";
+
+        CheckForSolvability(puzzle);
     }
-        
-        
+ 
     [TestMethod]
     [Ignore]
     public void SolveAIEscargot2006Puzzle()
     {
-        const string puzzle =       "1    7 9 \n"
-                                    + " 3  2   8\n"
-                                    + "  96  5  \n"
-                                    + "  53  9  \n"
-                                    + " 1  8   2\n"
-                                    + "6    4   \n"
-                                    + "3      1 \n"
-                                    + " 4      7\n"
-                                    + "  7   3  \n";
-           
-        var solved = Solve(puzzle, out var result);
-        Assert.IsTrue(solved);
+        const string puzzle =   "1    7 9 \n"
+                              + " 3  2   8\n"
+                              + "  96  5  \n"
+                              + "  53  9  \n"
+                              + " 1  8   2\n"
+                              + "6    4   \n"
+                              + "3      1 \n"
+                              + " 4      7\n"
+                              + "  7   3  \n";
+
+        CheckForSolvability(puzzle);
     }
         
     [TestMethod]
     [Ignore]
     public void SolveArtoInkala2012Puzzle()
     {
-        const string puzzle =     "  53     \n"
-                                  + "8      2 \n"
-                                  + " 7  1 5  \n"
-                                  + "4    53  \n"
-                                  + " 1  7   6\n"
-                                  + "  32   8 \n"
-                                  + " 6 5    9\n"
-                                  + "  4    3 \n"
-                                  + "     97  \n";
-           
-        var solved = Solve(puzzle, out var result);
-        Assert.IsTrue(solved);
+        const string puzzle = "  53     \n"
+                              + "8      2 \n"
+                              + " 7  1 5  \n"
+                              + "4    53  \n"
+                              + " 1  7   6\n"
+                              + "  32   8 \n"
+                              + " 6 5    9\n"
+                              + "  4    3 \n"
+                              + "     97  \n";
+
+        CheckForSolvability(puzzle);
     }
 
     [TestMethod]
@@ -185,9 +178,7 @@ public class SolveSudokuPuzzle
                                         + "834259671\n"
                                         + "517643892\n";
             
-        var solved = Solve(puzzle, out var result);
-        Assert.IsTrue(solved);
-        Assert.AreEqual(expectedSolution, result);
+        CompareWithExpectedSolution(puzzle, expectedSolution);
     }
     
     [TestMethod]
@@ -203,8 +194,8 @@ public class SolveSudokuPuzzle
                               + "820500000\n"
                               + "000000005\n"
                               + "034090710\n";
-        var solved = Solve(puzzle, out var result);
-        Assert.IsTrue(solved);
+
+        CheckForSolvability(puzzle);
     }
 
     [TestMethod]
@@ -215,77 +206,9 @@ public class SolveSudokuPuzzle
         //const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/Just17.txt";
         //const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/top50000.txt";
 
-        List<List<string>> allPuzzles = ReadPuzzlesFromFile(filename);
-
-        var unsolvedCells = new int[allPuzzles.Count];
-
-        for (var index = 0; index < allPuzzles.Count; index++)
-        {
-            var puzzle = allPuzzles[index];
-            var puzzleAsString = string.Join("\n", puzzle);
-            var solved = Solve(puzzleAsString, out var result);
-
-            var count = 0;
-            foreach (var c in result) {
-                if (c==' ')
-                    count++;
-            }
-
-            unsolvedCells[index] = count;
-        }
-        
-        var numberOfUnsolvedPuzzles = unsolvedCells.Count(c => c!=0);
+        var allPuzzles = ReadPuzzlesFromFile(filename);
+        var numberOfUnsolvedPuzzles = SolveMultiplePuzzles(allPuzzles);
         Console.WriteLine(numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.");
-    }
-
-    private static List<List<string>> ReadPuzzlesFromFile(string filename)
-    {
-        List<List<string>> allPuzzles = new List<List<string>>();
-        
-        using StreamReader reader = new(filename);
-
-        string text = reader.ReadToEnd();
-        
-        char[] separators = ['\n', '\r'];
-        List<string> allLines = text.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
-
-        if (allLines[0].Length == 81)
-        {
-            int numOfPuzzles = allLines.Count;
-
-            for (int i = 0; i < numOfPuzzles; i++)
-            {
-                List<string> puzzle = new List<string>();
-
-                for (int j = 0; j < 9; j++)
-                {
-                    puzzle.Add(allLines[i].Substring(9 * j, 9));
-                }
-
-                allPuzzles.Add(puzzle);
-            }
-        }
-        else
-        {
-            int numOfPuzzles = allLines.Count / 10;
-
-            for (int i = 0; i < numOfPuzzles; i++)
-            {
-                int offset = i * 10;
-                List<string> puzzle = new List<string>();
-
-                for (int j = offset; j < 10 + offset; j++)
-                {
-                    if (j % 10 != 0)
-                    {
-                        puzzle.Add(allLines[j]);
-                    }
-                }
-
-                allPuzzles.Add(puzzle);
-            }
-        }
-
-        return allPuzzles;
+        Assert.AreEqual(allPuzzles.Count, numberOfUnsolvedPuzzles);
     }
 }
