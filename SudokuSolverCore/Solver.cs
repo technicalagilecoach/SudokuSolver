@@ -12,90 +12,71 @@ public class Solver(Puzzle puzzle)
     
     private bool _valueModified = false;
 
-    private readonly bool _generateProtocol = false;
-    private List<(string,bool)> _executedStrategies = [];
-    private List<List<(string,bool)>> _executionProtocol = [];
-    private int _round = 0;
+    private const bool PerformChecks = true;
 
-    private readonly bool _generateDebugOutput = false;
-    private readonly bool _performChecks = false;
-    private List<string> _puzzleStates = new List<string>();
-    
-    
     public bool Solve()
     {
         do
         {
             _valueModified = false;
 
-            if (_generateDebugOutput)
-                _puzzleStates.Add(Print(puzzle));
-            
-            if (_performChecks&&IsInconsistent())
-            {
-                
-            }
-
             Execute(PruneCandidates);
             Execute(NakedSingles);
             
-            //Execute(HiddenSingles);
-            //Execute(NakedPairs);
+            Execute(HiddenSingles);
+            Execute(NakedPairs);
             //Execute(HiddenPairs);
             Execute(PointingPairs);
-    
-            UpdateProtocol();
         } while (_valueModified);
 
         var isCorrect = Check(Cells);
         
-        if (_generateDebugOutput&&!isCorrect)
+        if (PerformChecks&&!isCorrect)
             PrintDebugOutput(puzzle);
         
         return isCorrect;
     }
 
-    private void UpdateProtocol()
-    {
-        if (!_generateProtocol) return;
-        
-        _executionProtocol.Add(_executedStrategies);
-        _executedStrategies = [];
-        _round++;
-    }
-
-    private void CheckConsistency()
-    {
-        if (IsInconsistent())
-            PrintDebugOutput(puzzle);
-    }
-
     private bool IsInconsistent()
     {
-        return _performChecks && !IsSolutionCorrect(puzzle.Cells);
+        return PerformChecks && !IsSolutionCorrect(puzzle.Cells);
     }
 
+    private static string Difference(string puzzle1, string puzzle2)
+    {
+        var difference = new char[puzzle1.Length];
+                    
+        for (var i = 0; i < puzzle1.Length; i++)
+        {
+            difference[i] = ' ';
+            if (puzzle1[i] == '\n')
+            {
+                difference[i] = '\n';
+            }
+            if (puzzle1[i] != puzzle2[i])
+                difference[i] = puzzle2[i];
+        }
+
+        return new string(difference);
+    }
+    
     public void Execute(Func<bool> fun)
     {
         if (!_valueModified)
         {
-            var before = false;
-            var gotWorse = false;
-            
-            if (_generateProtocol)
-                before = IsInconsistent();
+            var before = IsInconsistent();
+            var puzzleBefore = PrintCells(Cells);
             
             _valueModified = fun();
 
-            if (_generateProtocol)
+            var gotWorse = (!before) && IsInconsistent();
+            if (PerformChecks && gotWorse)
             {
-                var after  = IsInconsistent();
-                gotWorse = (!before) && after;
-                if (gotWorse)
-                    PrintDebugOutput(puzzle);
-            }
+                var puzzleAfter = PrintCells(Cells);
+                var diff = Difference(puzzleBefore, puzzleAfter);
 
-            _executedStrategies.Add((fun.Method.Name, gotWorse));
+                //PrintDebugOutput(puzzle);
+            }
         }
     }
     
