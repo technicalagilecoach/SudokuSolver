@@ -5,9 +5,11 @@ namespace SudokuSolverTests;
 [TestClass]
 public class SolveSudokuPuzzle
 {
-    private static void CompareWithExpectedSolution(string easyPuzzle, string expectedSolution)
+    private static void CompareWithExpectedSolution(string puzzle, string expectedSolution)
     {
-        var result = Solve(easyPuzzle, out var solved);
+        puzzle = puzzle.Replace("\n", "");
+        
+        var result = Solve(puzzle, out var solved);
         Assert.IsTrue(solved);
         Assert.AreEqual(expectedSolution, result);
     }

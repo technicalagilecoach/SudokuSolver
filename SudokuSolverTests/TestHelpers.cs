@@ -11,7 +11,7 @@ public static class TestHelpers
         for (var index = 0; index < allPuzzles.Count; index++)
         {
             var puzzle = allPuzzles[index];
-            var puzzleAsString = string.Join("\n", puzzle);
+            var puzzleAsString = string.Join("", puzzle);
             unsolvedCells[index] = TryToSolve(puzzleAsString);
         }
         
