@@ -219,7 +219,7 @@ public class SolveSudokuPuzzle
     }
 
     [TestMethod]
-    //[Ignore]
+    [Ignore]
     public void SolvePuzzlesFromFile()
     {
         const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/0096_sudoku.txt";

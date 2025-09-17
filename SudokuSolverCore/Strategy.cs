@@ -7,18 +7,23 @@ public class Strategy(Puzzle puzzle)
 {
     protected int[,] Cells => puzzle.Cells;
     protected BitArray[,] Candidates => puzzle.Candidates;
-    
+
     protected bool IsUndefined(int row, int column)
     {
-        return Cells[row, column] == Puzzle.Undefined;
-    }
-    
-    protected bool IsUndefined(Position position)
-    {
-        return Cells[position.Row, position.Column]==Puzzle.Undefined;
+        return Cells[row, column] == Undefined;
     }
 
-    protected void SetValue(Position position, int digit)
+    protected bool IsUndefined(Position position)
+    {
+        return Cells[position.Row, position.Column] == Undefined;
+    }
+
+    protected bool IsFixed(Position position)
+    {
+        return !IsUndefined(position);
+    }
+
+protected void SetValue(Position position, int digit)
     { 
         Cells[position.Row,position.Column] = digit+1;
     }

@@ -23,7 +23,7 @@ public class Solver(Puzzle puzzle)
             Execute(PruneCandidates);
             Execute(NakedSingles);
             
-            //Execute(HiddenSingles);
+            Execute(HiddenSingles);
             //Execute(NakedPairs);
             //Execute(HiddenPairs);
             Execute(PointingPairs);

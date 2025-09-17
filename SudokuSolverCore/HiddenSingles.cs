@@ -7,33 +7,33 @@ internal class HiddenSingles(Puzzle puzzle) : Strategy(puzzle)
 {
     public bool Handle()
     {
-        var valueModified = false;
+        var numberOfNewFixedCells = 0;
             
         foreach (var row in AllRows)
         {
             var positions = GetIndicesForRow(row);
             var distribution = CountDigitDistributionInArea(positions);
-            ForEachCellInArea(positions, position => FixSingularValue(distribution, out valueModified, position));
+            ForEachCellInArea(positions, position => FixSingularValue(distribution, ref numberOfNewFixedCells, position));
         }     
         
         foreach (var column in AllColumns)
         {
             var positions = GetIndicesForColumn(column);
             var distribution = CountDigitDistributionInArea(positions);
-            ForEachCellInArea(positions, position => FixSingularValue(distribution, out valueModified, position));
+            ForEachCellInArea(positions, position => FixSingularValue(distribution, ref numberOfNewFixedCells, position));
         } 
         
         foreach (var box in AllBoxes)
         {
             var positions = GetIndicesForBox(box);
             var distribution = CountDigitDistributionInArea(positions);
-            ForEachCellInArea(positions, position => FixSingularValue(distribution, out valueModified, position));
+            ForEachCellInArea(positions, position => FixSingularValue(distribution, ref numberOfNewFixedCells, position));
         }
 
-        return valueModified;
+        return numberOfNewFixedCells>0;
     }
 
-    private void FixSingularValue(int[] values, out bool valueModified, Position position)
+    private void FixSingularValue(int[] values, ref int numberOfNewFixedCells, Position position)
     {
         foreach (var digit in AllDigits)
         {
@@ -41,11 +41,9 @@ internal class HiddenSingles(Puzzle puzzle) : Strategy(puzzle)
             if (IsUndefined(position) && isSingularDigit && IsCandidate(position, digit))
             {
                 SetValue(position, digit);
-                valueModified = true;
+                numberOfNewFixedCells++;
                 break;
             }
         }
-
-        valueModified = false;
     }
 }

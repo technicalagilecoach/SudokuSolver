@@ -6,19 +6,19 @@ public class NakedSingles(Puzzle puzzle) : Strategy(puzzle)
 {
     public bool Handle()
     {
-        var count = 0;
+        var numberOfNewFixedCells = 0;
         
         ForEachCell(position =>
         {
-            SelectUniqueValueForCell(position, ref count);
+            SelectUniqueValueForCell(position, ref numberOfNewFixedCells);
         });
 
-        return count > 0;
+        return numberOfNewFixedCells > 0;
     }
     
     private void SelectUniqueValueForCell(Position position, ref int count)
     {
-        if (!IsUndefined(position)) 
+        if (IsFixed(position)) 
             return;
 
         if (CountCandidates(position) != 1)
