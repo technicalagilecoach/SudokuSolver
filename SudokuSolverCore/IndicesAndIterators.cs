@@ -26,30 +26,12 @@ public static class IndicesAndIterators
         }
     }
 
-    public static void ForEachCellInColumnExcept(int row, Action<int> action)
+    public static void ForEachCellInAreaExcept(List<Position> positions, Position position, Action<Position> action)
     {
-        foreach (var r in Puzzle.AllRows)
+        foreach (var pos in positions)
         {
-            if (r!=row)
-                action(r);
-        }
-    }
-
-    public static void ForEachCellInRowExcept(int column, Action<int> action)
-    {
-        foreach (var c in Puzzle.AllColumns)
-        {
-            if (c != column)
-                action(c);
-        }
-    }
-    
-    public static void ForEachCellInBoxExcept(Position position, Action<Position> action)
-    {
-        foreach (var p in GetIndicesForBox(GetBoxIndex(position)))
-        {
-            if (p.Row != position.Row || p.Column != position.Column)
-                action(p);
+            if (pos!=position)
+                action(pos);
         }
     }
 

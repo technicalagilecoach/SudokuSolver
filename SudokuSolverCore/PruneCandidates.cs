@@ -21,17 +21,17 @@ public class PruneCandidates(Puzzle puzzle) : Strategy(puzzle)
         if (IsUndefined(position)) 
             return;
 
-        bool modified = candidatesModified;
+        var modified = candidatesModified;
         
-        ForEachCellInRowExcept(position.Column, column =>
+        ForEachCellInAreaExcept(GetIndicesForRow(position.Row), position, pos =>
         {
-            RemoveCandidate(position, Candidates[position.Row, column], out modified);
+            RemoveCandidate(position, Candidates[pos.Row, pos.Column], out modified);
         });
-        ForEachCellInColumnExcept(position.Row, row =>
+        ForEachCellInAreaExcept(GetIndicesForColumn(position.Column), position, pos =>
         {
-            RemoveCandidate(position, Candidates[row, position.Column], out modified);
+            RemoveCandidate(position, Candidates[pos.Row, pos.Column], out modified);
         });
-        ForEachCellInBoxExcept(position, tuple =>
+        ForEachCellInAreaExcept(GetIndicesForBox(GetBoxIndex(position)), position, tuple =>
         {
             RemoveCandidate(position, Candidates[tuple.Row,tuple.Column], out modified);
         });
