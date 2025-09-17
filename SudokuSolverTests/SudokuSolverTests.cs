@@ -105,6 +105,24 @@ public class SolveSudokuPuzzle
     }
 
     [TestMethod]
+    public void NakedSinglesBug()
+    {
+        const string puzzle = "24 9813 6\n"
+                            + "16 7 584 \n"
+                            + "8375642 9\n"
+                            + "9761 54 8\n"
+                            + "513 627  \n"
+                            + "4827 6   \n"
+                            + "391657842\n"
+                            + "72834 6  \n"
+                            + "654 1 793\n";
+        
+        var result = OneSolverStep(puzzle,out var change);
+        
+    }
+
+
+    [TestMethod]
     [Ignore]
     public void SolveExtremePuzzle()
     {
@@ -201,7 +219,7 @@ public class SolveSudokuPuzzle
     }
 
     [TestMethod]
-    [Ignore]
+    //[Ignore]
     public void SolvePuzzlesFromFile()
     {
         const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/0096_sudoku.txt";

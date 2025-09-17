@@ -23,8 +23,8 @@ public class Solver(Puzzle puzzle)
             Execute(PruneCandidates);
             Execute(NakedSingles);
             
-            Execute(HiddenSingles);
-            Execute(NakedPairs);
+            //Execute(HiddenSingles);
+            //Execute(NakedPairs);
             //Execute(HiddenPairs);
             Execute(PointingPairs);
         } while (_valueModified);
@@ -42,24 +42,6 @@ public class Solver(Puzzle puzzle)
         return PerformChecks && !IsSolutionCorrect(puzzle.Cells);
     }
 
-    private static string Difference(string puzzle1, string puzzle2)
-    {
-        var difference = new char[puzzle1.Length];
-                    
-        for (var i = 0; i < puzzle1.Length; i++)
-        {
-            difference[i] = ' ';
-            if (puzzle1[i] == '\n')
-            {
-                difference[i] = '\n';
-            }
-            if (puzzle1[i] != puzzle2[i])
-                difference[i] = puzzle2[i];
-        }
-
-        return new string(difference);
-    }
-    
     public void Execute(Func<bool> fun)
     {
         if (!_valueModified)
@@ -69,43 +51,43 @@ public class Solver(Puzzle puzzle)
             
             _valueModified = fun();
 
-            var gotWorse = (!before) && IsInconsistent();
+            var gotWorse = true;// (!before) && IsInconsistent();
             if (PerformChecks && gotWorse)
             {
                 var puzzleAfter = PrintCells(Cells);
-                var diff = Difference(puzzleBefore, puzzleAfter);
+                var diff = Puzzle.Difference(puzzleBefore, puzzleAfter);
 
                 //PrintDebugOutput(puzzle);
             }
         }
     }
-    
-    private bool PruneCandidates()
+
+    public bool PruneCandidates()
     {
         return new PruneCandidates(puzzle).Handle();
     }
-    
-    private bool NakedSingles()
+
+    public bool NakedSingles()
     {
         return new NakedSingles(puzzle).Handle();
     }
 
-    private bool HiddenSingles()
+    public bool HiddenSingles()
     {
         return new HiddenSingles(puzzle).Handle();
     }
         
-    private bool NakedPairs()
+    public bool NakedPairs()
     {
         return new NakedPairs(puzzle).Handle();
     }
      
-    private bool HiddenPairs()
+    public bool HiddenPairs()
     {
         return new HiddenPairs(puzzle).Handle();
     }
-    
-    private bool PointingPairs()
+
+    public bool PointingPairs()
     {
         return new PointingPairs(puzzle).Handle();
     }

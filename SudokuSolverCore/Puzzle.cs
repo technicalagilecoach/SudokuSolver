@@ -60,4 +60,22 @@ public class Puzzle
             
         return candidates;
     }
+    
+    public static string Difference(string puzzle1, string puzzle2)
+    {
+        var difference = new char[puzzle1.Length];
+                    
+        for (var i = 0; i < puzzle1.Length; i++)
+        {
+            difference[i] = ' ';
+            if (puzzle1[i] == '\n')
+            {
+                difference[i] = '\n';
+            }
+            if (puzzle1[i] != puzzle2[i])
+                difference[i] = puzzle2[i];
+        }
+
+        return new string(difference);
+    }
 }

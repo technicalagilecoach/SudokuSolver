@@ -85,4 +85,23 @@ public static class TestHelpers
 
         return allPuzzles;
     }
+    
+    public static string OneSolverStep(string puzzle, out bool hasBeenChanged)
+    {
+        var sudokuPuzzle = new Puzzle();
+        sudokuPuzzle.Init(puzzle.Replace("\n", ""));
+        Solver solver = new(sudokuPuzzle);
+
+        solver.Execute(solver.NakedSingles);
+
+        var result = Printers.Print(sudokuPuzzle);
+        
+        var diff = Puzzle.Difference(puzzle, result);
+
+        hasBeenChanged = false;
+        
+        return result;
+    }
+
+
 }
