@@ -23,7 +23,7 @@ public class Strategy(Puzzle puzzle)
         return !IsUndefined(position);
     }
 
-protected void SetValue(Position position, int digit)
+    protected void SetValue(Position position, int digit)
     { 
         Cells[position.Row,position.Column] = digit+1;
     }

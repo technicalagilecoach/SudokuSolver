@@ -132,10 +132,10 @@ public static class IndicesAndIterators
     
     public static List<(Position, Position)> GetIndicesForDistinctPairs(int areaType, int index)
     {
-        if (IndicesForDistinctPairs.Count != 0)
-        {
-            return IndicesForDistinctPairs[areaType][index];
-        }
+        // if (IndicesForDistinctPairs.Count != 0)
+        // {
+        //     return IndicesForDistinctPairs[areaType][index];
+        // }
         
         var allCellsOfInterest = new List<Position>();
 

@@ -24,8 +24,10 @@ public class Solver(Puzzle puzzle)
             Execute(NakedSingles);
             
             Execute(HiddenSingles);
-            //Execute(NakedPairs);
+            
+            Execute(NakedPairs);
             //Execute(HiddenPairs);
+            
             Execute(PointingPairs);
         } while (_valueModified);
 
@@ -51,7 +53,7 @@ public class Solver(Puzzle puzzle)
             
             _valueModified = fun();
 
-            var gotWorse = true;// (!before) && IsInconsistent();
+            var gotWorse = (!before) && IsInconsistent();
             if (PerformChecks && gotWorse)
             {
                 var puzzleAfter = PrintCells(Cells);

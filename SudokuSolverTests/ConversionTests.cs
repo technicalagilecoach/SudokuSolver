@@ -1,4 +1,5 @@
 using SudokuSolverCore;
+using static SudokuSolverCore.NakedPairs;
 
 namespace SudokuSolverTests;
 
@@ -31,5 +32,25 @@ public class ConversionTests
 
         Assert.AreEqual(expectedRow, result.Row);
         Assert.AreEqual(expectedColumn, result.Column);
+    }
+
+    [TestMethod]
+    public void IsDisjointFromTest()
+    {
+        var cell = new Position(0, 0);
+        var pairOfCells = (new Position(0, 0), new Position(0, 1));
+        
+        var isDisjoint = IsDisjointFrom(cell, pairOfCells);
+        
+        Assert.IsFalse(isDisjoint);
+    }
+
+    [TestMethod]
+    public void GetIndicesForDistinctPairsTest()
+    {
+        var indices0 = IndicesAndIterators.GetIndicesForDistinctPairs(0, 0);
+        var indices4 = IndicesAndIterators.GetIndicesForDistinctPairs(0, 4);
+
+        Assert.IsTrue(indices4[0].Item1.Row == 4);
     }
 }

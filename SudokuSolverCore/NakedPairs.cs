@@ -4,20 +4,38 @@ using static SudokuSolverCore.Puzzle;
 
 namespace SudokuSolverCore;
 
-internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
+public class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
+    
+    private bool GetCandidate(Position position, int digit)
+    {
+        return Candidates[position.Row, position.Column][digit];
+    }
+
+    private bool SetCandidate(Position position, int digit, bool value)
+    {
+        return Candidates[position.Row, position.Column][digit] = value;
+    }
+
+    private bool[,] _undefinedCells = new bool[GridSize, GridSize];
+    private bool[,] _potentialTwins = new bool[GridSize, GridSize];
+    
+    private List<string> _removedCandidates = [];
+    
     public bool Handle()
     {
-        var valueModified = false;
+        var numberOfRemovedCandidates = 0;
         
-        var undefinedCells = MarkUndefinedCells();
-        var potentialTwins = MarkPotentialTwins(undefinedCells);
+        MarkUndefinedCells();
+        MarkPotentialTwins();
 
+        string before = Printers.Print(puzzle);
+        
         foreach (var row in AllRows)
         {
             var allCellsOfInterest = GetIndicesForRow(row);
             var allPairsOfCells = GetIndicesForDistinctPairs(0, row);
 
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, allCellsOfInterest, undefinedCells, valueModified);
+            RemoveCandidatesBasedOnNakedPairs(allPairsOfCells, allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         foreach (var column in AllColumns)
@@ -25,7 +43,7 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
             var allCellsOfInterest = GetIndicesForColumn(column);
             var allPairsOfCells = GetIndicesForDistinctPairs(1, column);
             
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, allCellsOfInterest, undefinedCells, valueModified);
+            RemoveCandidatesBasedOnNakedPairs(allPairsOfCells, allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         foreach (var box in AllBoxes)
@@ -33,60 +51,69 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
             var allCellsOfInterest = GetIndicesForBox(box);
             var allPairsOfCells = GetIndicesForDistinctPairs(2, box);
             
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, potentialTwins, allCellsOfInterest, undefinedCells, valueModified);
+            RemoveCandidatesBasedOnNakedPairs(allPairsOfCells, allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
-        return valueModified;
+        return numberOfRemovedCandidates>0;
     }
 
-    private bool FindTwinsAndEliminateThemFromPotentialValues(List<(Position, Position)> allPairsOfCells,
-        bool[,] potentialTwins,
-        List<Position> allCellsOfInterest, bool[,] undefinedCells,
-        bool valueModified)
+    private void RemoveCandidatesBasedOnNakedPairs(List<(Position, Position)> allPairsOfCells,
+        List<Position> allCellsOfInterest,
+        ref int numberOfRemovedCandidates)
     {
         foreach (var pairOfCells in allPairsOfCells)
         {
-            if (ArePotentialTwins(potentialTwins, pairOfCells) && CellsAreEqual(pairOfCells))
+            if (ArePotentialTwins(pairOfCells) && HaveEqualCandidates(pairOfCells))
             {
-                valueModified = EliminatePotentialValuesFromOtherCells(allCellsOfInterest, undefinedCells, pairOfCells);
-                break;
+                EliminateCandidatesFromOtherCells(allCellsOfInterest, pairOfCells, ref numberOfRemovedCandidates);
+                //break;
+            }
+        }
+    }
+
+    private int EliminateCandidatesFromOtherCells(List<Position> allCellsOfInterest, (Position, Position) pairOfCells, ref int numberOfRemovedCandidates)
+    {
+        foreach (var cell in allCellsOfInterest)
+        {
+            if (IsUndefined(cell) && IsDisjointFrom(cell,pairOfCells))
+            {
+                EliminateCandidatesFromCell(cell, pairOfCells.Item1, ref numberOfRemovedCandidates);
             }
         }
 
-        return valueModified;
+        return numberOfRemovedCandidates;
     }
 
-    private bool EliminatePotentialValuesFromOtherCells(List<Position> allCellsOfInterest, bool[,] undefinedCells,
-        (Position, Position) pairOfCells)
+    private void EliminateCandidatesFromCell(Position cell, Position reference, ref int numberOfRemovedCandidates)
     {
-        var actualChange = false;
-        
-        foreach (var ele in allCellsOfInterest)
+        foreach (var digit in AllDigits)
         {
-            if (UndefinedAndDifferent(undefinedCells, ele, pairOfCells))
-                actualChange = EliminatePotentialValuesFromOtherCells(ele, pairOfCells.Item1, actualChange);
+            if (IsUndefined(cell) && GetCandidate(cell, digit) && GetCandidate(reference, digit))
+            {
+                SetCandidate(cell, digit, false);
+                _removedCandidates.Add("("+cell.Row+","+cell.Column+") "+digit);
+                numberOfRemovedCandidates++;
+            }
         }
-
-        return actualChange;
     }
-
-    private static bool UndefinedAndDifferent(bool[,] undefinedCells, Position ele, (Position, Position) pairOfCells)
+    
+    public static bool IsDisjointFrom(Position cell, (Position, Position) pairOfCells)
     {
-        return undefinedCells[ele.Row, ele.Column] && ele != pairOfCells.Item1 && ele != pairOfCells.Item2;
+        return cell != pairOfCells.Item1 && cell != pairOfCells.Item2;
     }
 
-    private static bool ArePotentialTwins(bool[,] potentialTwins, (Position, Position) pair)
+    private bool ArePotentialTwins((Position, Position) pair)
     {
-        return potentialTwins[pair.Item1.Row, pair.Item1.Column] && potentialTwins[pair.Item2.Row, pair.Item2.Column];
+        return _potentialTwins[pair.Item1.Row, pair.Item1.Column] && _potentialTwins[pair.Item2.Row, pair.Item2.Column];
     }
 
-    private bool CellsAreEqual((Position, Position) pair)
+    private bool HaveEqualCandidates((Position, Position) pair)
     {
         var cellsAreEqual = true;
             
-        foreach (var i in AllDigits)
+        foreach (var digit in AllDigits)
         {
-            if (Candidates[pair.Item1.Row, pair.Item1.Column][i] == Candidates[pair.Item2.Row, pair.Item2.Column][i]) 
+            if (GetCandidate(pair.Item1, digit) == GetCandidate(pair.Item2, digit)) 
                 continue;
                 
             cellsAreEqual = false;
@@ -95,43 +122,27 @@ internal class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
         
         return cellsAreEqual;
     }
-
-    private bool EliminatePotentialValuesFromOtherCells(Position pos1, Position pos2, bool actualChange)
+    
+    private void MarkPotentialTwins()
     {
-        foreach (var i in AllDigits)
-        {
-            if (Candidates[pos2.Row, pos2.Column][i] && Candidates[pos1.Row, pos1.Column][i])
-            {
-                Candidates[pos1.Row, pos1.Column][i] = false;
-                actualChange = true;
-            }
-        }
-
-        return actualChange;
-    }
-
-    private bool[,] MarkPotentialTwins(bool[,] undefinedCells)
-    {
-        var potentialTwins = new bool[GridSize, GridSize];
+        _potentialTwins = new bool[GridSize, GridSize];
+        
         ForEachCell(position =>
         {
-            if (!undefinedCells[position.Row, position.Column]) 
+            if (!_undefinedCells[position.Row, position.Column]) 
                 return;
             
-            potentialTwins[position.Row, position.Column] = CountCandidates(position) == 2;
+            _potentialTwins[position.Row, position.Column] = CountCandidates(position) == 2;
         });
-        return potentialTwins;
     }
 
-    private bool[,] MarkUndefinedCells()
+    private void MarkUndefinedCells()
     {
-        var undefinedCells = new bool[GridSize, GridSize];
+        _undefinedCells = new bool[GridSize, GridSize];
         
         ForEachCell(position =>
         {
-            undefinedCells[position.Row, position.Column] = IsUndefined(position);
+            _undefinedCells[position.Row, position.Column] = IsUndefined(position);
         });
-        
-        return undefinedCells;
     }
 }
