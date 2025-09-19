@@ -8,14 +8,14 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
 {
     public bool Handle()
     {
-        var valueModified = false;
+        var numberOfRemovedCandidates = 0;
 
         foreach (var row in AllRows)
         {
             var allCellsOfInterest = GetIndicesForRow(row);
             var allPairsOfCells = GetIndicesForDistinctPairs(0, row);
 
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, valueModified);
+            FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         foreach (var column in AllColumns)
@@ -23,7 +23,7 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
             var allCellsOfInterest = GetIndicesForColumn(column);
             var allPairsOfCells = GetIndicesForDistinctPairs(1, column);
             
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, valueModified);
+            FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         foreach (var box in AllBoxes)
@@ -31,14 +31,14 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
             var allCellsOfInterest = GetIndicesForBox(box);
             var allPairsOfCells = GetIndicesForDistinctPairs(2, box);
             
-            valueModified = FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, valueModified);
+            FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
-        return valueModified;
+        return numberOfRemovedCandidates>0;
     }
 
-    private bool FindTwinsAndEliminateThemFromPotentialValues(List<(Position, Position)> allPairsOfCells,
-        List<Position> allCellsOfInterest, bool valueModified)
+    private void FindTwinsAndEliminateThemFromPotentialValues(List<(Position, Position)> allPairsOfCells,
+        List<Position> allCellsOfInterest, ref int numberOfRemovedCandidates)
     {
         var digits = new int[GridSize];
 
@@ -88,12 +88,13 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
                 if (IsUndefined(cell) && cell != twin.Item1 && cell != twin.Item2)
                 {
                     var old = Candidates[cell.Row, cell.Column];
-                    Candidates[cell.Row, cell.Column].And(filter);
-                    valueModified = !Candidates[cell.Row, cell.Column].Equals(old);
+                    Candidates[cell.Row, cell.Column].And(filter); 
+                    
+                    //ToDo: more than one candidate can be removed here -> all of them should be counted
+                    if (!Candidates[cell.Row, cell.Column].Equals(old))
+                        numberOfRemovedCandidates++; 
                 }
             }
         }
-
-        return valueModified;
     }
 }

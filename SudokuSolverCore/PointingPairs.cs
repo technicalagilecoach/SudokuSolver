@@ -1,4 +1,3 @@
-using System.Collections;
 using static SudokuSolverCore.IndicesAndIterators;
 using static SudokuSolverCore.Puzzle;
 
@@ -7,20 +6,20 @@ namespace SudokuSolverCore;
 public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
     public bool Handle()
     {
-        var valueModified = false;
+        var numberOfRemovedCandidates = 0;
 
         foreach (var box in AllBoxes)
         {
             var positions = GetIndicesForBox(box);
             
-            HandlePointingPairsInRows(positions, box, ref valueModified);
-            HandlePointingPairsInColumns(positions, box, ref valueModified);
+            HandlePointingPairsInRows(positions, box, ref numberOfRemovedCandidates);
+            HandlePointingPairsInColumns(positions, box, ref numberOfRemovedCandidates);
         }
 
-        return valueModified;
+        return numberOfRemovedCandidates>0;
     }
 
-    private void HandlePointingPairsInRows(List<Position> positions, int box, ref bool valueModified)
+    private void HandlePointingPairsInRows(List<Position> positions, int box, ref int numberOfRemovedCandidates)
     {
         var valuesRows = new int[BoxSize,GridSize];
 
@@ -66,13 +65,13 @@ public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
                 if (Cells[row, column] == Undefined && !encounteredColumns.Contains(column) && Candidates[row,column][digit])
                 {
                     Candidates[row,column][digit] = false;
-                    valueModified = true;
+                    numberOfRemovedCandidates++;
                 }
             }
         }
     }
 
-    private void HandlePointingPairsInColumns(List<Position> positions, int box, ref bool valueModified)
+    private void HandlePointingPairsInColumns(List<Position> positions, int box, ref int numberOfRemovedCandidates)
     {
         var valuesColumns = new int[BoxSize,GridSize];
             
@@ -118,7 +117,7 @@ public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
                 if (IsUndefined(row, column) && !encounteredRows.Contains(row) && Candidates[row,column][digit])
                 {
                     Candidates[row,column][digit] = false;
-                    valueModified = true;
+                    numberOfRemovedCandidates++;
                 }
             }
         }

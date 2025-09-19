@@ -24,6 +24,7 @@
   - tradeoff with different diagnostic levels
 - clean up code to read in sets of puzzles
 - extract duplicate code into common helper functions
+- reduce number of method parameters by using more instance variables
 - check if existing strategies work as intended/identify test puzzles where the strategy is needed
 - perform pruning etc. only based on actually changed cells
 - make a nicer equality check for BitArrays than AreEqual
