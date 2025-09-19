@@ -26,15 +26,6 @@ public static class IndicesAndIterators
         }
     }
 
-    public static void ForEachCellInAreaExcept(List<Position> positions, Position position, Action<Position> action)
-    {
-        foreach (var pos in positions)
-        {
-            if (pos!=position)
-                action(pos);
-        }
-    }
-
     public static int GetBoxIndex(Position position)
     {
         var boxLine = position.Row / Puzzle.BoxSize;

@@ -5,50 +5,53 @@ namespace SudokuSolverCore;
 
 public class PruneCandidates(Puzzle puzzle) : Strategy(puzzle)
 {
+    private int _numberOfRemovedCandidates = 0;
+    
     public bool Handle()
     {
-        var candidatesModified = false;
+        _numberOfRemovedCandidates = 0;
         
-        ForEachCell(position => 
-            RemoveCandidatesBasedOnFixedValues(position, ref candidatesModified)
-        );
+        ForEachCell(RemoveCandidatesBasedOnFixedValues);
         
-        return candidatesModified;
+        return _numberOfRemovedCandidates>0;
     }
 
-    private void RemoveCandidatesBasedOnFixedValues(Position position, ref bool candidatesModified)
+    private void RemoveCandidatesBasedOnFixedValues(Position position)
     {
         if (IsUndefined(position)) 
             return;
-
-        var modified = candidatesModified;
         
         ForEachCellInAreaExcept(GetIndicesForRow(position.Row), position, pos =>
         {
-            RemoveCandidate(position, Candidates[pos.Row, pos.Column], out modified);
+            RemoveCandidate(position, Candidates[pos.Row, pos.Column]);
         });
         ForEachCellInAreaExcept(GetIndicesForColumn(position.Column), position, pos =>
         {
-            RemoveCandidate(position, Candidates[pos.Row, pos.Column], out modified);
+            RemoveCandidate(position, Candidates[pos.Row, pos.Column]);
         });
-        ForEachCellInAreaExcept(GetIndicesForBox(GetBoxIndex(position)), position, tuple =>
+        ForEachCellInAreaExcept(GetIndicesForBox(GetBoxIndex(position)), position, tuple  =>
         {
-            RemoveCandidate(position, Candidates[tuple.Row,tuple.Column], out modified);
+            RemoveCandidate(position, Candidates[tuple.Row,tuple.Column]);
         });
-        
-        candidatesModified = candidatesModified || modified;
     }
 
-    private void RemoveCandidate(Position position, BitArray digits, out bool candidatesModified)
+    private void RemoveCandidate(Position position, BitArray digits)
     {
         var digit = Cells[position.Row, position.Column];
-
-        candidatesModified = false;
+        
         if (digits[digit - 1])
         {
             digits[digit - 1] = false;
-            candidatesModified = true;
+            _numberOfRemovedCandidates++;
         }
     }
-    
+
+    private static void ForEachCellInAreaExcept(List<Position> positions, Position position, Action<Position> action)
+    {
+        foreach (var pos in positions)
+        {
+            if (pos!=position)
+                action(pos);
+        }
+    }
 }
