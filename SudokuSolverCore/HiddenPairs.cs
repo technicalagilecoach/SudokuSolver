@@ -6,16 +6,18 @@ namespace SudokuSolverCore;
 
 internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
 {
+    private int _numberOfRemovedCandidates = 0;
+    
     public bool Handle()
     {
-        var numberOfRemovedCandidates = 0;
+        _numberOfRemovedCandidates = 0;
 
         foreach (var row in AllRows)
         {
             var allCellsOfInterest = GetIndicesForRow(row);
             var allPairsOfCells = GetIndicesForDistinctPairs(0, row);
 
-            FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, ref numberOfRemovedCandidates);
+            FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest);
         }
         
         foreach (var column in AllColumns)
@@ -23,7 +25,7 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
             var allCellsOfInterest = GetIndicesForColumn(column);
             var allPairsOfCells = GetIndicesForDistinctPairs(1, column);
             
-            FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, ref numberOfRemovedCandidates);
+            FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest);
         }
         
         foreach (var box in AllBoxes)
@@ -31,14 +33,14 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
             var allCellsOfInterest = GetIndicesForBox(box);
             var allPairsOfCells = GetIndicesForDistinctPairs(2, box);
             
-            FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest, ref numberOfRemovedCandidates);
+            FindTwinsAndEliminateThemFromPotentialValues(allPairsOfCells, allCellsOfInterest);
         }
         
-        return numberOfRemovedCandidates>0;
+        return _numberOfRemovedCandidates>0;
     }
 
     private void FindTwinsAndEliminateThemFromPotentialValues(List<(Position, Position)> allPairsOfCells,
-        List<Position> allCellsOfInterest, ref int numberOfRemovedCandidates)
+        List<Position> allCellsOfInterest)
     {
         var digits = new int[GridSize];
 
@@ -56,11 +58,11 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
 
         var candidatesForPairs = new BitArray(digits.Select(digit => digits[digit] == 2).ToArray());
 
-        var foundTwins = new List<(Position, Position, BitArray)>();
+        var foundPairs = new List<(Position, Position, BitArray)>();
         
         foreach (var pair in allPairsOfCells)
         {
-            BitArray result = new BitArray(GridSize,true);
+            var result = new BitArray(GridSize,true);
             var c1 = Candidates[pair.Item1.Row, pair.Item1.Column];
             var c2 = Candidates[pair.Item2.Row, pair.Item2.Column];
             
@@ -75,24 +77,24 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
 
             if (count == 2)
             {
-                foundTwins.Add((pair.Item1, pair.Item2, result));
+                foundPairs.Add((pair.Item1, pair.Item2, result));
             }
         }
 
-        foreach (var twin in foundTwins)
+        foreach (var pair in foundPairs)
         {
-            var filter = twin.Item3.Not();
+            var filter = pair.Item3.Not();
             
             foreach (var cell in allCellsOfInterest)
             {
-                if (IsUndefined(cell) && cell != twin.Item1 && cell != twin.Item2)
+                if (IsUndefined(cell) && cell != pair.Item1 && cell != pair.Item2)
                 {
                     var old = Candidates[cell.Row, cell.Column];
                     Candidates[cell.Row, cell.Column].And(filter); 
                     
                     //ToDo: more than one candidate can be removed here -> all of them should be counted
                     if (!Candidates[cell.Row, cell.Column].Equals(old))
-                        numberOfRemovedCandidates++; 
+                        _numberOfRemovedCandidates++; 
                 }
             }
         }
