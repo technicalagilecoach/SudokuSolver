@@ -4,7 +4,6 @@
 - precalculating indices does not work in GetIndicesForDistinctPairs, see GetIndicesForDistinctPairsTest
 
 ## To Do
-- change strategies such that they count the number of newly fixed values/removed candidates
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
@@ -31,6 +30,7 @@
 - try to benefit more from the C# Enumerable class
 
 ## Done
+- change strategies such that they count the number of newly fixed values/removed candidates
 - implemented the box-line-reduction strategy
 - calculate indices only once -> as expected this has a big impact on performance as proven with profiling
 - improved check for modification in NakedSingles by counting how many values are set
