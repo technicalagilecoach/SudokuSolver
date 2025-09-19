@@ -1,13 +1,13 @@
 # Notes
 
 ## Bugs
-- precalculating indices does not work in GetIndicesForDistinctPairs, see GetIndicesForDistinctPairsTest
 
 ## To Do
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
   - HiddenPairs
+  - IndicesAndIterators
 - repair
   - HiddenPairs
 - which basic strategies from  https://www.sudokuwiki.org/Sudoku.htm have not been implemented yet? 
@@ -30,6 +30,7 @@
 - try to benefit more from the C# Enumerable class
 
 ## Done
+- BUG precalculating indices does not work in GetIndicesForDistinctPairs, see GetIndicesForDistinctPairsTest
 - change strategies such that they count the number of newly fixed values/removed candidates
 - implemented the box-line-reduction strategy
 - calculate indices only once -> as expected this has a big impact on performance as proven with profiling

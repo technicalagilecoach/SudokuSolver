@@ -123,42 +123,49 @@ public static class IndicesAndIterators
     
     public static List<(Position, Position)> GetIndicesForDistinctPairs(int areaType, int index)
     {
-        // if (IndicesForDistinctPairs.Count != 0)
-        // {
-        //     return IndicesForDistinctPairs[areaType][index];
-        // }
-        
-        var allCellsOfInterest = new List<Position>();
-
-        switch (areaType)
+        if (IndicesForDistinctPairs.Count != 0)
         {
-            case 0:
-                allCellsOfInterest = GetIndicesForRow(index); break;
-            case 1:
-                allCellsOfInterest = GetIndicesForColumn(index); break;
-            case 2:
-                allCellsOfInterest = GetIndicesForBox(index); break;
+             return IndicesForDistinctPairs[areaType][index];
         }
+        
+        InitializeIndicesForDistinctPairs();
+        
+        return IndicesForDistinctPairs[areaType][index];
+    }
 
+    private static void InitializeIndicesForDistinctPairs()
+    {
         for (var area = 0; area < 3; area++)
         {
-            IndicesForDistinctPairs[area] = new List<List<(Position, Position)>>();
+            IndicesForDistinctPairs[area] = [];
             
-            for (var idx = 0; idx < Puzzle.GridSize; idx++)
+            foreach (var digit in Puzzle.AllDigits)
             {
-                IndicesForDistinctPairs[area].Add(new List<(Position, Position)>());
-
-                for (var i = 0; i < allCellsOfInterest.Count-1; i++)
+                for (var idx = 0; idx < Puzzle.GridSize; idx++)
                 {
-                    for (var j = i; j < allCellsOfInterest.Count; j++)
+                    var allCellsOfInterest = new List<Position>();
+                    switch (area)
                     {
-                        if (i!=j)
-                            IndicesForDistinctPairs[area][idx].Add((allCellsOfInterest[i], allCellsOfInterest[j]));
+                        case 0:
+                            allCellsOfInterest = GetIndicesForRow(idx); break;
+                        case 1:
+                            allCellsOfInterest = GetIndicesForColumn(idx); break;
+                        case 2:
+                            allCellsOfInterest = GetIndicesForBox(idx); break;
+                    }
+
+                    IndicesForDistinctPairs[area].Add([]);
+
+                    for (var i = 0; i < allCellsOfInterest.Count - 1; i++)
+                    {
+                        for (var j = i; j < allCellsOfInterest.Count; j++)
+                        {
+                            if (i != j)
+                                IndicesForDistinctPairs[area][idx].Add((allCellsOfInterest[i], allCellsOfInterest[j]));
+                        }
                     }
                 }
             }
         }
-        
-        return IndicesForDistinctPairs[areaType][index];
     }
 }
