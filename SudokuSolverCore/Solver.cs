@@ -20,22 +20,27 @@ public class Solver(Puzzle puzzle)
         {
             _valueModified = false;
 
-            Execute(PruneCandidates);
-            Execute(NakedSingles);
+            Execute(PruneCandidates); //removes candidates
+            Execute(NakedSingles); //fixes values
             
-            Execute(HiddenSingles);
+            Execute(HiddenSingles); //fixes values
             
-            Execute(NakedPairs);
-            //Execute(HiddenPairs);
+            Execute(NakedPairs); //removes candidates
+            //Execute(HiddenPairs); //removes candidates?
             
-            Execute(PointingPairs);
+            Execute(PointingPairs); //removes candidates
+            Execute(BoxLineReduction); //removes candidates
         } while (_valueModified);
 
         var isCorrect = Check(Cells);
-        
-        if (PerformChecks&&!isCorrect)
+
+        if (PerformChecks && !isCorrect)
+        {
+            var isInconsistent = IsInconsistent();
             PrintDebugOutput(puzzle);
-        
+            string special = PrintSpecial(puzzle);
+        }
+
         return isCorrect;
     }
 
@@ -92,5 +97,10 @@ public class Solver(Puzzle puzzle)
     public bool PointingPairs()
     {
         return new PointingPairs(puzzle).Handle();
+    }
+    
+    public bool BoxLineReduction()
+    {
+        return new BoxLineReduction(puzzle).Handle();
     }
 }

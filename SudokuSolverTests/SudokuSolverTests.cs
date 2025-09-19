@@ -16,6 +16,8 @@ public class SolveSudokuPuzzle
     
     private static void CheckForSolvability(string puzzle)
     {
+        puzzle = puzzle.Replace("\n", "");
+        
         Solve(puzzle, out var solved);
         Assert.IsTrue(solved);
     }
@@ -123,7 +125,6 @@ public class SolveSudokuPuzzle
 
 
     [TestMethod]
-    [Ignore]
     public void SolveExtremePuzzle()
     {
         //puzzle from https://sudoku.com/extreme/
@@ -219,7 +220,7 @@ public class SolveSudokuPuzzle
     }
 
     [TestMethod]
-    [Ignore]
+    //[Ignore]
     public void SolvePuzzlesFromFile()
     {
         const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/0096_sudoku.txt";
@@ -229,6 +230,6 @@ public class SolveSudokuPuzzle
         var allPuzzles = ReadPuzzlesFromFile(filename);
         var numberOfUnsolvedPuzzles = SolveMultiplePuzzles(allPuzzles);
         Console.WriteLine(numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.");
-        Assert.AreEqual(allPuzzles.Count, numberOfUnsolvedPuzzles);
+        Assert.AreEqual(0, numberOfUnsolvedPuzzles);
     }
 }

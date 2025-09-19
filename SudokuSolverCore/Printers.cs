@@ -61,4 +61,47 @@ public static class Printers
         var potentialValues = PrintPotentialValues(puzzle);
         Console.WriteLine(potentialValues);
     }
+    
+    public static string PrintSpecial(Puzzle puzzle)
+    {
+        var data = new List<string>();
+        IndicesAndIterators.ForEachCell(position =>
+            {
+                
+                if (puzzle.Cells[position.Row, position.Column] == Puzzle.Undefined)
+                {
+                    //print Candidates
+                    var pValues = puzzle.Candidates[position.Row,position.Column];
+                    var values = new List<int>();
+                    foreach (var index in Puzzle.AllDigits)
+                    {
+                        var kv = pValues[index];
+                        if (kv)
+                            values.Add(index + 1);
+                    }
+                    data.Add("C:"+string.Join("", values));
+                }
+                else
+                {
+                    //print value
+                    var v = puzzle.Cells[position.Row, position.Column];
+                    data.Add("V:"+v.ToString());
+                }
+            } 
+        );
+
+        //return string.Join("\n", data);
+        
+        var buffer = new StringWriter();
+        for (int i = 0; i < data.Count; i++)
+        {
+            buffer.Write(data[i]);
+            if ((i+1)%9==0)
+                buffer.WriteLine();
+            else
+                buffer.Write(",");
+        }
+        return buffer.ToString();
+    }
+    
 }
