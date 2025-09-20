@@ -26,7 +26,7 @@ public class Solver(Puzzle puzzle)
             Execute(HiddenSingles); //fixes values
             
             Execute(NakedPairs); //removes candidates
-            //Execute(HiddenPairs); //removes candidates?
+            Execute(HiddenPairs); //removes candidates?
             
             Execute(PointingPairs); //removes candidates
             Execute(BoxLineReduction); //removes candidates
