@@ -20,6 +20,8 @@ public class PruneCandidates(Puzzle puzzle) : Strategy(puzzle)
     {
         if (IsUndefined(position)) 
             return;
+
+        Candidates[position.Row,position.Column].SetAll(false); // here instead of in SetValue???
         
         ForEachCellInAreaExcept(GetIndicesForRow(position.Row), position, pos =>
         {
