@@ -26,6 +26,7 @@ public class Strategy(Puzzle puzzle)
     protected void SetValue(Position position, int digit)
     { 
         Cells[position.Row,position.Column] = digit+1;
+        //Candidates[position.Row,position.Column].SetAll(false);
     }
     
     protected BitArray GetCandidates(Position position)
@@ -74,10 +75,10 @@ public class Strategy(Puzzle puzzle)
         
         foreach (var position in positions)
         {
-            var value = GetCandidates(position);
+            var candidates = GetCandidates(position);
             foreach (var digit in AllDigits)
             {
-                if (value[digit])
+                if (candidates[digit])
                     distribution[digit]++;
             }
         }
