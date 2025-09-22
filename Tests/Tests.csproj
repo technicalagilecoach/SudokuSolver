@@ -20,7 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SudokuSolverCore\SudokuSolverCore.csproj" />
+    <ProjectReference Include="..\Main\Main.csproj" />
+    <ProjectReference Include="..\Solver\Solver.csproj" />
   </ItemGroup>
 
   <ItemGroup>

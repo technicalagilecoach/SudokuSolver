@@ -1,4 +1,8 @@
-using SudokuSolverCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using SudokuSolver;
 
 namespace SudokuSolverTests;
 
@@ -25,7 +29,7 @@ public static class TestHelpers
         sudokuPuzzle.Init(puzzle);
         Solver solver = new(sudokuPuzzle);
         solved = solver.Solve();
-        var result = Printers.Print(sudokuPuzzle);
+        var result = sudokuPuzzle.PrintCells();
         return result;
     }
 
@@ -94,7 +98,7 @@ public static class TestHelpers
 
         solver.Execute(solver.NakedSingles);
 
-        var result = Printers.Print(sudokuPuzzle);
+        var result = sudokuPuzzle.PrintCells();
         
         var diff = Puzzle.Difference(puzzle, result);
 

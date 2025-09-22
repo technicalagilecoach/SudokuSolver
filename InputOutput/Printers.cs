@@ -1,12 +1,11 @@
-namespace SudokuSolverCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace SudokuSolver;
 
 public static class Printers
 {
-    public static string Print(Puzzle puzzle)
-    {
-        return PrintCells(puzzle.Cells);
-    }
-
     public static string PrintCells(int[,] cells)
     {
         var buffer = new StringWriter();
@@ -52,7 +51,7 @@ public static class Printers
 
     public static void PrintDebugOutput(Puzzle puzzle)
     {
-        var currentState = Print(puzzle);
+        var currentState = puzzle.PrintCells();
         Console.WriteLine(currentState);
             
         var spaces = ValidityChecker.CountUndefinedCells(puzzle.Cells);

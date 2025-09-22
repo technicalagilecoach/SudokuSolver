@@ -1,7 +1,8 @@
-using static SudokuSolverCore.IndicesAndIterators;
-using static SudokuSolverCore.Puzzle;
+using System.Collections.Generic;
+using static SudokuSolver.IndicesAndIterators;
+using static SudokuSolver.Puzzle;
 
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
 public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
 {

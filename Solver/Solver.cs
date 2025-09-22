@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using static SudokuSolverCore.IndicesAndIterators;
-using static SudokuSolverCore.Printers;
-using static SudokuSolverCore.ValidityChecker;
+﻿using System;
+using System.Collections;
+using static SudokuSolver.ValidityChecker;
 
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
 public class Solver(Puzzle puzzle)
 {
@@ -37,8 +36,7 @@ public class Solver(Puzzle puzzle)
         if (PerformChecks && !isCorrect)
         {
             var isInconsistent = IsInconsistent();
-            PrintDebugOutput(puzzle);
-            string special = PrintSpecial(puzzle);
+            var state = puzzle.PrintCells();
         }
 
         return isCorrect;
@@ -54,14 +52,14 @@ public class Solver(Puzzle puzzle)
         if (!_valueModified)
         {
             var before = IsInconsistent();
-            var puzzleBefore = PrintCells(Cells);
+            var puzzleBefore = puzzle.PrintCells();
             
             _valueModified = fun();
 
             var gotWorse = (!before) && IsInconsistent();
             if (PerformChecks && gotWorse)
             {
-                var puzzleAfter = PrintCells(Cells);
+                var puzzleAfter = puzzle.PrintCells();
                 var diff = Puzzle.Difference(puzzleBefore, puzzleAfter);
 
                 //PrintDebugOutput(puzzle);

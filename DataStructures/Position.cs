@@ -1,4 +1,4 @@
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
 public class Position(int row, int column)
 {

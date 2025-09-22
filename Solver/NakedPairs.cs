@@ -1,8 +1,8 @@
-using System.Collections;
-using static SudokuSolverCore.IndicesAndIterators;
-using static SudokuSolverCore.Puzzle;
+using System.Collections.Generic;
+using static SudokuSolver.IndicesAndIterators;
+using static SudokuSolver.Puzzle;
 
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
 public class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
     
@@ -27,8 +27,6 @@ public class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
         
         MarkUndefinedCells();
         MarkPotentialTwins();
-
-        string before = Printers.Print(puzzle);
         
         foreach (var row in AllRows)
         {

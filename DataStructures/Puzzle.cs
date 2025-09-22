@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using static SudokuSolverCore.IndicesAndIterators;
+using static SudokuSolver.IndicesAndIterators;
 
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
 public class Puzzle
 {
@@ -9,10 +9,10 @@ public class Puzzle
     public const int BoxSize = 3;
     public const int Undefined = 0;
 
-    internal static readonly IEnumerable<int> AllColumns = Enumerable.Range(0, GridSize);
-    internal static readonly IEnumerable<int> AllRows = Enumerable.Range(0, GridSize);
-    internal static readonly IEnumerable<int> AllBoxes = Enumerable.Range(0, GridSize);
-    internal static readonly IEnumerable<int> AllDigits = Enumerable.Range(0, GridSize);
+    public static readonly IEnumerable<int> AllColumns = Enumerable.Range(0, GridSize);
+    public static readonly IEnumerable<int> AllRows = Enumerable.Range(0, GridSize);
+    public static readonly IEnumerable<int> AllBoxes = Enumerable.Range(0, GridSize);
+    public static readonly IEnumerable<int> AllDigits = Enumerable.Range(0, GridSize);
 
     public int[,] Cells { get; } = new int[GridSize, GridSize];
     public BitArray[,] Candidates { get; } = new BitArray[GridSize, GridSize];
@@ -77,5 +77,23 @@ public class Puzzle
         }
 
         return new string(difference);
+    }
+    
+    public string PrintCells()
+    {
+        var buffer = new StringWriter();
+            
+        foreach (var row in Puzzle.AllDigits) {
+            foreach (var column in Puzzle.AllDigits)
+            {
+                Position position = new Position(row, column);
+                var v = Cells[position.Row, position.Column];
+                buffer.Write(v == Puzzle.Undefined ? " ":v);
+            } 
+
+            buffer.WriteLine();
+        }  
+            
+        return buffer.ToString();
     }
 }

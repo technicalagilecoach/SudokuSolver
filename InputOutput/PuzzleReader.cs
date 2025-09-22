@@ -1,4 +1,9 @@
-namespace SudokuSolverCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace SudokuSolver;
 
 public static class PuzzleReader
 {

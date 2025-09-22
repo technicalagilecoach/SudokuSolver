@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>13</LangVersion>
+        <AssemblyVersion>0.1.0</AssemblyVersion>
+        <RootNamespace>SudokuSolver</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DataStructures\DataStructures.csproj" />
+      <ProjectReference Include="..\Solver\Solver.csproj" />
+    </ItemGroup>
+
+</Project>

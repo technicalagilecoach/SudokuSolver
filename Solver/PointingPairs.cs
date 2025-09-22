@@ -1,7 +1,9 @@
-using static SudokuSolverCore.IndicesAndIterators;
-using static SudokuSolverCore.Puzzle;
+using System.Collections.Generic;
+using System.Linq;
+using static SudokuSolver.IndicesAndIterators;
+using static SudokuSolver.Puzzle;
 
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
 public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
     public bool Handle()

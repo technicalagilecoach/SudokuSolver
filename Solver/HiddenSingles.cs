@@ -1,7 +1,7 @@
-using static SudokuSolverCore.IndicesAndIterators;
-using static SudokuSolverCore.Puzzle;
+using static SudokuSolver.IndicesAndIterators;
+using static SudokuSolver.Puzzle;
 
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
 internal class HiddenSingles(Puzzle puzzle) : Strategy(puzzle)
 {

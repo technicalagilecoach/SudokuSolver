@@ -1,4 +1,4 @@
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
 using static IndicesAndIterators;
 using static Puzzle;

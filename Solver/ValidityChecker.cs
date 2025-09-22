@@ -1,9 +1,10 @@
-using static SudokuSolverCore.IndicesAndIterators;
-using static SudokuSolverCore.Puzzle;
+using System.Collections.Generic;
+using static SudokuSolver.IndicesAndIterators;
+using static SudokuSolver.Puzzle;
 
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
-internal static class ValidityChecker
+public static class ValidityChecker
 {
     public static bool Check(int[,] cells)
     {
@@ -29,7 +30,7 @@ internal static class ValidityChecker
         return true;
     }
 
-    internal static int CountUndefinedCells(int[,] cells)
+    public static int CountUndefinedCells(int[,] cells)
     {
         var count = 0;
         

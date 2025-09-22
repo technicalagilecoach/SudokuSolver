@@ -1,4 +1,5 @@
-﻿using CliFx;
+﻿using System.Threading.Tasks;
+using CliFx;
 
 namespace SudokuSolverMain;
 

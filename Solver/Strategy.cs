@@ -1,7 +1,8 @@
 using System.Collections;
-using static SudokuSolverCore.Puzzle;
+using System.Collections.Generic;
+using static SudokuSolver.Puzzle;
 
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
 public class Strategy(Puzzle puzzle)
 {

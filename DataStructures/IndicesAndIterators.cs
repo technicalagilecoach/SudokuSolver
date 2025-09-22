@@ -1,4 +1,4 @@
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
 public static class IndicesAndIterators
 {

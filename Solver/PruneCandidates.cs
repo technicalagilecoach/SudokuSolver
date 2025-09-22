@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
-using static SudokuSolverCore.IndicesAndIterators;
+using System.Collections.Generic;
+using static SudokuSolver.IndicesAndIterators;
 
-namespace SudokuSolverCore;
+namespace SudokuSolver;
 
 public class PruneCandidates(Puzzle puzzle) : Strategy(puzzle)
 {

@@ -1,9 +1,11 @@
-using CliFx.Infrastructure;
+using System.IO;
+using System.Threading.Tasks;
 using CliFx;
 using CliFx.Attributes;
+using CliFx.Infrastructure;
 using SudokuSolverTests;
 
-namespace SudokuSolverMain;
+namespace SudokuSolver;
 
 [Command(Description = "A simple command line Sudoku solver.")]
 public class InputCommand : ICommand

@@ -1,3 +1,5 @@
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static SudokuSolverTests.TestHelpers;
 
 namespace SudokuSolverTests;

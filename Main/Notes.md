@@ -4,6 +4,10 @@
 
 ## To Do
 - make solver usable for end users - command line tool
+- move code to read puzzles/write solutions to SudokuSolverMain
+- move puzzles, notes, ... to toplevel folder outside the projects
+- polish the code to make the GitHub-repo public
+- error handling for command line version (output file already exists, directory not writeable, ...)
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
