@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using static SudokuSolver.IndicesAndIterators;
 using static SudokuSolver.Puzzle;
 

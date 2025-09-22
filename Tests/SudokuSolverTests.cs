@@ -224,12 +224,12 @@ public class SolveSudokuPuzzle
     [Ignore]
     public void SolvePuzzlesFromFile()
     {
-        const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/0096_sudoku.txt";
+        //const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/0096_sudoku.txt";
         //const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/Just17.txt";
-        //const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/top50000.txt";
+        const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/top50000.txt";
 
         var allPuzzles = Input.ReadPuzzlesFromFile(filename);
-        var numberOfUnsolvedPuzzles = SolveMultiplePuzzles(allPuzzles);
+        var numberOfUnsolvedPuzzles = SolveMultiplePuzzles(allPuzzles,out var results);
         Console.WriteLine(numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.");
         Assert.AreEqual(0, numberOfUnsolvedPuzzles);
     }

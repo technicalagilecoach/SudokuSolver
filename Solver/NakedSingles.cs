@@ -1,7 +1,7 @@
 namespace SudokuSolver;
 
 using static IndicesAndIterators;
-using static Puzzle;
+
 public class NakedSingles(Puzzle puzzle) : Strategy(puzzle)
 {
     public bool Handle()

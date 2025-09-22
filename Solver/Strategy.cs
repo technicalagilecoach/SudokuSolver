@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using static SudokuSolver.Puzzle;
 
 namespace SudokuSolver;

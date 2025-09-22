@@ -1,4 +1,3 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SudokuSolver;
 using static SudokuSolver.NakedPairs;
 
