@@ -19,7 +19,7 @@ public static class Input
 
     private static bool ContainsSingleLinePuzzles(List<string> allLines)
     {
-        return allLines[0].Length == (Puzzle.GridSize^2);
+        return allLines[0].Length == Puzzle.GridSize*Puzzle.GridSize;
     }
 
     private static List<string> ReadMultilinePuzzles(List<string> allLines)
