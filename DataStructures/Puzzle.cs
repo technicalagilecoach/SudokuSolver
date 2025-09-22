@@ -33,7 +33,7 @@ public class Puzzle
         ForEachCell(position =>
         {
             var symbol = rows[position.Row][position.Column].ToString();
-            var digit = (symbol == " " || symbol== ".") ? Undefined : int.Parse(symbol); // inefficient logical or
+            var digit = (symbol == " " || symbol== ".") ? Undefined : int.Parse(symbol); // To Do: inefficient logical or?
             Cells[position.Row, position.Column] = digit;
         });
 

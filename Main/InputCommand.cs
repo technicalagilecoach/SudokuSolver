@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
-using SudokuSolverTests;
 
 namespace SudokuSolver;
 
@@ -18,8 +17,8 @@ public class InputCommand : ICommand
     
     public ValueTask ExecuteAsync(IConsole console)
     {
-        var allPuzzles = TestHelpers.ReadPuzzlesFromFile(FileName.FullName);
-        var numberOfUnsolvedPuzzles = TestHelpers.SolveMultiplePuzzles(allPuzzles);
+        var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName);
+        var numberOfUnsolvedPuzzles = SolverUtil.SolveMultiplePuzzles(allPuzzles);
 
         string output = numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.";
         

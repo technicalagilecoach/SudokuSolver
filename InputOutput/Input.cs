@@ -1,23 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
 namespace SudokuSolver;
 
-public static class PuzzleReader
+public static class Input
 {
     public static List<string> ReadPuzzlesFromFile(string filename)
     {
         var allLines = GetAllLinesFromFile(filename);
-        return ContainsSingleLinePuzzles(allLines) ? ReadSingleLinePuzzles(allLines) : ReadMultilinePuzzles(allLines);
+        return ContainsSingleLinePuzzles(allLines) ? allLines : ReadMultilinePuzzles(allLines);
     }
 
     private static List<string> GetAllLinesFromFile(string filename)
     {
         using StreamReader reader = new(filename);
         var text = reader.ReadToEnd();
-        var allLines = text.Split((char[])['\n', '\r'], StringSplitOptions.RemoveEmptyEntries).ToList();
+        char[] separators = ['\n', '\r'];
+        var allLines = text.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
         return allLines;
     }
 
@@ -34,16 +30,16 @@ public static class PuzzleReader
         
         var numOfPuzzles = allLines.Count / linesPerPuzzle;
 
-        for (var i = 0; i < numOfPuzzles; i++)
+        for (var puzzleIndex = 0; puzzleIndex < numOfPuzzles; puzzleIndex++)
         {
-            var offset = i * linesPerPuzzle;
+            var offset = puzzleIndex * linesPerPuzzle;
             var puzzle = new List<string>();
 
-            for (var j = offset; j < linesPerPuzzle + offset; j++)
+            for (var lineIndex = offset; lineIndex < linesPerPuzzle + offset; lineIndex++)
             {
-                if (j % linesPerPuzzle != 0)
+                if (lineIndex % linesPerPuzzle != 0)
                 {
-                    puzzle.Add(allLines[j]);
+                    puzzle.Add(allLines[lineIndex]);
                 }
             }
 
@@ -51,13 +47,6 @@ public static class PuzzleReader
             
             allPuzzles.Add(puzzleAsString);
         }
-        
-        return allPuzzles;
-    }
-
-    private static List<string> ReadSingleLinePuzzles(List<string> allLines)
-    {
-        var allPuzzles = allLines.ToList();
         
         return allPuzzles;
     }

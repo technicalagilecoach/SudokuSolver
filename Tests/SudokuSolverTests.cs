@@ -1,6 +1,5 @@
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static SudokuSolverTests.TestHelpers;
+using SudokuSolver;
+using static SudokuSolver.SolverUtil;
 
 namespace SudokuSolverTests;
 
@@ -229,7 +228,7 @@ public class SolveSudokuPuzzle
         //const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/Just17.txt";
         //const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/top50000.txt";
 
-        var allPuzzles = ReadPuzzlesFromFile(filename);
+        var allPuzzles = Input.ReadPuzzlesFromFile(filename);
         var numberOfUnsolvedPuzzles = SolveMultiplePuzzles(allPuzzles);
         Console.WriteLine(numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.");
         Assert.AreEqual(0, numberOfUnsolvedPuzzles);

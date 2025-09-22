@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-
 namespace SudokuSolver;
 
-public static class Printers
+public static class Output
 {
     public static string PrintCells(int[,] cells)
     {
@@ -69,7 +65,7 @@ public static class Printers
                 
                 if (puzzle.Cells[position.Row, position.Column] == Puzzle.Undefined)
                 {
-                    //print Candidates
+                    //print candidates
                     var pValues = puzzle.Candidates[position.Row,position.Column];
                     var values = new List<int>();
                     foreach (var index in Puzzle.AllDigits)
@@ -88,8 +84,6 @@ public static class Printers
                 }
             } 
         );
-
-        //return string.Join("\n", data);
         
         var buffer = new StringWriter();
         for (int i = 0; i < data.Count; i++)
@@ -102,5 +96,4 @@ public static class Printers
         }
         return buffer.ToString();
     }
-    
 }
