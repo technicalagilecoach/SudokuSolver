@@ -2,17 +2,25 @@ namespace SudokuSolver;
 
 public static class SolverUtil
 {
-    public static int SolveMultiplePuzzles(List<string> allPuzzles)
+    public static int SolveMultiplePuzzles(List<string> allPuzzles, out List<string> solutions)
     {
-        var unsolvedCells = new int[allPuzzles.Count];
+        var numberOfUnsolvedCells = new int[allPuzzles.Count];
+        solutions = [];
 
         for (var index = 0; index < allPuzzles.Count; index++)
         {
             var puzzle = allPuzzles[index];
-            unsolvedCells[index] = TryToSolve(puzzle);
+            var result = Solve(puzzle, out var solved);
+
+            var count = 0;
+            if (!solved)
+                count = result.Count(c => c == ' ');
+
+            numberOfUnsolvedCells[index] = count;
+            solutions.Add(result);
         }
         
-        var numberOfUnsolvedPuzzles = unsolvedCells.Count(c => c!=0);
+        var numberOfUnsolvedPuzzles = numberOfUnsolvedCells.Count(c => c!=0);
         return numberOfUnsolvedPuzzles;
     }
 
@@ -26,18 +34,7 @@ public static class SolverUtil
         return result;
     }
 
-    private static int TryToSolve(string puzzle)
-    {
-        var result = Solve(puzzle, out var solved);
 
-        var count = 0;
-        if (!solved)
-            count = result.Count(c => c == ' ');
-
-        return count;
-    }
-
-    
     public static string OneSolverStep(string puzzle, out bool hasBeenChanged)
     {
         var sudokuPuzzle = new Puzzle();

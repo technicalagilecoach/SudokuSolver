@@ -19,7 +19,7 @@ public class InputCommand : ICommand
         CheckIfFileIsMissing(FileName);
         
         var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName);
-        var numberOfUnsolvedPuzzles = SolverUtil.SolveMultiplePuzzles(allPuzzles);
+        var numberOfUnsolvedPuzzles = SolverUtil.SolveMultiplePuzzles(allPuzzles, out var results);
 
         var output = numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.";
         
@@ -28,6 +28,12 @@ public class InputCommand : ICommand
             using var fs = TryToCreateFile(OutputFile);
 
             using var sr = new StreamWriter(fs);
+
+            foreach (var puzzle in results)
+            {
+                sr.WriteLine(puzzle);
+            }
+
             sr.WriteLine(output);
         }
         else 
