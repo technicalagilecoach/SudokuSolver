@@ -3,6 +3,7 @@
 ## Bugs
 
 ## To Do
+- make solver usable for end users - command line tool
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
@@ -16,7 +17,6 @@
   - hidden triples
   - naked quads
   - hidden quads
-- make solver usable for end users - command line tool
 - improve statistics, error checking and debug support
   - should be helpful
   - can be activated on demand (impact on solver performance)
