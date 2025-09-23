@@ -8,8 +8,6 @@ namespace SudokuSolver;
 [Command(Description = "A simple command line Sudoku solver.")]
 public class InputCommand : ICommand
 {
-
-    
     [CommandParameter(0, Description = "A file containing one or more Sudoku puzzles to solve.")]
     public required FileInfo FileName { get; set; }
 
@@ -30,6 +28,8 @@ public class InputCommand : ICommand
         
         var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName);
 
+        var undefinedSymbol = DetermineUndefinedSymbol(allPuzzles[0]);
+        
         List<string> results;
         var output = "";
 
@@ -46,6 +46,9 @@ public class InputCommand : ICommand
             foreach (var puzzle in results)
             {
                 var res = puzzle;
+                
+                res = res.Replace(" ", undefinedSymbol);
+                
                 if (fileType == Input.FileType.MultiplePuzzlesOneLineEach)
                     res = res.Replace("\n", "");
                 
@@ -67,15 +70,17 @@ public class InputCommand : ICommand
                     if (index%10!=0)
                         puzzleIndex++;
                     
+                    string nextCell = solution[index].ToString().Replace(" ", undefinedSymbol);
+                    
                     if (puzzleIndex<puzzle.Length && solution[index] == puzzle[puzzleIndex])
                     {
                         console.WithForegroundColor(ConsoleColor.DarkRed);
-                        console.Output.Write(solution[index]);
+                        console.Output.Write(nextCell);
                         console.ResetColor();
                     }
                     else
                     {
-                        console.Output.Write(solution[index]);
+                        console.Output.Write(nextCell);
                     }
                 }
             }
@@ -84,6 +89,9 @@ public class InputCommand : ICommand
                 foreach (var result in results)
                 {
                     var res = result;
+                    
+                    res = res.Replace(" ", undefinedSymbol);
+                    
                     if (fileType==Input.FileType.MultiplePuzzlesOneLineEach)
                         res = res.Replace("\n", "");
                     
@@ -97,6 +105,26 @@ public class InputCommand : ICommand
         // If the execution is not meant to be asynchronous,
         // return an empty task at the end of the method.
         return default;
+    }
+
+    private static string DetermineUndefinedSymbol(string firstPuzzle)
+    {
+        string undefinedSymbol="";
+        
+        if (firstPuzzle.Contains(' '))
+        {
+            undefinedSymbol = " ";
+        }
+        else if (firstPuzzle.Contains('.'))
+        {
+            undefinedSymbol = ".";
+        }
+        else if (firstPuzzle.Contains('0'))
+        {
+            undefinedSymbol = "0";
+        }
+
+        return undefinedSymbol;
     }
 
     private static List<string> SolveMultiplePuzzles(List<string> allPuzzles, ref string output)
