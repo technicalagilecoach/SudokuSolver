@@ -3,11 +3,12 @@
 ## Bugs
 
 ## To Do
-- make solver usable for end users - command line tool
-- move code to read puzzles/write solutions to SudokuSolverMain
-- move puzzles, notes, ... to toplevel folder outside the projects
 - polish the code to make the GitHub-repo public
-- error handling for command line version (output file already exists, directory not writeable, ...)
+- use the same symbol for unsolved cells as in the input files when writing the results
+- also preserve the puzzle names from input files of type MultiplePuzzlesWithName when storing the results   
+- command line switch to save only the unsolved puzzles
+- clean up code for reading in sets of puzzles
+- clean up code for printing solutions
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
@@ -15,8 +16,7 @@
   - IndicesAndIterators
 - repair
   - HiddenPairs
-- which basic strategies from  https://www.sudokuwiki.org/Sudoku.htm have not been implemented yet? 
-- implement more basic strategies
+- implement remaining basic strategies
   - naked triples
   - hidden triples
   - naked quads
@@ -25,19 +25,17 @@
   - should be helpful
   - can be activated on demand (impact on solver performance)
   - tradeoff with different diagnostic levels
-- use the same symbol for unsolved cells as in the input files when writing the results
-- also preserve the puzzle names from input files of type MultiplePuzzlesWithName when storing the results   
-- command line switch to save only the unsolved puzzles
 - parallel execution when many puzzles are processed
-- clean up code to read in sets of puzzles
-- extract duplicate code into common helper functions
-- reduce number of method parameters by using more instance variables
-- check if existing strategies work as intended/identify test puzzles where the strategy is needed
 - perform pruning etc. only based on actually changed cells
-- make a nicer equality check for BitArrays than AreEqual
-- try to benefit more from the C# Enumerable class
 
 ## Done
+- highlight the original fixed cells in red for SinglePuzzle mode with console output
+- store output files in the same format as the input files
+- distinguish different input file types
+- make solver usable for end users - command line tool
+- move code to read puzzles/write solutions away from Tests project
+- move puzzles, notes, ... to toplevel folder outside the projects
+- error handling for command line version (output file already exists, directory not writeable, ...)
 - BUG precalculating indices does not work in GetIndicesForDistinctPairs, see GetIndicesForDistinctPairsTest
 - change strategies such that they count the number of newly fixed values/removed candidates
 - implemented the box-line-reduction strategy
