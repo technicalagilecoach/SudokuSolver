@@ -10,9 +10,10 @@ public static class Input
         Unknown
     }
     
-    public static List<string> ReadPuzzlesFromFile(string filename)
+    public static List<string> ReadPuzzlesFromFile(string filename, out List<string> puzzleNames)
     {
         var allLines = GetAllLinesFromFile(filename);
+        puzzleNames = new List<string>();
         
         var fileType = DetermineFileType(filename);
 
@@ -23,7 +24,7 @@ public static class Input
             case FileType.MultiplePuzzlesOneLineEach:
                 return allLines;
             case FileType.MultiplePuzzlesWithName:
-                return ReadMultilinePuzzles(allLines);
+                return ReadMultilinePuzzles(allLines, out puzzleNames);
         }
 
         var sw = new StringWriter();
@@ -81,9 +82,10 @@ public static class Input
         return FileType.Unknown;
     }
     
-    private static List<string> ReadMultilinePuzzles(List<string> allLines)
+    private static List<string> ReadMultilinePuzzles(List<string> allLines, out List<string> puzzleNames)
     {
         var allPuzzles = new List<string>();
+        puzzleNames = new List<string>();
         
         const int linesPerPuzzle = Puzzle.GridSize + 1;
         
@@ -99,6 +101,10 @@ public static class Input
                 if (lineIndex % linesPerPuzzle != 0)
                 {
                     puzzle.Add(allLines[lineIndex]);
+                }
+                else
+                {
+                    puzzleNames.Add(allLines[lineIndex]);
                 }
             }
 

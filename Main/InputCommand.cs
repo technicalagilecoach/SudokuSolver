@@ -25,8 +25,9 @@ public class InputCommand : ICommand
         
         if (fileType == Input.FileType.Unknown)
             throw new CommandException("Invalid file type.");
-        
-        var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName);
+
+        List<string> puzzleNames;
+        var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName, out puzzleNames);
 
         var undefinedSymbol = DetermineUndefinedSymbol(allPuzzles[0]);
         
@@ -43,14 +44,23 @@ public class InputCommand : ICommand
             using var fs = TryToCreateFile(OutputFile);
             using var sr = new StreamWriter(fs);
 
+            int index = 0;
             foreach (var puzzle in results)
             {
                 var res = puzzle;
-                
+
+                if (fileType == Input.FileType.MultiplePuzzlesWithName)
+                {
+                    sr.WriteLine(puzzleNames[index]);
+                    sr.Write(res);
+                    index++;
+                }
+
                 if (fileType == Input.FileType.MultiplePuzzlesOneLineEach)
+                {
                     res = res.Replace("\n", "");
-                
-                sr.WriteLine(res);
+                    sr.WriteLine(res);
+                }
             }
 
             sr.WriteLine(output);
@@ -84,14 +94,23 @@ public class InputCommand : ICommand
             }
             else
             {
+                int index = 0;
                 foreach (var result in results)
                 {
                     var res = result;
                     
-                    if (fileType==Input.FileType.MultiplePuzzlesOneLineEach)
+                    if (fileType == Input.FileType.MultiplePuzzlesWithName)
+                    {
+                        console.Output.WriteLine(puzzleNames[index]);
+                        console.Output.Write(res);    
+                        index++;
+                    }
+
+                    if (fileType == Input.FileType.MultiplePuzzlesOneLineEach)
+                    {
                         res = res.Replace("\n", "");
-                    
-                    console.Output.WriteLine(res);
+                        console.Output.WriteLine(res);
+                    }
                 }
             }
             
