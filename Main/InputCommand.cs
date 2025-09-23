@@ -16,6 +16,9 @@ public class InputCommand : ICommand
     
     [CommandOption("number", 'n', Description = "Number of the puzzle to be solved from a file with multiple puzzles.")]
     public int Number { get; set; }
+
+    [CommandOption("unsolved", 'u', Description = "Output the unsolved puzzles only. This option only applies to input files with multiple puzzles.")]
+    public bool Unsolved { get; set; } = false;
     
     public ValueTask ExecuteAsync(IConsole console)
     {
@@ -32,12 +35,14 @@ public class InputCommand : ICommand
         var undefinedSymbol = DetermineUndefinedSymbol(allPuzzles[0]);
         
         List<string> results;
+        List<bool> solvedPuzzles = new List<bool>();
+        
         var output = "";
 
         if (fileType == Input.FileType.SinglePuzzle || Number > 0)
             results = SolveOnePuzzle(allPuzzles, Number, ref output, undefinedSymbol);
         else
-            results = SolveMultiplePuzzles(allPuzzles, ref output, undefinedSymbol);
+            results = SolveMultiplePuzzles(allPuzzles, ref output, out solvedPuzzles, undefinedSymbol);
 
         if (OutputFile is not null)
         {
@@ -45,9 +50,12 @@ public class InputCommand : ICommand
             using var sr = new StreamWriter(fs);
 
             int index = 0;
-            foreach (var puzzle in results)
+            for (var i=0; i<results.Count; i++)
             {
-                var res = puzzle;
+                if (Unsolved && solvedPuzzles.Count==results.Count && solvedPuzzles[i])
+                    continue;
+                
+                var res = results[i];
 
                 if (fileType == Input.FileType.MultiplePuzzlesWithName)
                 {
@@ -95,9 +103,12 @@ public class InputCommand : ICommand
             else
             {
                 int index = 0;
-                foreach (var result in results)
+                for (var i=0; i<results.Count; i++)
                 {
-                    var res = result;
+                    if (Unsolved && solvedPuzzles.Count==results.Count && solvedPuzzles[i])
+                        continue;
+                    
+                    var res = results[i];
                     
                     if (fileType == Input.FileType.MultiplePuzzlesWithName)
                     {
@@ -142,9 +153,10 @@ public class InputCommand : ICommand
         return undefinedSymbol;
     }
 
-    private static List<string> SolveMultiplePuzzles(List<string> allPuzzles, ref string output, string undefinedSymbol)
+    private static List<string> SolveMultiplePuzzles(List<string> allPuzzles, ref string output,
+        out List<bool> solvedPuzzles, string undefinedSymbol)
     {
-        var numberOfUnsolvedPuzzles = SolverUtil.SolveMultiplePuzzles(allPuzzles, out var results, undefinedSymbol);
+        var numberOfUnsolvedPuzzles = SolverUtil.SolveMultiplePuzzles(allPuzzles, out var results, out solvedPuzzles, undefinedSymbol);
         output = numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.";
         return results;
     }

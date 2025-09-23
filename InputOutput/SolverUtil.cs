@@ -2,7 +2,8 @@ namespace SudokuSolver;
 
 public static class SolverUtil
 {
-    public static int SolveMultiplePuzzles(List<string> allPuzzles, out List<string> solutions, string undefinedSymbol)
+    public static int SolveMultiplePuzzles(List<string> allPuzzles, out List<string> solutions,
+        out List<bool> solvedPuzzles, string undefinedSymbol)
     {
         var numberOfUnsolvedCells = new int[allPuzzles.Count];
         solutions = [];
@@ -15,6 +16,8 @@ public static class SolverUtil
         }
         
         var numberOfUnsolvedPuzzles = numberOfUnsolvedCells.Count(c => c!=0);
+        solvedPuzzles = numberOfUnsolvedCells.Select(n => n == 0).ToList();
+
         return numberOfUnsolvedPuzzles;
     }
 

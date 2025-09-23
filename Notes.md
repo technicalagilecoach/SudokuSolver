@@ -4,9 +4,9 @@
 
 ## To Do
 - polish the code to make the GitHub-repo public
-- command line switch to save only the unsolved puzzles
 - clean up code for reading in sets of puzzles
 - clean up code for printing solutions
+- clean up code for calling the solver
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
@@ -27,6 +27,7 @@
 - perform pruning etc. only based on actually changed cells
 
 ## Done
+- command line switch to save only the unsolved puzzles
 - preserve the puzzle names from input files of type MultiplePuzzlesWithName when storing the results
 - use the same symbol for unsolved cells as in the input files when writing the results
   - currently done by replacing the characters afterward -> inefficient
