@@ -29,8 +29,7 @@ public class InputCommand : ICommand
         if (fileType == Input.FileType.Unknown)
             throw new CommandException("Invalid file type.");
 
-        List<string> puzzleNames;
-        var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName, out puzzleNames);
+        var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName, out var puzzleNames);
 
         var undefinedSymbol = DetermineUndefinedSymbol(allPuzzles[0]);
         
@@ -46,84 +45,14 @@ public class InputCommand : ICommand
 
         if (OutputFile is not null)
         {
-            using var fs = TryToCreateFile(OutputFile);
-            using var sr = new StreamWriter(fs);
-
-            int index = 0;
-            for (var i=0; i<results.Count; i++)
-            {
-                if (Unsolved && solvedPuzzles.Count==results.Count && solvedPuzzles[i])
-                    continue;
-                
-                var res = results[i];
-
-                if (fileType == Input.FileType.MultiplePuzzlesWithName)
-                {
-                    sr.WriteLine(puzzleNames[index]);
-                    sr.Write(res);
-                    index++;
-                }
-
-                if (fileType == Input.FileType.MultiplePuzzlesOneLineEach)
-                {
-                    res = res.Replace("\n", "");
-                    sr.WriteLine(res);
-                }
-            }
-
-            sr.WriteLine(output);
+            WritePuzzlesToFile(results, solvedPuzzles, fileType, puzzleNames, output);
         }
         else 
         {
             if (fileType == Input.FileType.SinglePuzzle)
-            {
-                var puzzle = allPuzzles[0];
-                var solution = results[0];
-
-                var puzzleIndex = 0;
-                for (var index = 0; index < solution.Length; index++)
-                {
-                    if (index%10!=0)
-                        puzzleIndex++;
-                    
-                    string nextCell = solution[index].ToString().Replace(" ", undefinedSymbol);
-                    
-                    if (puzzleIndex<puzzle.Length && solution[index] == puzzle[puzzleIndex])
-                    {
-                        console.WithForegroundColor(ConsoleColor.DarkRed);
-                        console.Output.Write(nextCell);
-                        console.ResetColor();
-                    }
-                    else
-                    {
-                        console.Output.Write(nextCell);
-                    }
-                }
-            }
+                WriteSinglePuzzleToConsole(console, results[0], allPuzzles[0], undefinedSymbol);
             else
-            {
-                int index = 0;
-                for (var i=0; i<results.Count; i++)
-                {
-                    if (Unsolved && solvedPuzzles.Count==results.Count && solvedPuzzles[i])
-                        continue;
-                    
-                    var res = results[i];
-                    
-                    if (fileType == Input.FileType.MultiplePuzzlesWithName)
-                    {
-                        console.Output.WriteLine(puzzleNames[index]);
-                        console.Output.Write(res);    
-                        index++;
-                    }
-
-                    if (fileType == Input.FileType.MultiplePuzzlesOneLineEach)
-                    {
-                        res = res.Replace("\n", "");
-                        console.Output.WriteLine(res);
-                    }
-                }
-            }
+                WriteMultiplePuzzlesToConsole(console, results, solvedPuzzles, fileType, puzzleNames);
             
             console.Output.WriteLine(output);
         }
@@ -131,6 +60,85 @@ public class InputCommand : ICommand
         // If the execution is not meant to be asynchronous,
         // return an empty task at the end of the method.
         return default;
+    }
+
+    private void WritePuzzlesToFile(List<string> results, List<bool> solvedPuzzles, Input.FileType fileType, List<string> puzzleNames, string output)
+    {
+        using var fs = TryToCreateFile(OutputFile);
+        using var sr = new StreamWriter(fs);
+
+        int index = 0;
+        for (var i=0; i<results.Count; i++)
+        {
+            if (Unsolved && solvedPuzzles.Count==results.Count && solvedPuzzles[i])
+                continue;
+                
+            var res = results[i];
+
+            if (fileType == Input.FileType.MultiplePuzzlesWithName)
+            {
+                sr.WriteLine(puzzleNames[index]);
+                sr.Write(res);
+                index++;
+            }
+
+            if (fileType == Input.FileType.MultiplePuzzlesOneLineEach)
+            {
+                res = res.Replace("\n", "");
+                sr.WriteLine(res);
+            }
+        }
+
+        sr.WriteLine(output);
+    }
+
+    private void WriteMultiplePuzzlesToConsole(IConsole console, List<string> results, List<bool> solvedPuzzles, Input.FileType fileType,
+        List<string> puzzleNames)
+    {
+        int index = 0;
+        for (var i=0; i<results.Count; i++)
+        {
+            if (Unsolved && solvedPuzzles.Count==results.Count && solvedPuzzles[i])
+                continue;
+                    
+            var res = results[i];
+                    
+            if (fileType == Input.FileType.MultiplePuzzlesWithName)
+            {
+                console.Output.WriteLine(puzzleNames[index]);
+                console.Output.Write(res);    
+                index++;
+            }
+
+            if (fileType == Input.FileType.MultiplePuzzlesOneLineEach)
+            {
+                res = res.Replace("\n", "");
+                console.Output.WriteLine(res);
+            }
+        }
+    }
+
+    private static void WriteSinglePuzzleToConsole(IConsole console, string solution, string puzzle, string undefinedSymbol)
+    {
+        var puzzleIndex = 0;
+        for (var index = 0; index < solution.Length; index++)
+        {
+            if (index%10!=0)
+                puzzleIndex++;
+                    
+            string nextCell = solution[index].ToString().Replace(" ", undefinedSymbol);
+                    
+            if (puzzleIndex<puzzle.Length && solution[index] == puzzle[puzzleIndex])
+            {
+                console.WithForegroundColor(ConsoleColor.DarkRed);
+                console.Output.Write(nextCell);
+                console.ResetColor();
+            }
+            else
+            {
+                console.Output.Write(nextCell);
+            }
+        }
     }
 
     private static string DetermineUndefinedSymbol(string firstPuzzle)

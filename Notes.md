@@ -4,6 +4,8 @@
 
 ## To Do
 - polish the code to make the GitHub-repo public
+- remove data from git retrospectively, e.g. puzzle files, this notes, ...
+- clean up code in InputCommands
 - clean up code for reading in sets of puzzles
 - clean up code for printing solutions
 - clean up code for calling the solver
@@ -14,7 +16,7 @@
   - IndicesAndIterators
 - repair
   - HiddenPairs
-- implement remaining basic strategies
+- implement remaining basic strategies (identify relevant puzzles for each)
   - naked triples
   - hidden triples
   - naked quads
