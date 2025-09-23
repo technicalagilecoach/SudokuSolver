@@ -9,19 +9,29 @@ public static class SolverUtil
 
         for (var index = 0; index < allPuzzles.Count; index++)
         {
-            var puzzle = allPuzzles[index];
-            var result = Solve(puzzle, out var solved);
-
-            var count = 0;
-            if (!solved)
-                count = result.Count(c => c == ' ');
-
+            var result = SolveOnePuzzle(allPuzzles, index, out var count);
             numberOfUnsolvedCells[index] = count;
             solutions.Add(result);
         }
         
         var numberOfUnsolvedPuzzles = numberOfUnsolvedCells.Count(c => c!=0);
         return numberOfUnsolvedPuzzles;
+    }
+
+    public static string SolveOnePuzzle(List<string> allPuzzles, int index, out int numberOfUnsolvedCells)
+    {
+        numberOfUnsolvedCells = 0;
+        
+        if (index < 0 || index >= allPuzzles.Count) 
+            return ""; //ToDo exception handling
+        
+        var puzzle = allPuzzles[index];
+        var result = Solve(puzzle, out var solved);
+        
+        if (!solved)
+            numberOfUnsolvedCells = result.Count(c => c == ' ');
+        
+        return result;
     }
 
     public static string Solve(string puzzle, out bool solved)
