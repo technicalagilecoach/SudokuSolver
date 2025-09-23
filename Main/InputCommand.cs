@@ -52,9 +52,35 @@ public class InputCommand : ICommand
         }
         else 
         {
-            foreach (var puzzle in results)
+            if (fileType == Input.FileType.SinglePuzzle)
             {
-                console.Output.WriteLine(puzzle);
+                var puzzle = allPuzzles[0];
+                var solution = results[0];
+
+                var puzzleIndex = 0;
+                for (var index = 0; index < solution.Length; index++)
+                {
+                    if (index%10!=0)
+                        puzzleIndex++;
+                    
+                    if (puzzleIndex<puzzle.Length && solution[index] == puzzle[puzzleIndex])
+                    {
+                        console.WithForegroundColor(ConsoleColor.DarkRed);
+                        console.Output.Write(solution[index]);
+                        console.ResetColor();
+                    }
+                    else
+                    {
+                        console.Output.Write(solution[index]);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var result in results)
+                {
+                    console.Output.WriteLine(result);
+                }
             }
             
             console.Output.WriteLine(output);
