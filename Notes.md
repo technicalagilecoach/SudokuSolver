@@ -25,6 +25,10 @@
   - should be helpful
   - can be activated on demand (impact on solver performance)
   - tradeoff with different diagnostic levels
+- use the same symbol for unsolved cells as in the input files when writing the results
+- also preserve the puzzle names from input files of type MultiplePuzzlesWithName when storing the results   
+- command line switch to save only the unsolved puzzles
+- parallel execution when many puzzles are processed
 - clean up code to read in sets of puzzles
 - extract duplicate code into common helper functions
 - reduce number of method parameters by using more instance variables

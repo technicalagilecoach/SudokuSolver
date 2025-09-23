@@ -45,7 +45,11 @@ public class InputCommand : ICommand
 
             foreach (var puzzle in results)
             {
-                sr.WriteLine(puzzle);
+                var res = puzzle;
+                if (fileType == Input.FileType.MultiplePuzzlesOneLineEach)
+                    res = res.Replace("\n", "");
+                
+                sr.WriteLine(res);
             }
 
             sr.WriteLine(output);
@@ -79,7 +83,11 @@ public class InputCommand : ICommand
             {
                 foreach (var result in results)
                 {
-                    console.Output.WriteLine(result);
+                    var res = result;
+                    if (fileType==Input.FileType.MultiplePuzzlesOneLineEach)
+                        res = res.Replace("\n", "");
+                    
+                    console.Output.WriteLine(res);
                 }
             }
             
