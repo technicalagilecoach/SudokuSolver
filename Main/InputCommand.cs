@@ -164,20 +164,22 @@ public class InputCommand : ICommand
     private static List<string> SolveMultiplePuzzles(List<string> allPuzzles, ref string output,
         out List<bool> solvedPuzzles, string undefinedSymbol)
     {
-        var numberOfUnsolvedPuzzles = SolverUtil.SolveMultiplePuzzles(allPuzzles, out var results, out solvedPuzzles, undefinedSymbol);
+        var solver = new SolverWrapper(undefinedSymbol);
+        var numberOfUnsolvedPuzzles = solver.SolveMultiplePuzzles(allPuzzles, out var results, out solvedPuzzles);
         output = numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.";
         return results;
     }
 
     private List<string> SolveOnePuzzle(List<string> allPuzzles, int index, ref string output, string undefinedSymbol)
     {
+        var solver = new SolverWrapper(undefinedSymbol);
         var result = new List<string>();
         
         if (index<0)
             index = Number - 1;
         if (index >= 0 && index < allPuzzles.Count)
         {
-            var res = SolverUtil.SolveOnePuzzle(allPuzzles, index, out var count, undefinedSymbol);
+            var res = solver.SolveOnePuzzle(allPuzzles, index, out var count);
             result.Add(res);
             output = count == 0
                 ? "Puzzle has been solved."

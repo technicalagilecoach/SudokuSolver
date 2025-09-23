@@ -6,9 +6,9 @@
 - polish the code to make the GitHub-repo public
 - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 - clean up code in InputCommands
-- clean up code for reading in sets of puzzles
-- clean up code for printing solutions
-- clean up code for calling the solver
+- clean up code for calling the solver SolverUtil.cs
+- clean up code for reading in sets of puzzles in Input.cs -> relatively clean
+- clean up code for printing solutions in Output.cs -> currently not usde
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs

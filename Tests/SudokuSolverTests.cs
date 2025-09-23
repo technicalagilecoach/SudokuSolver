@@ -1,5 +1,5 @@
 using SudokuSolver;
-using static SudokuSolver.SolverUtil;
+using static SudokuSolver.SolverWrapper;
 
 namespace SudokuSolverTests;
 
@@ -9,8 +9,9 @@ public class SolveSudokuPuzzle
     private static void CompareWithExpectedSolution(string puzzle, string expectedSolution)
     {
         puzzle = puzzle.Replace("\n", "");
-        
-        var result = Solve(puzzle, out var solved, out var unsolvedCells, " ");
+
+        SolverWrapper solver = new SolverWrapper(" ");
+        var result = solver.Solve(puzzle, out var solved, out var unsolvedCells);
         Assert.IsTrue(solved);
         Assert.AreEqual(expectedSolution, result);
     }
@@ -19,7 +20,8 @@ public class SolveSudokuPuzzle
     {
         puzzle = puzzle.Replace("\n", "");
         
-        Solve(puzzle, out var solved, out var unsolvedCells, " ");
+        var solver = new SolverWrapper(" ");
+        solver.Solve(puzzle, out var solved, out var unsolvedCells);
         Assert.IsTrue(solved);
     }
     
@@ -106,24 +108,6 @@ public class SolveSudokuPuzzle
             
         CompareWithExpectedSolution(puzzle, expectedSolution);
     }
-
-    [TestMethod]
-    public void NakedSinglesBug()
-    {
-        const string puzzle = "24 9813 6\n"
-                            + "16 7 584 \n"
-                            + "8375642 9\n"
-                            + "9761 54 8\n"
-                            + "513 627  \n"
-                            + "4827 6   \n"
-                            + "391657842\n"
-                            + "72834 6  \n"
-                            + "654 1 793\n";
-        
-        var result = OneSolverStep(puzzle,out var change);
-        
-    }
-
 
     [TestMethod]
     public void SolveExtremePuzzle()
@@ -230,7 +214,8 @@ public class SolveSudokuPuzzle
 
         var allPuzzles = Input.ReadPuzzlesFromFile(filename, out var puzzleNames);
         List<bool> solvedPuzzles;
-        var numberOfUnsolvedPuzzles = SolveMultiplePuzzles(allPuzzles,out var results, out solvedPuzzles,"."); //check undefined symbol
+        SolverWrapper solver = new SolverWrapper(".");
+        var numberOfUnsolvedPuzzles = solver.SolveMultiplePuzzles(allPuzzles,out var results, out solvedPuzzles); //check undefined symbol
         Console.WriteLine(numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.");
         Assert.AreEqual(0, numberOfUnsolvedPuzzles);
     }
