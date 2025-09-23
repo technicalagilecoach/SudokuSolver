@@ -34,9 +34,9 @@ public class InputCommand : ICommand
         var output = "";
 
         if (fileType == Input.FileType.SinglePuzzle || Number > 0)
-            results = SolveOnePuzzle(allPuzzles, Number, ref output);
+            results = SolveOnePuzzle(allPuzzles, Number, ref output, undefinedSymbol);
         else
-            results = SolveMultiplePuzzles(allPuzzles, ref output);
+            results = SolveMultiplePuzzles(allPuzzles, ref output, undefinedSymbol);
 
         if (OutputFile is not null)
         {
@@ -46,8 +46,6 @@ public class InputCommand : ICommand
             foreach (var puzzle in results)
             {
                 var res = puzzle;
-                
-                res = res.Replace(" ", undefinedSymbol);
                 
                 if (fileType == Input.FileType.MultiplePuzzlesOneLineEach)
                     res = res.Replace("\n", "");
@@ -90,8 +88,6 @@ public class InputCommand : ICommand
                 {
                     var res = result;
                     
-                    res = res.Replace(" ", undefinedSymbol);
-                    
                     if (fileType==Input.FileType.MultiplePuzzlesOneLineEach)
                         res = res.Replace("\n", "");
                     
@@ -127,14 +123,14 @@ public class InputCommand : ICommand
         return undefinedSymbol;
     }
 
-    private static List<string> SolveMultiplePuzzles(List<string> allPuzzles, ref string output)
+    private static List<string> SolveMultiplePuzzles(List<string> allPuzzles, ref string output, string undefinedSymbol)
     {
-        var numberOfUnsolvedPuzzles = SolverUtil.SolveMultiplePuzzles(allPuzzles, out var results);
+        var numberOfUnsolvedPuzzles = SolverUtil.SolveMultiplePuzzles(allPuzzles, out var results, undefinedSymbol);
         output = numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.";
         return results;
     }
 
-    private List<string> SolveOnePuzzle(List<string> allPuzzles, int index, ref string output)
+    private List<string> SolveOnePuzzle(List<string> allPuzzles, int index, ref string output, string undefinedSymbol)
     {
         var result = new List<string>();
         
@@ -142,7 +138,7 @@ public class InputCommand : ICommand
             index = Number - 1;
         if (index >= 0 && index < allPuzzles.Count)
         {
-            var res = SolverUtil.SolveOnePuzzle(allPuzzles, index, out var count);
+            var res = SolverUtil.SolveOnePuzzle(allPuzzles, index, out var count, undefinedSymbol);
             result.Add(res);
             output = count == 0
                 ? "Puzzle has been solved."

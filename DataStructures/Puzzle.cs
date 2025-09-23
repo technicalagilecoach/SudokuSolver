@@ -33,7 +33,7 @@ public class Puzzle
         ForEachCell(position =>
         {
             var symbol = rows[position.Row][position.Column].ToString();
-            var digit = (symbol == " " || symbol== ".") ? Undefined : int.Parse(symbol); // To Do: inefficient logical or?
+            var digit = symbol is " " or "." ? Undefined : int.Parse(symbol);
             Cells[position.Row, position.Column] = digit;
         });
 
@@ -79,21 +79,38 @@ public class Puzzle
         return new string(difference);
     }
     
-    public string PrintCells()
+    public string PrintCells(string undefinedSymbol = " ")
     {
         var buffer = new StringWriter();
             
-        foreach (var row in Puzzle.AllDigits) {
+        foreach (var row in Puzzle.AllDigits) 
+        {
             foreach (var column in Puzzle.AllDigits)
             {
                 Position position = new Position(row, column);
                 var v = Cells[position.Row, position.Column];
-                buffer.Write(v == Puzzle.Undefined ? " ":v);
+                buffer.Write(v == Puzzle.Undefined ? undefinedSymbol : v);
             } 
 
             buffer.WriteLine();
         }  
             
         return buffer.ToString();
+    }
+
+    public int CountUndefinedCells()
+    {
+        var count = 0;
+
+        foreach (var row in Puzzle.AllDigits)
+        {
+            foreach (var column in Puzzle.AllDigits)
+            {
+                if (IsUndefined(new Position(row, column)))
+                    count++;
+            }
+        }
+
+        return count;
     }
 }

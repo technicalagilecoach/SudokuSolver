@@ -4,10 +4,6 @@
 
 ## To Do
 - polish the code to make the GitHub-repo public
-- use the same symbol for unsolved cells as in the input files when writing the results
-  - currently done by replacing the characters afterward -> inefficient
-  - Puzzle.Init
-  - Puzzle.PrintCells
 - also preserve the puzzle names from input files of type MultiplePuzzlesWithName when storing the results   
 - command line switch to save only the unsolved puzzles
 - clean up code for reading in sets of puzzles
@@ -32,6 +28,10 @@
 - perform pruning etc. only based on actually changed cells
 
 ## Done
+- use the same symbol for unsolved cells as in the input files when writing the results
+  - currently done by replacing the characters afterward -> inefficient
+  - Puzzle.Init -> no need to change, internally 0 is used to denote undefined cells
+  - Puzzle.PrintCells -> additional parameter undefinedSymbol
 - highlight the original fixed cells in red for SinglePuzzle mode with console output
 - store output files in the same format as the input files
 - distinguish different input file types

@@ -10,7 +10,7 @@ public class SolveSudokuPuzzle
     {
         puzzle = puzzle.Replace("\n", "");
         
-        var result = Solve(puzzle, out var solved);
+        var result = Solve(puzzle, out var solved, out var unsolvedCells, " ");
         Assert.IsTrue(solved);
         Assert.AreEqual(expectedSolution, result);
     }
@@ -19,7 +19,7 @@ public class SolveSudokuPuzzle
     {
         puzzle = puzzle.Replace("\n", "");
         
-        Solve(puzzle, out var solved);
+        Solve(puzzle, out var solved, out var unsolvedCells, " ");
         Assert.IsTrue(solved);
     }
     
@@ -229,7 +229,7 @@ public class SolveSudokuPuzzle
         const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/top50000.txt";
 
         var allPuzzles = Input.ReadPuzzlesFromFile(filename);
-        var numberOfUnsolvedPuzzles = SolveMultiplePuzzles(allPuzzles,out var results);
+        var numberOfUnsolvedPuzzles = SolveMultiplePuzzles(allPuzzles,out var results,"."); //check undefined symbol
         Console.WriteLine(numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.");
         Assert.AreEqual(0, numberOfUnsolvedPuzzles);
     }
