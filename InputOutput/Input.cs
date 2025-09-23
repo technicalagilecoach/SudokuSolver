@@ -115,4 +115,24 @@ public static class Input
         
         return allPuzzles;
     }
+
+    public static string DetermineUndefinedSymbol(string firstPuzzle)
+    {
+        string undefinedSymbol="";
+        
+        if (firstPuzzle.Contains(' '))
+        {
+            undefinedSymbol = " ";
+        }
+        else if (firstPuzzle.Contains('.'))
+        {
+            undefinedSymbol = ".";
+        }
+        else if (firstPuzzle.Contains('0'))
+        {
+            undefinedSymbol = "0";
+        }
+
+        return undefinedSymbol;
+    }
 }

@@ -14,4 +14,8 @@
       <ProjectReference Include="..\Solver\Solver.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="CliFx" Version="2.3.6" />
+    </ItemGroup>
+
 </Project>

@@ -24,11 +24,7 @@ public class Puzzle
 
     public void Init(string puzzle)
     {
-        var rows = new List<string>();
-        for (var row = 0; row < GridSize; row++)
-        {
-            rows.Add(puzzle.Substring(GridSize * row, GridSize));
-        }
+        var rows = StringToRows(puzzle);
 
         ForEachCell(position =>
         {
@@ -42,6 +38,17 @@ public class Puzzle
             BitArray candidates = InitializeCandidates(position);
             Candidates[position.Row, position.Column] = candidates;
         });
+    }
+
+    private static List<string> StringToRows(string puzzle)
+    {
+        var rows = new List<string>();
+        for (var row = 0; row < GridSize; row++)
+        {
+            rows.Add(puzzle.Substring(GridSize * row, GridSize));
+        }
+
+        return rows;
     }
 
     private BitArray InitializeCandidates(Position position)

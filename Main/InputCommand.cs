@@ -31,7 +31,7 @@ public class InputCommand : ICommand
 
         var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName, out var puzzleNames);
 
-        var undefinedSymbol = DetermineUndefinedSymbol(allPuzzles[0]);
+        var undefinedSymbol = Input.DetermineUndefinedSymbol(allPuzzles[0]);
         
         List<string> results;
         List<bool> solvedPuzzles = new List<bool>();
@@ -39,20 +39,23 @@ public class InputCommand : ICommand
         var output = "";
 
         if (fileType == Input.FileType.SinglePuzzle || Number > 0)
-            results = SolveOnePuzzle(allPuzzles, Number, ref output, undefinedSymbol);
+            results = SolverWrapper.SolveOnePuzzle(allPuzzles, Number, ref output, undefinedSymbol);
         else
-            results = SolveMultiplePuzzles(allPuzzles, ref output, out solvedPuzzles, undefinedSymbol);
+            results = SolverWrapper.SolveMultiplePuzzles(allPuzzles, ref output, out solvedPuzzles, undefinedSymbol);
 
         if (OutputFile is not null)
         {
-            WritePuzzlesToFile(results, solvedPuzzles, fileType, puzzleNames, output);
+            using var fs = TryToCreateFile(OutputFile);
+            var writer = new Writer(Unsolved,OutputFile);
+            writer.WritePuzzlesToFileStream(fs, results, solvedPuzzles, fileType, puzzleNames, output);
         }
         else 
         {
+            var writer = new Writer(Unsolved,OutputFile);
             if (fileType == Input.FileType.SinglePuzzle)
-                WriteSinglePuzzleToConsole(console, results[0], allPuzzles[0], undefinedSymbol);
+                writer.WriteSinglePuzzleToConsole(console, results[0], allPuzzles[0], undefinedSymbol);
             else
-                WriteMultiplePuzzlesToConsole(console, results, solvedPuzzles, fileType, puzzleNames);
+                writer.WriteMultiplePuzzlesToConsole(console, results, solvedPuzzles, fileType, puzzleNames);
             
             console.Output.WriteLine(output);
         }
@@ -62,132 +65,6 @@ public class InputCommand : ICommand
         return default;
     }
 
-    private void WritePuzzlesToFile(List<string> results, List<bool> solvedPuzzles, Input.FileType fileType, List<string> puzzleNames, string output)
-    {
-        using var fs = TryToCreateFile(OutputFile);
-        using var sr = new StreamWriter(fs);
-
-        int index = 0;
-        for (var i=0; i<results.Count; i++)
-        {
-            if (Unsolved && solvedPuzzles.Count==results.Count && solvedPuzzles[i])
-                continue;
-                
-            var res = results[i];
-
-            if (fileType == Input.FileType.MultiplePuzzlesWithName)
-            {
-                sr.WriteLine(puzzleNames[index]);
-                sr.Write(res);
-                index++;
-            }
-
-            if (fileType == Input.FileType.MultiplePuzzlesOneLineEach)
-            {
-                res = res.Replace("\n", "");
-                sr.WriteLine(res);
-            }
-        }
-
-        sr.WriteLine(output);
-    }
-
-    private void WriteMultiplePuzzlesToConsole(IConsole console, List<string> results, List<bool> solvedPuzzles, Input.FileType fileType,
-        List<string> puzzleNames)
-    {
-        int index = 0;
-        for (var i=0; i<results.Count; i++)
-        {
-            if (Unsolved && solvedPuzzles.Count==results.Count && solvedPuzzles[i])
-                continue;
-                    
-            var res = results[i];
-                    
-            if (fileType == Input.FileType.MultiplePuzzlesWithName)
-            {
-                console.Output.WriteLine(puzzleNames[index]);
-                console.Output.Write(res);    
-                index++;
-            }
-
-            if (fileType == Input.FileType.MultiplePuzzlesOneLineEach)
-            {
-                res = res.Replace("\n", "");
-                console.Output.WriteLine(res);
-            }
-        }
-    }
-
-    private static void WriteSinglePuzzleToConsole(IConsole console, string solution, string puzzle, string undefinedSymbol)
-    {
-        var puzzleIndex = 0;
-        for (var index = 0; index < solution.Length; index++)
-        {
-            if (index%10!=0)
-                puzzleIndex++;
-                    
-            string nextCell = solution[index].ToString().Replace(" ", undefinedSymbol);
-                    
-            if (puzzleIndex<puzzle.Length && solution[index] == puzzle[puzzleIndex])
-            {
-                console.WithForegroundColor(ConsoleColor.DarkRed);
-                console.Output.Write(nextCell);
-                console.ResetColor();
-            }
-            else
-            {
-                console.Output.Write(nextCell);
-            }
-        }
-    }
-
-    private static string DetermineUndefinedSymbol(string firstPuzzle)
-    {
-        string undefinedSymbol="";
-        
-        if (firstPuzzle.Contains(' '))
-        {
-            undefinedSymbol = " ";
-        }
-        else if (firstPuzzle.Contains('.'))
-        {
-            undefinedSymbol = ".";
-        }
-        else if (firstPuzzle.Contains('0'))
-        {
-            undefinedSymbol = "0";
-        }
-
-        return undefinedSymbol;
-    }
-
-    private static List<string> SolveMultiplePuzzles(List<string> allPuzzles, ref string output,
-        out List<bool> solvedPuzzles, string undefinedSymbol)
-    {
-        var solver = new SolverWrapper(undefinedSymbol);
-        var numberOfUnsolvedPuzzles = solver.SolveMultiplePuzzles(allPuzzles, out var results, out solvedPuzzles);
-        output = numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.";
-        return results;
-    }
-
-    private List<string> SolveOnePuzzle(List<string> allPuzzles, int index, ref string output, string undefinedSymbol)
-    {
-        var solver = new SolverWrapper(undefinedSymbol);
-        var result = new List<string>();
-        
-        if (index<0)
-            index = Number - 1;
-        if (index >= 0 && index < allPuzzles.Count)
-        {
-            var res = solver.SolveOnePuzzle(allPuzzles, index, out var count);
-            result.Add(res);
-            output = count == 0
-                ? "Puzzle has been solved."
-                : "Puzzle has not been solved. " + count + " cells are still unsolved.";
-        }
-
-        return result;
-    }
 
     private static void CheckIfFileIsMissing(FileInfo filename)
     {
