@@ -65,7 +65,6 @@ public static class DebugOutput
                 
                 if (puzzle.Cells[position.Row, position.Column] == Puzzle.Undefined)
                 {
-                    //print candidates
                     var pValues = puzzle.Candidates[position.Row,position.Column];
                     var values = new List<int>();
                     foreach (var index in Puzzle.AllDigits)
@@ -78,7 +77,6 @@ public static class DebugOutput
                 }
                 else
                 {
-                    //print value
                     var v = puzzle.Cells[position.Row, position.Column];
                     data.Add("V:"+v.ToString());
                 }

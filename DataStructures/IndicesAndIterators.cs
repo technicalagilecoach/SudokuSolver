@@ -38,8 +38,8 @@ public static class IndicesAndIterators
 
     public static Position GetBoxCoordinates(int box)
     {
-        var row = box / 3 * 3;//+1;
-        var column = box % 3 * 3;//+1;
+        var row = box / 3 * 3;
+        var column = box % 3 * 3;
         return new Position(row, column);
     }
 

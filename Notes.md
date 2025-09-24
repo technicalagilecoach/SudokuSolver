@@ -3,18 +3,17 @@
 ## Bugs
 
 ## To Do
-- find a name for the project
-- decide on a license before publishing on GitHub
-- polish the code to make the GitHub-repo public
-- remove data from git retrospectively, e.g. puzzle files, this notes, ...
-- reduce different internal formats for puzzles?
-  - single line string (with/without linebreak), list of 9 rows, cells in Puzzle object 
+- implement statistics to find out which strategies are actually needed for solving a specific puzzle
+- make project ready to publish
+  - find a name for the project
+  - decide on a license before publishing on GitHub
+  - polish the code to make the GitHub-repo public
+  - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
+- test/repair and refactor
   - HiddenPairs
-  - IndicesAndIterators
-- repair
   - HiddenPairs
 - implement remaining basic strategies (identify relevant puzzles for each)
   - naked triples
@@ -22,6 +21,7 @@
   - naked quads
   - hidden quads
 - improve statistics, error checking and debug support
+  - which strategies are needed might also depend on the order in which the strategies are executed!
   - clean up code for printing solutions in DebugOutput -> currently not used
   - should be helpful
   - can be activated on demand (impact on solver performance)
