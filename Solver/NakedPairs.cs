@@ -72,7 +72,7 @@ public class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
     {
         foreach (var cell in allCellsOfInterest)
         {
-            if (IsUndefined(cell) && IsDisjointFrom(cell,pairOfCells))
+            if (IsUndefined(cell) && Position.IsDisjointFrom(cell,pairOfCells))
             {
                 EliminateCandidatesFromCell(cell, pairOfCells.Item1, ref numberOfRemovedCandidates);
             }
@@ -92,11 +92,6 @@ public class NakedPairs(Puzzle puzzle) : Strategy(puzzle){
                 numberOfRemovedCandidates++;
             }
         }
-    }
-    
-    public static bool IsDisjointFrom(Position cell, (Position, Position) pairOfCells)
-    {
-        return cell != pairOfCells.Item1 && cell != pairOfCells.Item2;
     }
 
     private bool ArePotentialTwins((Position, Position) pair)

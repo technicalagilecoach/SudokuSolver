@@ -20,4 +20,9 @@ public class Position(int row, int column)
     {
         return !position1.Equals(position2);
     }
+
+    public static bool IsDisjointFrom(Position cell, (Position, Position) pairOfCells)
+    {
+        return cell != pairOfCells.Item1 && cell != pairOfCells.Item2;
+    }
 }

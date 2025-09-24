@@ -4,6 +4,7 @@
 
 ## To Do
 - polish the code to make the GitHub-repo public
+- tidy up PuzzlesFromFilesTests? -> remove (file base tests are a mess, could be tested with CLI instead)
 - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 - clean up code in InputCommands
 - clean up code for calling the solver SolverUtil.cs

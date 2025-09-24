@@ -1,16 +1,15 @@
 using SudokuSolver;
-using static SudokuSolver.NakedPairs;
 
 namespace SudokuSolverTests;
 
 [TestClass]
-public class ConversionTests
+public class IndicesAndPositionsTests
 {
     [TestMethod]
     [DataRow(1, 1, 0)]
     [DataRow(2, 4, 1)]
     [DataRow(8, 8, 8)]
-    public void BoxIndexForCoordinatesTest(int row, int column, int expectedBoxIndex)
+    public void GetBoxIndexTest(int row, int column, int expectedBoxIndex)
     {
         var result = IndicesAndIterators.GetBoxIndex(new Position(row, column));
         Assert.AreEqual(expectedBoxIndex, result);
@@ -26,7 +25,7 @@ public class ConversionTests
     [DataRow(6, 6, 0)]
     [DataRow(7, 6, 3)]
     [DataRow(8, 6, 6)]
-    public void CoordinatesForBoxIndexTest(int box, int expectedRow, int expectedColumn)
+    public void GetBoxCoordinatesTest(int box, int expectedRow, int expectedColumn)
     {
         var result = IndicesAndIterators.GetBoxCoordinates(box);
 
@@ -40,7 +39,7 @@ public class ConversionTests
         var cell = new Position(0, 0);
         var pairOfCells = (new Position(0, 0), new Position(0, 1));
         
-        var isDisjoint = IsDisjointFrom(cell, pairOfCells);
+        var isDisjoint = Position.IsDisjointFrom(cell, pairOfCells);
         
         Assert.IsFalse(isDisjoint);
     }
@@ -48,7 +47,7 @@ public class ConversionTests
     [TestMethod]
     public void GetIndicesForDistinctPairsTest()
     {
-        var indices0 = IndicesAndIterators.GetIndicesForDistinctPairs(0, 0);
+        IndicesAndIterators.GetIndicesForDistinctPairs(0, 0);
         var indices4 = IndicesAndIterators.GetIndicesForDistinctPairs(0, 4);
 
         Assert.IsTrue(indices4[0].Item1.Row == 4);
