@@ -8,7 +8,9 @@
 - polish the code to make the GitHub-repo public
 - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 - clean up code for calling the solver in SolverWrapper.cs
-- clean up code for printing solutions in Output.cs -> currently not used
+- clean up code for printing solutions in DebugOutput -> currently not used
+- reduce different internal formats for puzzles?
+  - single line string (with/without linebreak), list of 9 rows, cells in Puzzle object 
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
@@ -25,10 +27,13 @@
   - should be helpful
   - can be activated on demand (impact on solver performance)
   - tradeoff with different diagnostic levels
+- in InputSolver.RunSolver all puzzles are run through the solver before any output is written 
+  - consider calling solver and writing output puzzle after puzzle
 - parallel execution when many puzzles are processed
 - perform pruning etc. only based on actually changed cells
 
 ## Done
+- clean up code in Writer.cs
 - clean up code for reading in sets of puzzles in Input.cs
 - move Writer.SolvePuzzles somewhere else -> SolverWrapper
 - clean up code in InputCommands

@@ -1,6 +1,6 @@
 namespace SudokuSolver;
 
-public static class Output
+public static class DebugOutput
 {
     public static string PrintCells(int[,] cells)
     {
