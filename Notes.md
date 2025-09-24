@@ -3,10 +3,11 @@
 ## Bugs
 
 ## To Do
+- find a name for the project
+- decide on a license before publishing on GitHub
 - polish the code to make the GitHub-repo public
 - remove data from git retrospectively, e.g. puzzle files, this notes, ...
-- clean up code for calling the solver SolverWrapper.cs
-- clean up code for reading in sets of puzzles in Input.cs -> relatively clean
+- clean up code for calling the solver in SolverWrapper.cs
 - clean up code for printing solutions in Output.cs -> currently not used
 - clean up/refactor 
   - BoxLineReduction
@@ -28,6 +29,7 @@
 - perform pruning etc. only based on actually changed cells
 
 ## Done
+- clean up code for reading in sets of puzzles in Input.cs
 - move Writer.SolvePuzzles somewhere else -> SolverWrapper
 - clean up code in InputCommands
 - tidy up PuzzlesFromFilesTests? -> remove (file base tests are a mess, could be tested with CLI instead)

@@ -13,7 +13,7 @@ public static class Input
     public static List<string> ReadPuzzlesFromFile(string filename, out List<string> puzzleNames)
     {
         var allLines = GetAllLinesFromFile(filename);
-        puzzleNames = new List<string>();
+        puzzleNames = [];
         
         var fileType = DetermineFileType(filename);
 
@@ -25,13 +25,11 @@ public static class Input
                 return allLines;
             case FileType.MultiplePuzzlesWithName:
                 return ReadMultilinePuzzles(allLines, out puzzleNames);
+            case FileType.SinglePuzzle:
+                return [string.Join("", allLines)];
+            default:
+                return [];
         }
-
-        var sw = new StringWriter();
-        foreach (var line in allLines)
-            sw.Write(line);
-        
-        return [sw.ToString()];
     }
 
     private static List<string> GetAllLinesFromFile(string filename)
@@ -49,28 +47,10 @@ public static class Input
         var firstLine = reader.ReadLine();
 
         if (firstLine == null)
-            return FileType.Unknown; // Todo: throw exception instead?
+            return FileType.Unknown;
         
         if (firstLine.Length == Puzzle.GridSize * Puzzle.GridSize)
             return FileType.MultiplePuzzlesOneLineEach; // 81 numbers/spaces/zeroes in first line
-
-        bool IsValidPuzzleLine(string line)
-        {
-            if (line.Length != Puzzle.GridSize)
-                return false;
-            
-            var b = true;
-            for (var i = 0; i < line.Length; i++)
-            {
-                char symbol = line[i];
-                if (char.IsDigit(symbol)||char.IsWhiteSpace(symbol)||symbol=='.')
-                    continue;
-                b = false;
-                break;
-            }
-
-            return b;
-        }
 
         if (IsValidPuzzleLine(firstLine))
             return FileType.SinglePuzzle; // 9 numbers/spaces/zeroes in first line
@@ -82,10 +62,18 @@ public static class Input
         return FileType.Unknown;
     }
     
+    private static bool IsValidPuzzleLine(string line)
+    {
+        if (line.Length != Puzzle.GridSize)
+            return false;
+
+        return line.All(symbol => char.IsDigit(symbol) || char.IsWhiteSpace(symbol) || symbol == '.');
+    }
+
     private static List<string> ReadMultilinePuzzles(List<string> allLines, out List<string> puzzleNames)
     {
         var allPuzzles = new List<string>();
-        puzzleNames = new List<string>();
+        puzzleNames = [];
         
         const int linesPerPuzzle = Puzzle.GridSize + 1;
         
@@ -99,13 +87,9 @@ public static class Input
             for (var lineIndex = offset; lineIndex < linesPerPuzzle + offset; lineIndex++)
             {
                 if (lineIndex % linesPerPuzzle != 0)
-                {
                     puzzle.Add(allLines[lineIndex]);
-                }
                 else
-                {
                     puzzleNames.Add(allLines[lineIndex]);
-                }
             }
 
             var puzzleAsString = string.Join("", puzzle);
@@ -118,7 +102,7 @@ public static class Input
 
     public static string DetermineUndefinedSymbol(string firstPuzzle)
     {
-        string undefinedSymbol="";
+        var undefinedSymbol="";
         
         if (firstPuzzle.Contains(' '))
         {
