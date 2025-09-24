@@ -8,15 +8,16 @@ public class Solver(Puzzle puzzle)
     private int[,] Cells => puzzle.Cells;
     private BitArray[,] Candidates => puzzle.Candidates;
     
-    private bool _valueModified = false;
+    private bool _puzzleModified = false;
 
     private const bool PerformChecks = true;
-
+    public Dictionary<string,int> StrategyStats { get; } = new();
+    
     public bool Solve()
     {
         do
         {
-            _valueModified = false;
+            _puzzleModified = false;
 
             Execute(PruneCandidates); //removes candidates
             
@@ -28,7 +29,7 @@ public class Solver(Puzzle puzzle)
             
             Execute(PointingPairs); //removes candidates
             Execute(BoxLineReduction); //removes candidates
-        } while (_valueModified);
+        } while (_puzzleModified);
 
         var isCorrect = Check(Cells);
 
@@ -48,13 +49,20 @@ public class Solver(Puzzle puzzle)
 
     public void Execute(Func<bool> fun)
     {
-        if (!_valueModified)
+        if (!_puzzleModified)
         {
             var before = IsInconsistent();
             var puzzleBefore = puzzle.PrintCells();
             
-            _valueModified = fun();
+            string strategy = fun.Method.Name;
+            if (!StrategyStats.ContainsKey(strategy))
+                StrategyStats[strategy] = 0;
+            
+            _puzzleModified = fun();
 
+            if (_puzzleModified) 
+                StrategyStats[strategy]++;
+            
             var gotWorse = (!before) && IsInconsistent();
             if (PerformChecks && gotWorse)
             {

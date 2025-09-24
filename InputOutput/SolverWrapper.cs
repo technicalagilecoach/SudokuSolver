@@ -5,14 +5,16 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
     private string UndefinedSymbol { get; } = undefinedSymbol;
     private Input.FileType FileType { get; } = fileType;
     private List<string> AllPuzzles { get; } = allPuzzles;
+    public List<Dictionary<string, int>> StrategyStatistics { get; } = [];
 
     public List<string> SolvePuzzles(int number, ref string output, ref List<bool> solvedPuzzles)
     {
         List<string> results = [];
         if (FileType == Input.FileType.SinglePuzzle || number > 0)
         {
-            var result = Solve(AllPuzzles[GetIndexFromNumber(number)], UndefinedSymbol, out var count);
+            var result = Solve(AllPuzzles[GetIndexFromNumber(number)], UndefinedSymbol, out var count, out var strategyStats);
             results.Add(result);
+            StrategyStatistics.Add(strategyStats);
             output = CreateMessageForSinglePuzzle(count);
         }
         else
@@ -32,8 +34,9 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
 
         for (var index = 0; index < AllPuzzles.Count; index++)
         {
-            var result = Solve(AllPuzzles[index], UndefinedSymbol, out var count);
+            var result = Solve(AllPuzzles[index], UndefinedSymbol, out var count, out var strategyStats);
             results.Add(result);
+            StrategyStatistics.Add(strategyStats);
             numberOfUnsolvedCells[index] = count;
         }
         
@@ -43,12 +46,14 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
         return numberOfUnsolvedPuzzles;
     }
     
-    public static string Solve(string puzzleString, string undefinedSymbol, out int numberOfUnsolvedCells)
+    public static string Solve(string puzzleString, string undefinedSymbol, out int numberOfUnsolvedCells, out Dictionary<string,int> strategyStats)
     {
         var puzzle = new Puzzle();
         puzzle.Init(puzzleString);
         Solver solver = new(puzzle);
         var solved = solver.Solve();
+
+        strategyStats = solver.StrategyStats;
         
         numberOfUnsolvedCells = 0;
         if (!solved)

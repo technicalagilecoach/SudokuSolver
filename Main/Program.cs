@@ -1,6 +1,6 @@
 ﻿using CliFx;
 
-namespace SudokuSolverMain;
+namespace SudokuSolver;
 
 public static class Program
 {

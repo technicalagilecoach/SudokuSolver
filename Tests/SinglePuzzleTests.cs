@@ -8,7 +8,7 @@ public class SolveSudokuPuzzle
     private static void CheckForSolvability(string puzzle)
     {
         puzzle = puzzle.Replace("\n", "");
-        SolverWrapper.Solve(puzzle, " ", out var unsolvedCells);
+        SolverWrapper.Solve(puzzle, " ", out var unsolvedCells, out var strategyStats);
         Assert.IsTrue(unsolvedCells==0);
     }
     

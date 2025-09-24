@@ -17,10 +17,12 @@ public class InputCommand : ICommand
     [CommandOption("number", 'n', Description = "Number of the puzzle to be solved from a file with multiple puzzles.")]
     public int Number { get; set; }
 
-    [CommandOption("unsolved", 'u',
-        Description = "Output the unsolved puzzles only. This option only applies to input files with multiple puzzles.")]
+    [CommandOption("unsolved", 'u', Description = "Output the unsolved puzzles only. This option only applies to input files with multiple puzzles.")]
     public bool Unsolved { get; set; } = false;
 
+    [CommandOption("statistics", 's', Description = "Show statistics about the solver strategies which were used for each puzzle.")]
+    public bool Statistics { get; set; } = false;
+    
     public ValueTask ExecuteAsync(IConsole console)
     {
         CheckIfFileIsMissing(FileName);
@@ -49,8 +51,25 @@ public class InputCommand : ICommand
         writer.WriteResults(console, fileStream, results, solvedPuzzles, allPuzzles);
         
         console.Output.WriteLine(output);
+
+        if (Statistics)
+            WriteStatistics(console, solver.StrategyStatistics);
     }
-    
+
+    private static void WriteStatistics(IConsole console, List<Dictionary<string,int>> stats)
+    {
+        foreach (var stat in stats)
+        {
+            foreach (var strategy in stat)
+            {
+                string formatString = "{0,4}";
+                console.Output.Write(strategy.Key + ": " + String.Format(formatString, strategy.Value) + " ");
+            }
+
+            console.Output.WriteLine();
+        }
+    }
+
     private FileStream? TryToInitializeFileStream()
     {
         FileStream? fileStream = null;

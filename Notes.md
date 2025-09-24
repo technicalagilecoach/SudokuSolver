@@ -3,7 +3,6 @@
 ## Bugs
 
 ## To Do
-- implement statistics to find out which strategies are actually needed for solving a specific puzzle
 - make project ready to publish
   - find a name for the project
   - decide on a license before publishing on GitHub
@@ -32,6 +31,7 @@
 - perform pruning etc. only based on actually changed cells
 
 ## Done
+- implement statistics to find out which strategies are actually needed for solving a specific puzzle
 - clean up code for calling the solver in SolverWrapper.cs
 - clean up code in Writer.cs
 - clean up code for reading in sets of puzzles in Input.cs
