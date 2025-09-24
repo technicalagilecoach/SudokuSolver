@@ -4,10 +4,8 @@
 
 ## To Do
 - polish the code to make the GitHub-repo public
-- tidy up PuzzlesFromFilesTests? -> remove (file base tests are a mess, could be tested with CLI instead)
 - remove data from git retrospectively, e.g. puzzle files, this notes, ...
-- clean up code in InputCommands
-- clean up code for calling the solver SolverUtil.cs
+- clean up code for calling the solver SolverWrapper.cs
 - clean up code for reading in sets of puzzles in Input.cs -> relatively clean
 - clean up code for printing solutions in Output.cs -> currently not used
 - clean up/refactor 
@@ -30,6 +28,9 @@
 - perform pruning etc. only based on actually changed cells
 
 ## Done
+- move Writer.SolvePuzzles somewhere else -> SolverWrapper
+- clean up code in InputCommands
+- tidy up PuzzlesFromFilesTests? -> remove (file base tests are a mess, could be tested with CLI instead)
 - command line switch to save only the unsolved puzzles
 - preserve the puzzle names from input files of type MultiplePuzzlesWithName when storing the results
 - use the same symbol for unsolved cells as in the input files when writing the results

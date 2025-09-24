@@ -13,58 +13,62 @@ public class InputCommand : ICommand
 
     [CommandOption("output", 'o', Description = "File to store the results.")]
     public FileInfo? OutputFile { get; set; }
-    
+
     [CommandOption("number", 'n', Description = "Number of the puzzle to be solved from a file with multiple puzzles.")]
     public int Number { get; set; }
 
-    [CommandOption("unsolved", 'u', Description = "Output the unsolved puzzles only. This option only applies to input files with multiple puzzles.")]
+    [CommandOption("unsolved", 'u',
+        Description = "Output the unsolved puzzles only. This option only applies to input files with multiple puzzles.")]
     public bool Unsolved { get; set; } = false;
-    
+
     public ValueTask ExecuteAsync(IConsole console)
     {
         CheckIfFileIsMissing(FileName);
-        
-        var fileType = Input.DetermineFileType(FileName.FullName);
-        
-        if (fileType == Input.FileType.Unknown)
-            throw new CommandException("Invalid file type.");
+        var fileStream = TryToInitializeFileStream();
+        var fileType = CheckFileType(FileName.FullName);
 
-        var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName, out var puzzleNames);
-
-        var undefinedSymbol = Input.DetermineUndefinedSymbol(allPuzzles[0]);
-        
-        List<string> results;
-        List<bool> solvedPuzzles = new List<bool>();
-        
-        var output = "";
-
-        if (fileType == Input.FileType.SinglePuzzle || Number > 0)
-            results = SolverWrapper.SolveOnePuzzle(allPuzzles, Number, ref output, undefinedSymbol);
-        else
-            results = SolverWrapper.SolveMultiplePuzzles(allPuzzles, ref output, out solvedPuzzles, undefinedSymbol);
-
-        if (OutputFile is not null)
-        {
-            using var fs = TryToCreateFile(OutputFile);
-            var writer = new Writer(Unsolved,OutputFile);
-            writer.WritePuzzlesToFileStream(fs, results, solvedPuzzles, fileType, puzzleNames, output);
-        }
-        else 
-        {
-            var writer = new Writer(Unsolved,OutputFile);
-            if (fileType == Input.FileType.SinglePuzzle)
-                writer.WriteSinglePuzzleToConsole(console, results[0], allPuzzles[0], undefinedSymbol);
-            else
-                writer.WriteMultiplePuzzlesToConsole(console, results, solvedPuzzles, fileType, puzzleNames);
-            
-            console.Output.WriteLine(output);
-        }
+        RunSolver(console, fileType, fileStream);
 
         // If the execution is not meant to be asynchronous,
         // return an empty task at the end of the method.
         return default;
     }
 
+    private void RunSolver(IConsole console, Input.FileType fileType, FileStream? fileStream)
+    {
+        var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName, out var puzzleNames);
+        var undefinedSymbol = Input.DetermineUndefinedSymbol(allPuzzles[0]);
+
+        var solvedPuzzles = new List<bool>();
+        var output = "";
+
+        var solver = new SolverWrapper(undefinedSymbol, fileType);
+        var results = solver.SolvePuzzles(Number, allPuzzles, ref output, ref solvedPuzzles);
+       
+        var writer = new Writer(Unsolved, undefinedSymbol, fileType);
+        writer.WriteResults(console, fileStream, results, solvedPuzzles, puzzleNames, allPuzzles);
+        
+        console.Output.WriteLine(output);
+    }
+    
+    private FileStream? TryToInitializeFileStream()
+    {
+        FileStream? fileStream = null;
+        if (OutputFile is not null)
+        {
+            fileStream = TryToCreateFile(OutputFile);
+        }
+
+        return fileStream;
+    }
+
+    private static Input.FileType CheckFileType(string fileName)
+    {
+        var fileType = Input.DetermineFileType(fileName);
+        if (fileType == Input.FileType.Unknown)
+            throw new CommandException("Invalid file type.");
+        return fileType;
+    }
 
     private static void CheckIfFileIsMissing(FileInfo filename)
     {

@@ -9,7 +9,7 @@ public class SolveSudokuPuzzle
     {
         puzzle = puzzle.Replace("\n", "");
         
-        var solver = new SolverWrapper(" ");
+        var solver = new SolverWrapper(" ", Input.FileType.Unknown);
         solver.Solve(puzzle, out var solved, out var unsolvedCells);
         Assert.IsTrue(solved);
     }
