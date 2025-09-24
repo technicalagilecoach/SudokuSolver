@@ -19,8 +19,8 @@ public class Solver(Puzzle puzzle)
             _valueModified = false;
 
             Execute(PruneCandidates); //removes candidates
-            Execute(NakedSingles); //fixes values
             
+            Execute(NakedSingles); //fixes values
             Execute(HiddenSingles); //fixes values
             
             Execute(NakedPairs); //removes candidates
@@ -60,43 +60,41 @@ public class Solver(Puzzle puzzle)
             {
                 var puzzleAfter = puzzle.PrintCells();
                 var diff = Puzzle.Difference(puzzleBefore, puzzleAfter);
-
-                //PrintDebugOutput(puzzle);
             }
         }
     }
 
-    public bool PruneCandidates()
+    private bool PruneCandidates()
     {
         return new PruneCandidates(puzzle).Handle();
     }
 
-    public bool NakedSingles()
+    private bool NakedSingles()
     {
         return new NakedSingles(puzzle).Handle();
     }
 
-    public bool HiddenSingles()
+    private bool HiddenSingles()
     {
         return new HiddenSingles(puzzle).Handle();
     }
-        
-    public bool NakedPairs()
+
+    private bool NakedPairs()
     {
         return new NakedPairs(puzzle).Handle();
     }
-     
-    public bool HiddenPairs()
+
+    private bool HiddenPairs()
     {
         return new HiddenPairs(puzzle).Handle();
     }
 
-    public bool PointingPairs()
+    private bool PointingPairs()
     {
         return new PointingPairs(puzzle).Handle();
     }
-    
-    public bool BoxLineReduction()
+
+    private bool BoxLineReduction()
     {
         return new BoxLineReduction(puzzle).Handle();
     }

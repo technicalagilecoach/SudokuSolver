@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>13</LangVersion>
     <AssemblyVersion>0.1.0</AssemblyVersion>
-    <RootNamespace>SudokuSolverCore</RootNamespace>
+    <RootNamespace>SudokuSolver</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
