@@ -42,8 +42,8 @@ public class InputCommand : ICommand
         var solvedPuzzles = new List<bool>();
         var output = "";
 
-        var solver = new SolverWrapper(undefinedSymbol, fileType);
-        var results = solver.SolvePuzzles(Number, allPuzzles, ref output, ref solvedPuzzles);
+        var solver = new SolverWrapper(undefinedSymbol, fileType, allPuzzles);
+        var results = solver.SolvePuzzles(Number, ref output, ref solvedPuzzles);
        
         var writer = new Writer(Unsolved, undefinedSymbol, fileType, puzzleNames);
         writer.WriteResults(console, fileStream, results, solvedPuzzles, allPuzzles);
