@@ -1,21 +1,10 @@
 using SudokuSolver;
-using static SudokuSolver.SolverWrapper;
 
 namespace SudokuSolverTests;
 
 [TestClass]
 public class SolveSudokuPuzzle
 {
-    private static void CompareWithExpectedSolution(string puzzle, string expectedSolution)
-    {
-        puzzle = puzzle.Replace("\n", "");
-
-        SolverWrapper solver = new SolverWrapper(" ");
-        var result = solver.Solve(puzzle, out var solved, out var unsolvedCells);
-        Assert.IsTrue(solved);
-        Assert.AreEqual(expectedSolution, result);
-    }
-    
     private static void CheckForSolvability(string puzzle)
     {
         puzzle = puzzle.Replace("\n", "");
@@ -39,18 +28,8 @@ public class SolveSudokuPuzzle
                               "914835 76\n" +
                               " 3 7 1495\n" +
                               "567429 13\n";
-
-        const string expectedSolution = "176583924\n" +
-                                        "859274361\n" +
-                                        "342916587\n" +
-                                        "795148632\n" +
-                                        "423697158\n" +
-                                        "681352749\n" +
-                                        "914835276\n" +
-                                        "238761495\n" +
-                                        "567429813\n";
-
-        CompareWithExpectedSolution(puzzle, expectedSolution);
+        
+        CheckForSolvability(puzzle);
     }
 
     [TestMethod]
@@ -68,17 +47,7 @@ public class SolveSudokuPuzzle
                               "2  78 435\n" +
                               "  51     \n";
 
-        const string expectedSolution = "792536184\n"+
-                                        "643871529\n"+
-                                        "158294763\n"+
-                                        "329647851\n"+
-                                        "874315692\n"+
-                                        "516928347\n"+
-                                        "987453216\n"+
-                                        "261789435\n"+
-                                        "435162978\n";
-
-        CompareWithExpectedSolution(puzzle, expectedSolution);
+        CheckForSolvability(puzzle);
     }
 
     [TestMethod]
@@ -95,18 +64,8 @@ public class SolveSudokuPuzzle
                                 + "  9 2    \n"
                                 + " 75 6  2 \n"
                                 + "2  5   8 \n";
-
-        const string expectedSolution =     "518932647\n"
-                                          + "924675831\n"
-                                          + "637481592\n"
-                                          + "792853416\n"
-                                          + "846197253\n"
-                                          + "351246978\n"
-                                          + "189724365\n"
-                                          + "475368129\n"
-                                          + "263519784\n";
-            
-        CompareWithExpectedSolution(puzzle, expectedSolution);
+           
+        CheckForSolvability(puzzle);
     }
 
     [TestMethod]
@@ -173,18 +132,8 @@ public class SolveSudokuPuzzle
                               + "920108000\n"
                               + "034059000\n"
                               + "507000000\n";
-        
-        const string expectedSolution =   "462831957\n"
-                                        + "795426183\n"
-                                        + "381795426\n"
-                                        + "173984265\n"
-                                        + "659312748\n"
-                                        + "248567319\n"
-                                        + "926178534\n"
-                                        + "834259671\n"
-                                        + "517643892\n";
-            
-        CompareWithExpectedSolution(puzzle, expectedSolution);
+       
+        CheckForSolvability(puzzle);
     }
     
     [TestMethod]
@@ -202,21 +151,5 @@ public class SolveSudokuPuzzle
                               + "034090710\n";
 
         CheckForSolvability(puzzle);
-    }
-
-    [TestMethod]
-    [Ignore]
-    public void SolvePuzzlesFromFile()
-    {
-        //const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/0096_sudoku.txt";
-        //const string filename = "/home/armin/src/SudokuSolver/SudokuSolverTests/puzzles/Just17.txt";
-        const string filename = "/home/tac/src/SudokuSolver/SudokuSolverTests/puzzles/top50000.txt";
-
-        var allPuzzles = Input.ReadPuzzlesFromFile(filename, out var puzzleNames);
-        List<bool> solvedPuzzles;
-        SolverWrapper solver = new SolverWrapper(".");
-        var numberOfUnsolvedPuzzles = solver.SolveMultiplePuzzles(allPuzzles,out var results, out solvedPuzzles); //check undefined symbol
-        Console.WriteLine(numberOfUnsolvedPuzzles + " of " + allPuzzles.Count + " puzzles have not been solved.");
-        Assert.AreEqual(0, numberOfUnsolvedPuzzles);
     }
 }

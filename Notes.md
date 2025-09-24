@@ -8,7 +8,7 @@
 - clean up code in InputCommands
 - clean up code for calling the solver SolverUtil.cs
 - clean up code for reading in sets of puzzles in Input.cs -> relatively clean
-- clean up code for printing solutions in Output.cs -> currently not usde
+- clean up code for printing solutions in Output.cs -> currently not used
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
