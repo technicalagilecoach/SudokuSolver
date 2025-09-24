@@ -8,56 +8,33 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
 
     public List<string> SolvePuzzles(int number, ref string output, ref List<bool> solvedPuzzles)
     {
-        List<string> results;
+        List<string> results = [];
         if (FileType == Input.FileType.SinglePuzzle || number > 0)
-            results = SolveOnePuzzle(number, ref output);
+        {
+            var result = Solve(AllPuzzles[GetIndexFromNumber(number)], UndefinedSymbol, out var count);
+            results.Add(result);
+            output = CreateMessageForSinglePuzzle(count);
+        }
         else
-            results = SolveMultiplePuzzles(ref output, out solvedPuzzles);
+        {
+            var numberOfUnsolvedPuzzles = SolveMultiplePuzzles(out var res, out solvedPuzzles);
+            output = CreateMessageForMultiplePuzzles(numberOfUnsolvedPuzzles);
+            results = res;
+        }
+
         return results;
     }
 
-    private string SolveOnePuzzle(int index, out int numberOfUnsolvedCells)
-    {
-        numberOfUnsolvedCells = 0;
-        
-        if (index < 0 || index >= AllPuzzles.Count) 
-            return "";
-        
-        var puzzle = AllPuzzles[index];
-        var result = Solve(puzzle, out var solved, out numberOfUnsolvedCells);
-
-        return result;
-    }
-
-    private List<string> SolveOnePuzzle(int index, ref string output)
-    {
-        var result = new List<string>();
-        
-        if (index>0)
-            index = index - 1;
-        if (index >= 0 && index < AllPuzzles.Count)
-        {
-            var res = SolveOnePuzzle(index, out var count);
-            result.Add(res);
-            output = count == 0
-                ? "Puzzle has been solved."
-                : "Puzzle has not been solved. " + count + " cells are still unsolved.";
-        }
-
-        return result;
-    }
-
-    private int SolveMultiplePuzzles(out List<string> solutions,
-        out List<bool> solvedPuzzles)
+    private int SolveMultiplePuzzles(out List<string> results, out List<bool> solvedPuzzles)
     {
         var numberOfUnsolvedCells = new int[AllPuzzles.Count];
-        solutions = [];
+        results = [];
 
         for (var index = 0; index < AllPuzzles.Count; index++)
         {
-            var result = SolveOnePuzzle(index, out var count);
+            var result = Solve(AllPuzzles[index], UndefinedSymbol, out var count);
+            results.Add(result);
             numberOfUnsolvedCells[index] = count;
-            solutions.Add(result);
         }
         
         var numberOfUnsolvedPuzzles = numberOfUnsolvedCells.Count(c => c!=0);
@@ -65,26 +42,46 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
 
         return numberOfUnsolvedPuzzles;
     }
-
-    private List<string> SolveMultiplePuzzles(ref string output, out List<bool> solvedPuzzles)
+    
+    public static string Solve(string puzzleString, string undefinedSymbol, out int numberOfUnsolvedCells)
     {
-        var numberOfUnsolvedPuzzles = SolveMultiplePuzzles(out var results, out solvedPuzzles);
-        output = numberOfUnsolvedPuzzles + " of " + AllPuzzles.Count + " puzzles have not been solved.";
-        return results;
-    }
-
-    public string Solve(string puzzle, out bool solved, out int numberOfUnsolvedCells)
-    {
-        var sudokuPuzzle = new Puzzle();
-        sudokuPuzzle.Init(puzzle);
-        Solver solver = new(sudokuPuzzle);
-        solved = solver.Solve();
+        var puzzle = new Puzzle();
+        puzzle.Init(puzzleString);
+        Solver solver = new(puzzle);
+        var solved = solver.Solve();
         
         numberOfUnsolvedCells = 0;
         if (!solved)
-            numberOfUnsolvedCells = sudokuPuzzle.CountUndefinedCells();
+            numberOfUnsolvedCells = puzzle.CountUndefinedCells();
         
-        var result = sudokuPuzzle.PrintCells(UndefinedSymbol);
+        var result = puzzle.PrintCells(undefinedSymbol);
         return result;
+    }
+    
+    private int GetIndexFromNumber(int number)
+    {
+        int index = 0;
+
+        if (FileType == Input.FileType.SinglePuzzle)
+            index = 0;
+        else
+            index = number - 1;
+
+        if (index < 0 || index >= AllPuzzles.Count)
+            throw new IndexOutOfRangeException();
+        
+        return index;
+    }
+
+    private static string CreateMessageForSinglePuzzle(int count)
+    {
+        return count == 0
+            ? "Puzzle has been solved."
+            : "Puzzle has not been solved. " + count + " cells are still unsolved.";
+    }
+
+    private string CreateMessageForMultiplePuzzles(int numberOfUnsolvedPuzzles)
+    {
+        return numberOfUnsolvedPuzzles + " of " + AllPuzzles.Count + " puzzles have not been solved.";
     }
 }
