@@ -8,6 +8,7 @@
   - decide on a license before publishing on GitHub
   - polish the code to make the GitHub-repo public
   - remove data from git retrospectively, e.g. puzzle files, this notes, ...
+- use typealiases to make code mroe readable
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs

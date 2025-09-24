@@ -49,6 +49,24 @@ public class SolveSudokuPuzzle
     }
 
     [TestMethod]
+    [Ignore]
+    public void SolvePuzzleWithHiddenPairs()
+    {
+        //from https://www.sudokuwiki.org/sudoku.htm?bd=720408030080000047401076802810739000000851000000264080209680413340000008168943275
+        const string puzzle = "720408030" +
+                              "080000047" +
+                              "401076802" +
+                              "810739000" +
+                              "000851000" +
+                              "000264080" +
+                              "209680413" +
+                              "340000008" +
+                              "168943275";
+
+        CheckForSolvability(puzzle);
+    }
+    
+    [TestMethod]
     public void SolveHardPuzzle()
     {
         //https://sudoku-puzzles.net/sudoku-hard/580/
