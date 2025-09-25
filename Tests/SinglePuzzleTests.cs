@@ -63,6 +63,8 @@ public class SolveSudokuPuzzle
                               "340000008" +
                               "168943275";
 
+        //not solvable with Hidden-Pairs alone, but this is a next step!
+        
         CheckForSolvability(puzzle);
     }
     

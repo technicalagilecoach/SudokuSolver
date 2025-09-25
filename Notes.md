@@ -14,7 +14,8 @@
   - PointingPairs
 - test/repair and refactor
   - HiddenPairs
-  - HiddenPairs
+  - It needs to be extended such that more than one hidden pair may occur in one particular area.
+  - more example puzzles needed
 - implement remaining basic strategies (identify relevant puzzles for each)
   - naked triples
   - hidden triples
@@ -32,6 +33,7 @@
 - perform pruning etc. only based on actually changed cells
 
 ## Done
+- improved Hidden Pairs strategy such that it performs as expected with on example puzzle.
 - implement statistics to find out which strategies are actually needed for solving a specific puzzle
 - clean up code for calling the solver in SolverWrapper.cs
 - clean up code in Writer.cs

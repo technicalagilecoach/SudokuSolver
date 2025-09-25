@@ -44,7 +44,6 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
     {
         var distribution = CountDigitDistributionInArea(allCellsOfInterest);
         
-        //var candidatesForPairs = new BitArray(distribution.Select(digit => distribution[digit] == 2).ToArray()); //???
         var candidatesForPairs = new BitArray(GridSize);
         var count = 0;
         for (var digit = 0; digit < GridSize; digit++)
@@ -73,7 +72,6 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
             return;
         
         var foundPair = new List<(Position, Position, BitArray)>();
-        //FindHiddenPairs(allPairsOfCells, candidatesForPairs, foundPair);
         
         foundPair.Add((hiddenPair[0], hiddenPair[1], candidatesForPairs));
         
@@ -101,45 +99,21 @@ internal class HiddenPairs(Puzzle puzzle) : Strategy(puzzle)
         return cellsAreEqual;
     }
     
-    private void FindHiddenPairs(List<(Position, Position)> allPairsOfCells, BitArray candidatesForPairs, List<(Position, Position, BitArray)> foundPairs)
-    {
-        foreach (var pair in allPairsOfCells)
-        {
-            var candidates1 = GetCandidates(pair.Item1);
-            var candidates2 = GetCandidates(pair.Item2);
-            
-            var result = new BitArray(GridSize,true);
-            result.And(candidates1).And(candidates2).And(candidatesForPairs); //???
-
-            var count = 0;
-            for (var index = 0; index < result.Count; index++)
-            {
-                if (result[index])
-                    count++;
-            }
-
-            if (count == 2)
-            {
-                foundPairs.Add((pair.Item1, pair.Item2, result));
-            }
-        }
-    }
-    
     private void RemoveCandidates(List<Position> allCellsOfInterest, List<(Position, Position, BitArray)> foundPairs)
     {
         foreach (var pair in foundPairs)
         {
-            var filter = pair.Item3.Not();
+            var filter = pair.Item3; //.Not();
             
             foreach (var cell in allCellsOfInterest)
             {
-                if (IsUndefined(cell) && cell != pair.Item1 && cell != pair.Item2)
+                if (IsUndefined(cell) && (cell == pair.Item1 || cell == pair.Item2))
                 {
-                    var old = Candidates[cell.Row, cell.Column];
+                    var old = (BitArray)Candidates[cell.Row, cell.Column].Clone();
                     Candidates[cell.Row, cell.Column].And(filter); 
                     
                     //ToDo: more than one candidate can be removed here -> all of them should be counted
-                    if (!Candidates[cell.Row, cell.Column].Equals(old))
+                    if (!HasMatchingCandidates(cell, old))
                         _numberOfRemovedCandidates++; 
                 }
             }
