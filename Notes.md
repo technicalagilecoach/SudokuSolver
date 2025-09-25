@@ -9,14 +9,17 @@
   - polish the code to make the GitHub-repo public
   - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 - use typealiases to make code mroe readable
+- HiddenPairs
+  - test/repair and refactor
+  - exclude naked pairs!
+  - It needs to be extended such that more than one hidden pair may occur in one particular area.
+  - more example puzzles needed
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
-- test/repair and refactor
-  - HiddenPairs
-  - It needs to be extended such that more than one hidden pair may occur in one particular area.
-  - more example puzzles needed
 - implement remaining basic strategies (identify relevant puzzles for each)
+  - can the code for naked pairs/hidden pairs be generalized?
+  - can the code for triples/quads be specialized that it also works for pairs?
   - naked triples
   - hidden triples
   - naked quads

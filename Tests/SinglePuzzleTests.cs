@@ -12,6 +12,13 @@ public class SolveSudokuPuzzle
         Assert.IsTrue(unsolvedCells==0);
     }
     
+    private static void CompareWithExpectedOutcome(string puzzle, string expected, string undefinedSymbol)
+    {
+        puzzle = puzzle.Replace("\n", "");
+        var result = SolverWrapper.Solve(puzzle, undefinedSymbol, out var unsolvedCells, out var strategyStats);
+        Assert.AreEqual(expected, result);
+    }
+    
     [TestMethod]
     public void SolveEasyPuzzle()
     {
@@ -49,7 +56,7 @@ public class SolveSudokuPuzzle
     }
 
     [TestMethod]
-    [Ignore]
+    //[Ignore]
     public void SolvePuzzleWithHiddenPairs()
     {
         //from https://www.sudokuwiki.org/sudoku.htm?bd=720408030080000047401076802810739000000851000000264080209680413340000008168943275
@@ -63,9 +70,20 @@ public class SolveSudokuPuzzle
                               "340000008" +
                               "168943275";
 
-        //not solvable with Hidden-Pairs alone, but this is a next step!
+        const string expected = "720408030\n" +
+                                "080000047\n" +
+                                "401076802\n" +
+                                "810739000\n" +
+                                "600851000\n" +
+                                "000264081\n" +
+                                "209680413\n" +
+                                "340000008\n" +
+                                "168943275\n";
         
-        CheckForSolvability(puzzle);
+        // Hidden Pairs strategy works as the next step, afterward Hidden Singles is applicable!
+        // Naked Triple strategy is then needed to continue!
+        
+        CompareWithExpectedOutcome(puzzle, expected,"0");
     }
     
     [TestMethod]
