@@ -36,6 +36,8 @@
 - perform pruning etc. only based on actually changed cells
 
 ## Done
+- implemented messy but generic code for handling naked tuples 
+  - works for pairs, triplets and most likely also for quadruplets (no test case for quadruplets yet) 
 - improved Hidden Pairs strategy such that it performs as expected with on example puzzle.
 - implement statistics to find out which strategies are actually needed for solving a specific puzzle
 - clean up code for calling the solver in SolverWrapper.cs

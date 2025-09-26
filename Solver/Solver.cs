@@ -25,7 +25,10 @@ public class Solver(Puzzle puzzle)
             Execute(HiddenSingles); //fixes values
             
             Execute(NakedPairs); //removes candidates
-            Execute(HiddenPairs); //removes candidates?
+            Execute(HiddenPairs); //removes candidates
+            
+            Execute(NakedTriplets); //removes candidates
+            Execute(NakedQuadruplets); //removes candidates
             
             Execute(PointingPairs); //removes candidates
             Execute(BoxLineReduction); //removes candidates
@@ -89,7 +92,8 @@ public class Solver(Puzzle puzzle)
 
     private bool NakedPairs()
     {
-        return new NakedPairs(puzzle).Handle();
+        //return new NakedPairs(puzzle).Handle();
+        return new NakedTuples(puzzle, 2).Handle();
     }
 
     private bool HiddenPairs()
@@ -97,6 +101,16 @@ public class Solver(Puzzle puzzle)
         return new HiddenPairs(puzzle).Handle();
     }
 
+    private bool NakedTriplets()
+    {
+        return new NakedTriplets(puzzle).Handle();
+    }
+    
+    private bool NakedQuadruplets()
+    {
+        return new NakedQuadruplets(puzzle).Handle();
+    }
+    
     private bool PointingPairs()
     {
         return new PointingPairs(puzzle).Handle();
