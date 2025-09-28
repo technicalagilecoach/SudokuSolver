@@ -3,41 +3,43 @@ using static SudokuSolver.Puzzle;
 
 namespace SudokuSolver;
 
-public class HiddenTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
+public class HiddenTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle: puzzle)
 {
     private int TupleSize { get; } = tupleSize;
     public bool Handle()
     {
         int numberOfRemovedCandidates = 0;
         
-        
-        var state = puzzle.PrintCells();
-        
         foreach (var row in AllRows)
         {
             var allCellsOfInterest = GetIndicesForRow(row).Where(IsUndefined).ToList();
-            numberOfRemovedCandidates = FindHiddenTuplesAndEliminateCandidates(allCellsOfInterest, numberOfRemovedCandidates);
+            FindHiddenTuplesAndEliminateCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         foreach (var column in AllColumns)
         {
             var allCellsOfInterest = GetIndicesForColumn(column).Where(IsUndefined).ToList();;
-            numberOfRemovedCandidates = FindHiddenTuplesAndEliminateCandidates(allCellsOfInterest, numberOfRemovedCandidates);
+            FindHiddenTuplesAndEliminateCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         foreach (var box in AllBoxes)
         {
             var allCellsOfInterest = GetIndicesForBox(box).Where(IsUndefined).ToList();;
-            numberOfRemovedCandidates = FindHiddenTuplesAndEliminateCandidates(allCellsOfInterest, numberOfRemovedCandidates);
+            FindHiddenTuplesAndEliminateCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         return numberOfRemovedCandidates > 0;
     }
 
-    private int FindHiddenTuplesAndEliminateCandidates(List<Position> allCellsOfInterest, int numberOfRemovedCandidates)
+    private void FindHiddenTuplesAndEliminateCandidates(List<Position> allCellsOfInterest, ref int numberOfRemovedCandidates)
     {
-        var state = puzzle.PrintCells();
-        
+        var numberTuples = GeneratePotentialNumberTuples(allCellsOfInterest);
+        var hiddenTuples = IdentifyHiddenTuples(allCellsOfInterest, numberTuples);
+        RemoveCandidatesBasedOnHiddenTuples(ref numberOfRemovedCandidates, hiddenTuples);
+    }
+
+    private List<List<int>> GeneratePotentialNumberTuples(List<Position> allCellsOfInterest)
+    {
         var digitDistribution = CountDigitDistributionInArea(allCellsOfInterest);
         var relevantDigits = digitDistribution.Where(x=> x<=TupleSize).ToList();
 
@@ -49,9 +51,33 @@ public class HiddenTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
         }
 
         var numberTuples = Combinations<int>(relevantNumbers.ToList(),TupleSize);
+        return numberTuples;
+    }
 
+    private void RemoveCandidatesBasedOnHiddenTuples(ref int numberOfRemovedCandidates, List<(List<Position>, List<int>)> hiddenTuples)
+    {
+        foreach (var tuple in hiddenTuples)
+        {
+            foreach (var position in tuple.Item1)
+            {
+                var candidates = GetCandidates(position);
+                
+                foreach (var number in AllDigits)
+                {
+                    if (candidates[number] && !tuple.Item2.Contains(number + 1))
+                    {
+                        candidates[number] = false;
+                        numberOfRemovedCandidates++;
+                    }
+                }
+            }
+        }
+    }
+
+    private List<(List<Position>, List<int>)> IdentifyHiddenTuples(List<Position> allCellsOfInterest, List<List<int>> numberTuples)
+    {
         var hiddenTuples = new List<(List<Position>,List<int>)>();
-        
+
         foreach (var tuple in numberTuples)
         {
             List<Position> potentialCellsOfTuple = [];
@@ -95,23 +121,6 @@ public class HiddenTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
             }
         }
 
-        foreach (var tuple in hiddenTuples)
-        {
-            foreach (var position in tuple.Item1)
-            {
-                var candidates = GetCandidates(position);
-
-                foreach (var number in AllDigits)
-                {
-                    if (candidates[number] && !tuple.Item2.Contains(number + 1))
-                    {
-                        candidates[number] = false;
-                        numberOfRemovedCandidates++;
-                    }
-                }
-            }
-        }
-
-        return numberOfRemovedCandidates;
+        return hiddenTuples;
     }
 }

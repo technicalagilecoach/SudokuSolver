@@ -13,34 +13,44 @@ public class NakedTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
         foreach (var row in AllRows)
         {
             var allCellsOfInterest = GetIndicesForRow(row).Where(IsUndefined).ToList();
-            numberOfRemovedCandidates = FindNakedTuplesAndEliminateCandidates(allCellsOfInterest, numberOfRemovedCandidates);
+            FindNakedTuplesAndEliminateCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         foreach (var column in AllColumns)
         {
             var allCellsOfInterest = GetIndicesForColumn(column).Where(IsUndefined).ToList();;
-            numberOfRemovedCandidates = FindNakedTuplesAndEliminateCandidates(allCellsOfInterest, numberOfRemovedCandidates);
+            FindNakedTuplesAndEliminateCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         foreach (var box in AllBoxes)
         {
             var allCellsOfInterest = GetIndicesForBox(box).Where(IsUndefined).ToList();;
-            numberOfRemovedCandidates = FindNakedTuplesAndEliminateCandidates(allCellsOfInterest, numberOfRemovedCandidates);
+            FindNakedTuplesAndEliminateCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         return numberOfRemovedCandidates > 0;
     }
 
-    private int FindNakedTuplesAndEliminateCandidates(List<Position> allCellsOfInterest, int numberOfRemovedCandidates)
+    private void FindNakedTuplesAndEliminateCandidates(List<Position> allCellsOfInterest, ref int numberOfRemovedCandidates)
+    {
+        var tuples = GeneratePotentialNakedTuples(allCellsOfInterest);
+        var nakedTuples = IdentifyNakedTuples(tuples);
+
+        RemoveCandidatesBasedOnNakedTuples(allCellsOfInterest, nakedTuples, ref numberOfRemovedCandidates);
+    }
+
+    private List<List<Position>> GeneratePotentialNakedTuples(List<Position> allCellsOfInterest)
     {
         var tupleCandidates = allCellsOfInterest.Where(x => CountCandidates(x)<=TupleSize).ToList();
-
-        if (tupleCandidates.Count() < TupleSize)
-            return numberOfRemovedCandidates;
-
-        List<List<Position>> tuples = Combinations(tupleCandidates,TupleSize);
         
+        if (tupleCandidates.Count < TupleSize)
+            return [];
 
+        return Combinations(tupleCandidates, TupleSize);
+    }
+
+    private List<Tuple<List<Position>, SortedSet<int>>> IdentifyNakedTuples(List<List<Position>> tuples)
+    {
         List<Tuple<List<Position>,SortedSet<int>>> nakedTuples = [];
         foreach (var tuple in tuples)
         {
@@ -63,6 +73,12 @@ public class NakedTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
             }
         }
 
+        return nakedTuples;
+    }
+
+    private void RemoveCandidatesBasedOnNakedTuples(List<Position> allCellsOfInterest,
+        List<Tuple<List<Position>, SortedSet<int>>> nakedTuples, ref int numberOfRemovedCandidates)
+    {
         foreach (var tuple in nakedTuples)
         {
             var numbers = tuple.Item2;
@@ -83,7 +99,5 @@ public class NakedTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
                 }
             }
         }
-
-        return numberOfRemovedCandidates;
     }
 }

@@ -8,10 +8,10 @@
   - remove unnecessary data from git, e.g. puzzle files, this notes, ...
 - extend PointingPairs to triplets
 - clean up/refactor 
-  - BoxLineReduction
-  - PointingPairs
   - naked tuples
   - hidden tuples
+  - BoxLineReduction
+  - PointingPairs
 - clean up naked and hidden tuples (identify relevant puzzles for each)
   - more example puzzles needed
 - improve statistics, error checking and debug support
