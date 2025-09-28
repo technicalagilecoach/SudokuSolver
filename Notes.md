@@ -17,6 +17,10 @@
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
+- replace GenerateNTuple by generic implementations
+- replace NakedPairs by generic NakedTuples version
+- extend BoxLineReduction to triplets
+- extend PointingPairs to triplets
 - implement remaining basic strategies (identify relevant puzzles for each)
   - can the code for naked pairs/hidden pairs be generalized?
   - can the code for triples/quads be specialized that it also works for pairs?

@@ -38,10 +38,8 @@ public class NakedTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
         if (tupleCandidates.Count() < TupleSize)
             return numberOfRemovedCandidates;
 
-        List<List<Position>> tuples = [];
-
+        List<List<Position>> tuples = Combinations(tupleCandidates,TupleSize);
         
-        GenerateNTuples(tupleCandidates, tuples);
 
         List<Tuple<List<Position>,SortedSet<int>>> nakedTuples = [];
         foreach (var tuple in tuples)
@@ -89,49 +87,33 @@ public class NakedTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
         return numberOfRemovedCandidates;
     }
 
-    private void GenerateNTuples(List<Position> tupleCandidates, List<List<Position>> tuples)
+    public static List<List<T>> Combinations<T>(List<T> list, int n)
     {
-        if (TupleSize == 2)
+        if (n == 0)
+            return [[]];
+        if (list.Count == 0)
+            return [];
+
+        var head = list[0];
+        var tail = list.Count>1?list.GetRange(1,list.Count - 1):[];
+
+        var result = new List<List<T>>();
+        
+        //head is part of the combination
+        var res1 = Combinations(tail, n-1);
+        foreach (var item in res1)
         {
-            int size = tupleCandidates.Count();
-            for (int i = 0; i < size - 1; i++)
-            {
-                for (int j = i + 1; j < size; j++)
-                {
-                    tuples.Add(new List<Position> { tupleCandidates[i], tupleCandidates[j]});
-                }
-            }
+            item.Insert(0, head);
+            result.Add(item);
         }
-        else if (TupleSize == 3)
+
+        //head is not part of the combination
+        var res2 = Combinations(tail, n);
+        foreach (var item in res2)
         {
-            int size = tupleCandidates.Count();
-            for (int i = 0; i < size - 2; i++)
-            {
-                for (int j = i + 1; j < size - 1; j++)
-                {
-                    for (int k = j + 1; k < size; k++)
-                    {
-                        tuples.Add(new List<Position> { tupleCandidates[i], tupleCandidates[j], tupleCandidates[k] });
-                    }
-                }
-            }
+            result.Add(item);
         }
-        else if (TupleSize == 4)
-        {
-            int size = tupleCandidates.Count();
-            for (int i = 0; i < size - 3; i++)
-            {
-                for (int j = i + 1; j < size - 2; j++)
-                {
-                    for (int k = j + 1; k < size -1; k++)
-                    {
-                        for (int l = k + 1; l < size; l++)
-                        {
-                            tuples.Add(new List<Position> { tupleCandidates[i], tupleCandidates[j], tupleCandidates[k], tupleCandidates[l] });
-                        }
-                    }
-                }
-            }
-        }
+        
+        return result;
     }
 }

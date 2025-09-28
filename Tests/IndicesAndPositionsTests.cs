@@ -52,4 +52,16 @@ public class IndicesAndPositionsTests
 
         Assert.IsTrue(indices4[0].Item1.Row == 4);
     }
+    
+    [TestMethod]
+    public void GenerateCombinationsTest()
+    {
+        List<int> list = [ 1, 2, 3, 4, 5 ];
+        var result2 = NakedTuples.Combinations<int>(list, 2);
+        var result3 = NakedTuples.Combinations<int>(list, 3);
+        var result4 = NakedTuples.Combinations<int>(list, 4);
+
+        var positions = IndicesAndIterators.GetIndicesForRow(0);
+        var result5 = NakedTuples.Combinations<Position>(positions, 2);
+    }
 }
