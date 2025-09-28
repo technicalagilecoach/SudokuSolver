@@ -1,6 +1,6 @@
 namespace SudokuSolver;
 
-public class HiddenPairs(Puzzle puzzle) : HiddenTuples(puzzle,2)
+internal class HiddenPairs(Puzzle puzzle) : HiddenTuples(puzzle,2)
 {
     
 }

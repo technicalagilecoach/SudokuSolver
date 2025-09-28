@@ -1,12 +1,14 @@
 # Notes
 
+## Bugs
+
 ## To Do
 - make project ready to publish
   - find a name for the project
   - decide on a license before publishing on GitHub
   - polish the code to make the GitHub-repo public
-  - remove unnecessary data from git, e.g. puzzle files, this notes, ...
-- extend PointingPairs to triplets
+  - remove data from git retrospectively, e.g. puzzle files, this notes, ...
+- use typealiases to make code more readable
 - clean up/refactor 
   - naked tuples
   - hidden tuples
@@ -20,6 +22,10 @@
   - should be helpful
   - can be activated on demand (impact on solver performance)
   - tradeoff with different diagnostic levels
+- in InputSolver.RunSolver all puzzles are run through the solver before any output is written 
+  - consider calling solver and writing output puzzle after puzzle
+- parallel execution when many puzzles are processed
+- perform pruning etc. only based on actually changed cells
 
 ## Done
 - removed deprecated code for naked and hidden pairs
