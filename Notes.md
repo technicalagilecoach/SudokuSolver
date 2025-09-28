@@ -12,7 +12,6 @@
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
-- extend BoxLineReduction to triplets
 - extend PointingPairs to triplets
 - clean up naked and hidden tuples (identify relevant puzzles for each)
   - test/repair and refactor
@@ -29,6 +28,7 @@
 - perform pruning etc. only based on actually changed cells
 
 ## Done
+- extend BoxLineReduction to triplets -> code not based on pairs or triplets
 - implement remaining basic strategies (identify relevant puzzles for each)
   - implemented generic solver strategy for naked tuple (used for pairs, triplets and quadruplets)
   - implemented generic solver strategy for hidden tuples (used for pairs, triplets and quadruplets)

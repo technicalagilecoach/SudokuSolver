@@ -23,7 +23,9 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
                 foreach (var column in AllColumns)
                 {
                     Position cell = new Position(row, column);
-                    if (!columnsInBox.Contains(column))
+                    
+                    bool isOutsideOfBox = !columnsInBox.Contains(column);
+                    if (isOutsideOfBox)
                     {
                         if (IsUndefined(cell))
                         {
@@ -70,7 +72,6 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
                         }
                     }
                 }
-
             }
 
             //for each column (intersecting the box)
@@ -81,7 +82,9 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
                 foreach (var row in AllRows)
                 {
                     Position cell = new Position(row, column);
-                    if (!rowsInBox.Contains(row))
+                    
+                    bool isOutsideOfBox = !rowsInBox.Contains(row);
+                    if (isOutsideOfBox)
                     {
                         if (IsUndefined(cell))
                         {
