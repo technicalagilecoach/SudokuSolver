@@ -1,20 +1,18 @@
 # Notes
 
-## Bugs
-
 ## To Do
 - make project ready to publish
   - find a name for the project
   - decide on a license before publishing on GitHub
   - polish the code to make the GitHub-repo public
-  - remove data from git retrospectively, e.g. puzzle files, this notes, ...
-- use typealiases to make code mroe readable
+  - remove unnecessary data from git, e.g. puzzle files, this notes, ...
+- extend PointingPairs to triplets
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
-- extend PointingPairs to triplets
+  - naked tuples
+  - hidden tuples
 - clean up naked and hidden tuples (identify relevant puzzles for each)
-  - test/repair and refactor
   - more example puzzles needed
 - improve statistics, error checking and debug support
   - which strategies are needed might also depend on the order in which the strategies are executed!
@@ -22,12 +20,9 @@
   - should be helpful
   - can be activated on demand (impact on solver performance)
   - tradeoff with different diagnostic levels
-- in InputSolver.RunSolver all puzzles are run through the solver before any output is written 
-  - consider calling solver and writing output puzzle after puzzle
-- parallel execution when many puzzles are processed
-- perform pruning etc. only based on actually changed cells
 
 ## Done
+- removed deprecated code for naked and hidden pairs
 - extend BoxLineReduction to triplets -> code not based on pairs or triplets
 - implement remaining basic strategies (identify relevant puzzles for each)
   - implemented generic solver strategy for naked tuple (used for pairs, triplets and quadruplets)
@@ -76,6 +71,12 @@
 - row, columns and boxes can be treated equally when using a container with all cells/indices of that box
 - brute force search is not implemented but could help if all other strategies fail
 - implement more strategies mentioned at https://www.sudokuwiki.org/Sudoku.htm
+- ideas for code improvement
+    - use typealiases to make code more readable
+    - in InputSolver.RunSolver all puzzles are run through the solver before any output is written
+        - consider calling solver and writing output puzzle after puzzle
+    - parallel execution when many puzzles are processed
+    - perform pruning etc. only based on actually changed cells
 
 ## Limitations
 - Grid.Init assumes that the input puzzles always follows the expected syntax -> no error handling otherwise

@@ -95,14 +95,12 @@ public class Solver(Puzzle puzzle)
 
     private bool NakedPairs()
     {
-        //return new NakedPairs(puzzle).Handle();
-        return new NakedTuples(puzzle, 2).Handle();
+        return new NakedPairs(puzzle).Handle();
     }
 
     private bool HiddenPairs()
     {
-        //return new HiddenPairs(puzzle).Handle();
-        return new HiddenTuples(puzzle, 2).Handle();
+        return new HiddenPairs(puzzle).Handle();
     }
 
     private bool NakedTriplets()
