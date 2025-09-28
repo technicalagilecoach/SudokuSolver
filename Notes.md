@@ -9,25 +9,14 @@
   - polish the code to make the GitHub-repo public
   - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 - use typealiases to make code mroe readable
-- HiddenPairs
-  - test/repair and refactor
-  - exclude naked pairs!
-  - It needs to be extended such that more than one hidden pair may occur in one particular area.
-  - more example puzzles needed
 - clean up/refactor 
   - BoxLineReduction
   - PointingPairs
-- replace GenerateNTuple by generic implementations
-- replace NakedPairs by generic NakedTuples version
 - extend BoxLineReduction to triplets
 - extend PointingPairs to triplets
-- implement remaining basic strategies (identify relevant puzzles for each)
-  - can the code for naked pairs/hidden pairs be generalized?
-  - can the code for triples/quads be specialized that it also works for pairs?
-  - naked triples
-  - hidden triples
-  - naked quads
-  - hidden quads
+- clean up naked and hidden tuples (identify relevant puzzles for each)
+  - test/repair and refactor
+  - more example puzzles needed
 - improve statistics, error checking and debug support
   - which strategies are needed might also depend on the order in which the strategies are executed!
   - clean up code for printing solutions in DebugOutput -> currently not used
@@ -40,6 +29,11 @@
 - perform pruning etc. only based on actually changed cells
 
 ## Done
+- implement remaining basic strategies (identify relevant puzzles for each)
+  - implemented generic solver strategy for naked tuple (used for pairs, triplets and quadruplets)
+  - implemented generic solver strategy for hidden tuples (used for pairs, triplets and quadruplets)
+  - replaced NakedPairs by generic NakedTuples version
+  - replaced previous GenerateNTuple by generic Combinations implementations
 - implemented messy but generic code for handling naked tuples 
   - works for pairs, triplets and most likely also for quadruplets (no test case for quadruplets yet) 
 - improved Hidden Pairs strategy such that it performs as expected with on example puzzle.

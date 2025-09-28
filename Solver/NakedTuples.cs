@@ -86,34 +86,4 @@ public class NakedTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
 
         return numberOfRemovedCandidates;
     }
-
-    public static List<List<T>> Combinations<T>(List<T> list, int n)
-    {
-        if (n == 0)
-            return [[]];
-        if (list.Count == 0)
-            return [];
-
-        var head = list[0];
-        var tail = list.Count>1?list.GetRange(1,list.Count - 1):[];
-
-        var result = new List<List<T>>();
-        
-        //head is part of the combination
-        var res1 = Combinations(tail, n-1);
-        foreach (var item in res1)
-        {
-            item.Insert(0, head);
-            result.Add(item);
-        }
-
-        //head is not part of the combination
-        var res2 = Combinations(tail, n);
-        foreach (var item in res2)
-        {
-            result.Add(item);
-        }
-        
-        return result;
-    }
 }

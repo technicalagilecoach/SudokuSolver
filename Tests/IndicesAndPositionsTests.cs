@@ -57,11 +57,11 @@ public class IndicesAndPositionsTests
     public void GenerateCombinationsTest()
     {
         List<int> list = [ 1, 2, 3, 4, 5 ];
-        var result2 = NakedTuples.Combinations<int>(list, 2);
-        var result3 = NakedTuples.Combinations<int>(list, 3);
-        var result4 = NakedTuples.Combinations<int>(list, 4);
+        var result2 = IndicesAndIterators.Combinations<int>(list, 2);
+        var result3 = IndicesAndIterators.Combinations<int>(list, 3);
+        var result4 = IndicesAndIterators.Combinations<int>(list, 4);
 
         var positions = IndicesAndIterators.GetIndicesForRow(0);
-        var result5 = NakedTuples.Combinations<Position>(positions, 2);
+        var result5 = IndicesAndIterators.Combinations<Position>(positions, 2);
     }
 }
