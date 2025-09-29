@@ -11,7 +11,9 @@ public class Solver(Puzzle puzzle)
     private bool _puzzleModified = false;
 
     private const bool PerformChecks = true;
+    
     public Dictionary<string,int> StrategyStats { get; } = new();
+    public List<string> StrategyProtocol { get; } = new();
     
     public bool Solve()
     {
@@ -66,9 +68,12 @@ public class Solver(Puzzle puzzle)
             
             _puzzleModified = fun();
 
-            if (_puzzleModified) 
+            if (_puzzleModified)
+            {
                 StrategyStats[strategy]++;
-            
+                StrategyProtocol.Add(strategy);
+            }
+
             var gotWorse = (!before) && IsInconsistent();
             if (PerformChecks && gotWorse)
             {

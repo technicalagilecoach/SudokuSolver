@@ -29,9 +29,9 @@ public class Writer(bool unsolved, string undefinedSymbol, Input.FileType fileTy
     {
         using var sr = new StreamWriter(fileStream);
 
-        var index = 0;
         for (var i=0; i<results.Count; i++)
         {
+           
             if (Unsolved && solvedPuzzles.Count==results.Count && solvedPuzzles[i])
                 continue;
                 
@@ -39,9 +39,8 @@ public class Writer(bool unsolved, string undefinedSymbol, Input.FileType fileTy
 
             if (FileType == Input.FileType.MultiplePuzzlesWithName)
             {
-                sr.WriteLine(PuzzleNames[index]);
+                sr.WriteLine(PuzzleNames[i]);
                 sr.Write(res);
-                index++;
             }
 
             if (FileType == Input.FileType.MultiplePuzzlesOneLineEach)
@@ -77,7 +76,6 @@ public class Writer(bool unsolved, string undefinedSymbol, Input.FileType fileTy
 
     private void WriteMultiplePuzzlesToConsole(IConsole console, List<string> results, List<bool> solvedPuzzles)
     {
-        int index = 0;
         for (var i=0; i<results.Count; i++)
         {
             if (Unsolved && solvedPuzzles.Count==results.Count && solvedPuzzles[i])
@@ -87,9 +85,8 @@ public class Writer(bool unsolved, string undefinedSymbol, Input.FileType fileTy
                     
             if (FileType == Input.FileType.MultiplePuzzlesWithName)
             {
-                console.Output.WriteLine(PuzzleNames[index]);
+                console.Output.WriteLine(PuzzleNames[i]);
                 console.Output.Write(res);    
-                index++;
             }
 
             if (FileType == Input.FileType.MultiplePuzzlesOneLineEach)
