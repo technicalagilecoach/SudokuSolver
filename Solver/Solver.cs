@@ -35,7 +35,7 @@ public class Solver(Puzzle puzzle)
             Execute(NakedQuadruplets); //removes candidates
             Execute(HiddenQuadruplets); //removes candidates
             
-            Execute(PointingPairs); //removes candidates
+            Execute(PointingTuples); //removes candidates
             Execute(BoxLineReduction); //removes candidates
         } while (_puzzleModified);
 
@@ -128,9 +128,9 @@ public class Solver(Puzzle puzzle)
         return new HiddenQuadruplets(puzzle).Handle();
     }
     
-    private bool PointingPairs()
+    private bool PointingTuples()
     {
-        return new PointingPairs(puzzle).Handle();
+        return new PointingTuples(puzzle).Handle();
     }
 
     private bool BoxLineReduction()

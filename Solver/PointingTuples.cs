@@ -3,7 +3,7 @@ using static SudokuSolver.Puzzle;
 
 namespace SudokuSolver;
 
-public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
+public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
     private int _numberOfRemovedCandidates;
     
     public bool Handle()

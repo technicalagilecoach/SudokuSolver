@@ -3,7 +3,7 @@
 ## To Do
 - finish implementation of basic strategies
   - extend pointing pairs to triplets
-    - PointingPairs strategy already covers triplets
+    - PointingPairs strategy already covers triplets -> rename it to PointingTuples
     - requires further refactoring
   - check if all elements of the basic strategies from https://www.sudokuwiki.org/Sudoku.htm are covered
   - identify relevant puzzles for each strategy and improve tests
