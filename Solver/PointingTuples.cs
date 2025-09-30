@@ -14,27 +14,27 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
         {
             var allCellsInBox = GetIndicesForBox(box);
             
-            HandlePointingPairsInRows(allCellsInBox, box);
-            HandlePointingPairsInColumns(allCellsInBox, box);
+            HandlePointingTuplesInRows(allCellsInBox, box);
+            HandlePointingTuplesInColumns(allCellsInBox, box);
         }
 
         return _numberOfRemovedCandidates>0;
     }
 
-    private void HandlePointingPairsInRows(List<Position> allCellsInBox, int box)
+    private void HandlePointingTuplesInRows(List<Position> allCellsInBox, int box)
     {
         var candidatesInRelevantRows = CreateValuesRows(allCellsInBox);
-        var pointingPairsInRows = FindPointingPairsInRows(box, candidatesInRelevantRows);
+        var pointingTuplesInRows = FindPointingTuples(GetBoxCoordinates(box).Row, candidatesInRelevantRows);
         var columnsWithUndefinedCells = allCellsInBox.Where(IsUndefined).Select(pos => pos.Column).ToHashSet();
-        RemoveCandidatesBasedOnPointingPairsInRows(pointingPairsInRows, columnsWithUndefinedCells);
+        RemoveCandidatesBasedOnPointingTuplesInRows(pointingTuplesInRows, columnsWithUndefinedCells);
     }
 
-    private void HandlePointingPairsInColumns(List<Position> allCellsInBox, int box)
+    private void HandlePointingTuplesInColumns(List<Position> allCellsInBox, int box)
     {
         var candidatesInRelevantColumns = CreateValuesColumns(allCellsInBox);
-        var pointingPairsInColumns = FindPointingPairsInColumns(box, candidatesInRelevantColumns);
+        var pointingTuplesInColumns = FindPointingTuples(GetBoxCoordinates(box).Column, candidatesInRelevantColumns);
         var rowsWithUndefinedCells = allCellsInBox.Where(IsUndefined).Select(pos => pos.Row).ToHashSet();
-        RemoveCandidatesBasedOnPointingPairsInColumns(pointingPairsInColumns, rowsWithUndefinedCells);
+        RemoveCandidatesBasedOnPointingTuplesInColumns(pointingTuplesInColumns, rowsWithUndefinedCells);
     }
     
     private int[,] CreateValuesRows(List<Position> allCellsInBox)
@@ -61,38 +61,6 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
         return candidatesInRelevantRows;
     }
 
-    private static List<(int, int)> FindPointingPairsInRows(int box, int[,] valuesRows)
-    {
-        var pointingPairsInRows = new List<(int, int)>();
-        
-        foreach (var digit in AllDigits)
-        {
-            int offset = GetIndexOfPositiveComponent(valuesRows[0,digit], valuesRows[1,digit], valuesRows[2,digit]);
-            if (offset >= 0)
-            {
-                var pos = GetBoxCoordinates(box);
-                pointingPairsInRows.Add((digit, pos.Row+offset));                    
-            }
-        }
-
-        return pointingPairsInRows;
-    }
-    
-    private void RemoveCandidatesBasedOnPointingPairsInRows(List<(int, int)> pointingPairsInRows, HashSet<int> columnsWithUndefinedCells)
-    {
-        foreach (var (digit, row) in pointingPairsInRows)
-        {
-            foreach (var column in AllColumns)
-            {
-                if (IsUndefined(row,column) && !columnsWithUndefinedCells.Contains(column) && Candidates[row,column][digit])
-                {
-                    Candidates[row,column][digit] = false;
-                    _numberOfRemovedCandidates++;
-                }
-            }
-        }
-    }
-
     private int[,] CreateValuesColumns(List<Position> allCellsInBox)
     {
         var candidatesInRelevantColumns = new int[BoxSize,GridSize];
@@ -116,27 +84,41 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
         
         return candidatesInRelevantColumns;
     }
-
-    private static List<(int, int)> FindPointingPairsInColumns(int box, int[,] valuesColumns)
+    
+    private static List<(int, int)> FindPointingTuples(int baseIndex, int[,] candidateCountPerArea)
     {
-        var pointingPairsInColumns = new List<(int, int)>();
+        var pointingTuples = new List<(int, int)>();
         
         foreach (var digit in AllDigits)
         {
-            int offset = GetIndexOfPositiveComponent(valuesColumns[0,digit], valuesColumns[1,digit], valuesColumns[2,digit]);
+            int offset = GetIndexOfPositiveComponent(candidateCountPerArea[0,digit], candidateCountPerArea[1,digit], candidateCountPerArea[2,digit]);
             if (offset >= 0)
             {
-                var pos = GetBoxCoordinates(box);
-                pointingPairsInColumns.Add((digit, pos.Column+offset));                    
+                pointingTuples.Add((digit, baseIndex+offset));                    
             }
         }
 
-        return pointingPairsInColumns;
+        return pointingTuples;
     }
     
-    private void RemoveCandidatesBasedOnPointingPairsInColumns(List<(int, int)> pointingPairsInColumns, HashSet<int> rowsWithUndefinedCells)
+    private void RemoveCandidatesBasedOnPointingTuplesInRows(List<(int, int)> pointingTuplesInRows, HashSet<int> columnsWithUndefinedCells)
     {
-        foreach (var (digit, column) in pointingPairsInColumns)
+        foreach (var (digit, row) in pointingTuplesInRows)
+        {
+            foreach (var column in AllColumns)
+            {
+                if (IsUndefined(row,column) && !columnsWithUndefinedCells.Contains(column) && Candidates[row,column][digit])
+                {
+                    Candidates[row,column][digit] = false;
+                    _numberOfRemovedCandidates++;
+                }
+            }
+        }
+    }
+
+    private void RemoveCandidatesBasedOnPointingTuplesInColumns(List<(int, int)> pointingTuplesInColumns, HashSet<int> rowsWithUndefinedCells)
+    {
+        foreach (var (digit, column) in pointingTuplesInColumns)
         {
             foreach (var row in AllColumns)
             {
