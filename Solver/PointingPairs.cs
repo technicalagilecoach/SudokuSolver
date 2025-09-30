@@ -4,137 +4,179 @@ using static SudokuSolver.Puzzle;
 namespace SudokuSolver;
 
 public class PointingPairs(Puzzle puzzle) : Strategy(puzzle) {
+    private int _numberOfRemovedCandidates;
+    
     public bool Handle()
     {
-        var numberOfRemovedCandidates = 0;
+        _numberOfRemovedCandidates = 0;
 
         foreach (var box in AllBoxes)
         {
-            var positions = GetIndicesForBox(box);
+            var allCellsInBox = GetIndicesForBox(box);
             
-            HandlePointingPairsInRows(positions, box, ref numberOfRemovedCandidates);
-            HandlePointingPairsInColumns(positions, box, ref numberOfRemovedCandidates);
+            HandlePointingPairsInRows(allCellsInBox, box);
+            HandlePointingPairsInColumns(allCellsInBox, box);
         }
 
-        return numberOfRemovedCandidates>0;
+        return _numberOfRemovedCandidates>0;
     }
 
-    private void HandlePointingPairsInRows(List<Position> positions, int box, ref int numberOfRemovedCandidates)
+    private void HandlePointingPairsInRows(List<Position> allCellsInBox, int box)
     {
-        var valuesRows = new int[BoxSize,GridSize];
+        var candidatesInRelevantRows = CreateValuesRows(allCellsInBox);
+        var pointingPairsInRows = FindPointingPairsInRows(box, candidatesInRelevantRows);
+        var columnsWithUndefinedCells = allCellsInBox.Where(IsUndefined).Select(pos => pos.Column).ToHashSet();
+        RemoveCandidatesBasedOnPointingPairsInRows(pointingPairsInRows, columnsWithUndefinedCells);
+    }
 
-        var encounteredColumns = new HashSet<int>();
-            
-        for (var rIndex = 0; rIndex < GridSize; rIndex++)
-        {
-            var index = rIndex;
-            var rowPositions = positions.Where(position =>  position.Row % 3 == index );
+    private void HandlePointingPairsInColumns(List<Position> allCellsInBox, int box)
+    {
+        var candidatesInRelevantColumns = CreateValuesColumns(allCellsInBox);
+        var pointingPairsInColumns = FindPointingPairsInColumns(box, candidatesInRelevantColumns);
+        var rowsWithUndefinedCells = allCellsInBox.Where(IsUndefined).Select(pos => pos.Row).ToHashSet();
+        RemoveCandidatesBasedOnPointingPairsInColumns(pointingPairsInColumns, rowsWithUndefinedCells);
+    }
+    
+    private int[,] CreateValuesRows(List<Position> allCellsInBox)
+    {
+        var candidatesInRelevantRows = new int[BoxSize,GridSize];
         
-            foreach (var position in rowPositions)
+        //var found = false;
+
+        foreach (var position in allCellsInBox.Where(IsUndefined))
+        {
+            var candidates = GetCandidates(position);
+            foreach (var digit in AllDigits)
             {
-                if (Cells[position.Row, position.Column] == Undefined)
+                if (candidates[digit])
                 {
-                    encounteredColumns.Add(position.Column);
-                        
-                    var value = GetCandidates(position);
-                    foreach (var digit in AllDigits)
-                    {
-                        if (value[digit])
-                            valuesRows[position.Row % 3,digit]++;
-                    }
+                    candidatesInRelevantRows[position.Row % 3, digit]++; //count how many times the candidate occurs in this row
+                    //found = true;
                 }
             }
         }
+        
+        //ToDo: if valuesRows only contains 0s then the rest can be skipped
+        
+        return candidatesInRelevantRows;
+    }
 
+    private static List<(int, int)> FindPointingPairsInRows(int box, int[,] valuesRows)
+    {
         var pointingPairsInRows = new List<(int, int)>();
+        
         foreach (var digit in AllDigits)
-        { 
-            var result = OnlyOnePositive(valuesRows[0,digit], valuesRows[1,digit], valuesRows[2,digit]);
-            if (result)
+        {
+            int offset = GetIndexOfPositiveComponent(valuesRows[0,digit], valuesRows[1,digit], valuesRows[2,digit]);
+            if (offset >= 0)
             {
-                var positiveIndex = valuesRows[0, digit] > 0 ? 0 : (valuesRows[1, digit] > 0 ? 1 : 2);
                 var pos = GetBoxCoordinates(box);
-                pointingPairsInRows.Add((digit, pos.Row+positiveIndex));                    
+                pointingPairsInRows.Add((digit, pos.Row+offset));                    
             }
         }
 
+        return pointingPairsInRows;
+    }
+    
+    private void RemoveCandidatesBasedOnPointingPairsInRows(List<(int, int)> pointingPairsInRows, HashSet<int> columnsWithUndefinedCells)
+    {
         foreach (var (digit, row) in pointingPairsInRows)
         {
             foreach (var column in AllColumns)
             {
-                if (Cells[row, column] == Undefined && !encounteredColumns.Contains(column) && Candidates[row,column][digit])
+                if (IsUndefined(row,column) && !columnsWithUndefinedCells.Contains(column) && Candidates[row,column][digit])
                 {
                     Candidates[row,column][digit] = false;
-                    numberOfRemovedCandidates++;
+                    _numberOfRemovedCandidates++;
                 }
             }
         }
     }
 
-    private void HandlePointingPairsInColumns(List<Position> positions, int box, ref int numberOfRemovedCandidates)
+    private int[,] CreateValuesColumns(List<Position> allCellsInBox)
     {
-        var valuesColumns = new int[BoxSize,GridSize];
-            
-        var encounteredRows = new HashSet<int>();
-            
-        for (var cIndex = 0; cIndex < GridSize; cIndex++)
-        {
-            var index = cIndex;
-            var columnPositions = positions.Where(position =>  position.Column % 3 == index );
+        var candidatesInRelevantColumns = new int[BoxSize,GridSize];
         
-            foreach (var position in columnPositions)
+        //var found = false;
+
+        foreach (var position in allCellsInBox.Where(IsUndefined))
+        {
+            var candidates = GetCandidates(position);
+            foreach (var digit in AllDigits)
             {
-                if (IsUndefined(position))
+                if (candidates[digit])
                 {
-                    encounteredRows.Add(position.Row);
-                    
-                    var value = GetCandidates(position);
-                    foreach (var digit in AllDigits)
-                    {
-                        if (value[digit])
-                            valuesColumns[position.Column % 3,digit]++;
-                    }
+                    candidatesInRelevantColumns[position.Column % 3, digit]++; //count how many times the candidate occurs in this row
+                    //found = true;
                 }
             }
         }
-            
+        
+        //ToDo: if valuesColumns only contains 0s then the rest can be skipped
+        
+        return candidatesInRelevantColumns;
+    }
+
+    private static List<(int, int)> FindPointingPairsInColumns(int box, int[,] valuesColumns)
+    {
         var pointingPairsInColumns = new List<(int, int)>();
+        
         foreach (var digit in AllDigits)
-        { 
-            var result = OnlyOnePositive(valuesColumns[0,digit], valuesColumns[1,digit], valuesColumns[2,digit]);
-            if (result)
+        {
+            int offset = GetIndexOfPositiveComponent(valuesColumns[0,digit], valuesColumns[1,digit], valuesColumns[2,digit]);
+            if (offset >= 0)
             {
-                var positiveIndex = valuesColumns[0, digit] > 0 ? 0 : (valuesColumns[1, digit] > 0 ? 1 : 2);
                 var pos = GetBoxCoordinates(box);
-                pointingPairsInColumns.Add((digit, pos.Column+positiveIndex));                    
+                pointingPairsInColumns.Add((digit, pos.Column+offset));                    
             }
         }
-            
+
+        return pointingPairsInColumns;
+    }
+    
+    private void RemoveCandidatesBasedOnPointingPairsInColumns(List<(int, int)> pointingPairsInColumns, HashSet<int> rowsWithUndefinedCells)
+    {
         foreach (var (digit, column) in pointingPairsInColumns)
         {
-            foreach (var row in AllRows)
+            foreach (var row in AllColumns)
             {
-                if (IsUndefined(row, column) && !encounteredRows.Contains(row) && Candidates[row,column][digit])
+                if (IsUndefined(row,column) && !rowsWithUndefinedCells.Contains(row) && Candidates[row,column][digit])
                 {
                     Candidates[row,column][digit] = false;
-                    numberOfRemovedCandidates++;
+                    _numberOfRemovedCandidates++;
                 }
             }
         }
     }
 
-
-    private static bool OnlyOnePositive(int a, int b, int c)
+    private static int GetIndexOfPositiveComponent(int a, int b, int c)
     {
+        int indexOfPositive = 0;
         int positive = 0;
 
         if (a > 0)
+        {
+            indexOfPositive=0;
             positive++;
+        }
+
         if (b > 0)
+        {
+            indexOfPositive=1;
             positive++;
+        }
+
         if (c > 0)
+        {
+            indexOfPositive=2;
             positive++;
+        }
+
+        bool onlyOnePositive = positive==1;
         
-        return positive==1;
+        if (!onlyOnePositive)
+            indexOfPositive = -1;
+        
+        return indexOfPositive;
     }
 }
