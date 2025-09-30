@@ -23,7 +23,7 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
 
     private void HandlePointingTuplesInRows(List<Position> allCellsInBox, int box)
     {
-        var candidatesInRelevantRows = CreateValuesRows(allCellsInBox);
+        var candidatesInRelevantRows = ExtractValues(allCellsInBox, position => position.Row);
         var pointingTuplesInRows = FindPointingTuples(GetBoxCoordinates(box).Row, candidatesInRelevantRows);
         var columnsWithUndefinedCells = allCellsInBox.Where(IsUndefined).Select(pos => pos.Column).ToHashSet();
         RemoveCandidatesBasedOnPointingTuplesInRows(pointingTuplesInRows, columnsWithUndefinedCells);
@@ -31,15 +31,15 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
 
     private void HandlePointingTuplesInColumns(List<Position> allCellsInBox, int box)
     {
-        var candidatesInRelevantColumns = CreateValuesColumns(allCellsInBox);
+        var candidatesInRelevantColumns = ExtractValues(allCellsInBox, position => position.Column);
         var pointingTuplesInColumns = FindPointingTuples(GetBoxCoordinates(box).Column, candidatesInRelevantColumns);
         var rowsWithUndefinedCells = allCellsInBox.Where(IsUndefined).Select(pos => pos.Row).ToHashSet();
         RemoveCandidatesBasedOnPointingTuplesInColumns(pointingTuplesInColumns, rowsWithUndefinedCells);
     }
     
-    private int[,] CreateValuesRows(List<Position> allCellsInBox)
+    private int[,] ExtractValues(List<Position> allCellsInBox, Func<Position, int> projection)
     {
-        var candidatesInRelevantRows = new int[BoxSize,GridSize];
+        var candidatesInRelevantAreas = new int[BoxSize,GridSize];
         
         //var found = false;
 
@@ -50,7 +50,7 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
             {
                 if (candidates[digit])
                 {
-                    candidatesInRelevantRows[position.Row % 3, digit]++; //count how many times the candidate occurs in this row
+                    candidatesInRelevantAreas[projection(position) % 3, digit]++; //count how many times the candidate occurs in this row
                     //found = true;
                 }
             }
@@ -58,31 +58,7 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
         
         //ToDo: if valuesRows only contains 0s then the rest can be skipped
         
-        return candidatesInRelevantRows;
-    }
-
-    private int[,] CreateValuesColumns(List<Position> allCellsInBox)
-    {
-        var candidatesInRelevantColumns = new int[BoxSize,GridSize];
-        
-        //var found = false;
-
-        foreach (var position in allCellsInBox.Where(IsUndefined))
-        {
-            var candidates = GetCandidates(position);
-            foreach (var digit in AllDigits)
-            {
-                if (candidates[digit])
-                {
-                    candidatesInRelevantColumns[position.Column % 3, digit]++; //count how many times the candidate occurs in this row
-                    //found = true;
-                }
-            }
-        }
-        
-        //ToDo: if valuesColumns only contains 0s then the rest can be skipped
-        
-        return candidatesInRelevantColumns;
+        return candidatesInRelevantAreas;
     }
     
     private static List<(int, int)> FindPointingTuples(int baseIndex, int[,] candidateCountPerArea)
