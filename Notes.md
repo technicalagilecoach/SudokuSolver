@@ -1,31 +1,27 @@
 # Notes
 
-## Bugs
-
 ## To Do
-- make project ready to publish
-  - find a name for the project
-  - decide on a license before publishing on GitHub
-  - polish the code to make the GitHub-repo public
-  - remove data from git retrospectively, e.g. puzzle files, this notes, ...
-- use typealiases to make code more readable
-- clean up/refactor 
-  - naked tuples
-  - hidden tuples
-  - BoxLineReduction
-  - PointingPairs
-- clean up naked and hidden tuples (identify relevant puzzles for each)
-  - more example puzzles needed
+- finish implementation of basic strategies
+  - extend pointing pairs to triplets
+  - check if all elements of the basic strategies from https://www.sudokuwiki.org/Sudoku.htm are covered
+  - identify relevant puzzles for each strategy and improve tests
+  - clean up/refactor 
+    - naked tuples
+    - hidden tuples
+    - BoxLineReduction
+    - PointingPairs
 - improve statistics, error checking and debug support
-  - which strategies are needed might also depend on the order in which the strategies are executed!
+  - should be helpful -> locate the problematic code as precisely as possible
+  - detect when puzzle can not be solved -> none of the strategies helps
+  - detect errors -> puzzle got into an inconsistent state
+  - statistics can be activated on demand (impact on solver performance)
+  - detailed diagnostics can be activated on demand (impact on solver performance)
   - clean up code for printing solutions in DebugOutput -> currently not used
-  - should be helpful
-  - can be activated on demand (impact on solver performance)
-  - tradeoff with different diagnostic levels
-- in InputSolver.RunSolver all puzzles are run through the solver before any output is written 
-  - consider calling solver and writing output puzzle after puzzle
-- parallel execution when many puzzles are processed
-- perform pruning etc. only based on actually changed cells
+- make project ready to publish
+    - find a name for the project
+    - decide on a license before publishing on GitHub
+    - polish the code to make the GitHub-repo public
+    - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
 - removed deprecated code for naked and hidden pairs
@@ -77,12 +73,15 @@
 - row, columns and boxes can be treated equally when using a container with all cells/indices of that box
 - brute force search is not implemented but could help if all other strategies fail
 - implement more strategies mentioned at https://www.sudokuwiki.org/Sudoku.htm
+- which strategies are needed might also depend on the order in which the strategies are executed!
 - ideas for code improvement
-    - use typealiases to make code more readable
-    - in InputSolver.RunSolver all puzzles are run through the solver before any output is written
-        - consider calling solver and writing output puzzle after puzzle
-    - parallel execution when many puzzles are processed
-    - perform pruning etc. only based on actually changed cells
+  - consider using ImmutableList where it is feasible
+  - use Enumerable more instead of expanded lists
+  - use typealiases to make code more readable
+  - in InputSolver.RunSolver all puzzles are run through the solver before any output is written
+    - consider calling solver and writing output puzzle after puzzle
+  - parallel execution when many puzzles are processed
+  - perform pruning etc. only based on actually changed cells
 
 ## Limitations
 - Grid.Init assumes that the input puzzles always follows the expected syntax -> no error handling otherwise
