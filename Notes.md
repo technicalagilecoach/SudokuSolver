@@ -2,9 +2,6 @@
 
 ## To Do
 - finish implementation of basic strategies
-  - extend pointing pairs to triplets
-    - PointingPairs strategy already covers triplets -> rename it to PointingTuples
-    - requires further refactoring
   - check if all elements of the basic strategies from https://www.sudokuwiki.org/Sudoku.htm are covered
   - identify relevant puzzles for each strategy and improve tests
   - clean up/refactor 
@@ -26,6 +23,9 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- revised pointing pairs to pointing tuples 
+    - PointingPairs strategy already covers triplets -> rename it to PointingTuples
+    - refactoring for cleanup
 - removed deprecated code for naked and hidden pairs
 - extend BoxLineReduction to triplets -> code not based on pairs or triplets
 - implement remaining basic strategies (identify relevant puzzles for each)
