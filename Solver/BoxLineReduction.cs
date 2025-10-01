@@ -5,7 +5,7 @@ namespace SudokuSolver;
 
 public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
 {
-    int _removedCandidates = 0;
+    private int _removedCandidates = 0;
     
     public bool Handle()
     {
@@ -13,25 +13,36 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
         
         foreach (var box in AllBoxes)
         {
-            var (rowsInBox, columnsInBox) = GetRowsAndColumnsOfBox(GetIndicesForBox(box));
+            var allCellsInBox = GetIndicesForBox(box);
+            var (rowsInBox, columnsInBox) = GetRowsAndColumnsOfBox(allCellsInBox);
 
             foreach (var row in rowsInBox)
             {
-                var possibleDigits = FindExclusiveDigitsForBox(columnsInBox, GetIndicesForRow(row),position => position.Column);
-                RemoveCandidatesInRestOfBoxRows(possibleDigits, rowsInBox, row, columnsInBox);
+                var possibleDigits = FindDigitsExclusiveInBox(columnsInBox, GetIndicesForRow(row),position => position.Column);
+                
+                var remainingCells = allCellsInBox.Where(position => position.Row != row);
+                foreach (var cell in remainingCells)
+                {
+                    RemoveCandidate(cell, possibleDigits);
+                }
             }
 
             foreach (var column in columnsInBox)
             {
-                var possibleDigits = FindExclusiveDigitsForBox(rowsInBox, GetIndicesForColumn(column), position => position.Row);
-                RemoveCandidatesInRestOfBoxColumns(possibleDigits, columnsInBox, column, rowsInBox);
+                var possibleDigits = FindDigitsExclusiveInBox(rowsInBox, GetIndicesForColumn(column), position => position.Row);
+                
+                var remainingCells = allCellsInBox.Where(position => position.Column != column);
+                foreach (var cell in remainingCells)
+                {
+                    RemoveCandidate(cell, possibleDigits);
+                }
             }
         }
         
         return _removedCandidates>0;
     }
 
-    private SortedSet<int> FindExclusiveDigitsForBox(SortedSet<int> indicesInBox, List<Position> positions, Func<Position, int> projection)
+    private SortedSet<int> FindDigitsExclusiveInBox(SortedSet<int> indicesInBox, List<Position> positions, Func<Position, int> projection)
     {
         var possibleDigits = new SortedSet<int>(AllDigits);
         foreach (var cell in positions)
@@ -58,58 +69,19 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
         return possibleDigits;
     }
 
-    private void RemoveCandidatesInRestOfBoxColumns(SortedSet<int> possibleDigits, SortedSet<int> columnsInBox,
-        int column,
-        SortedSet<int> rowsInBox)
+    private void RemoveCandidate(Position cell, SortedSet<int> digitsToRemove)
     {
-        foreach (var digit in possibleDigits)
+        if (IsUndefined(cell))
         {
-            foreach (var column2 in columnsInBox)
+            var candidates = GetCandidates(cell);
+            foreach (var digit in digitsToRemove)
             {
-                if (column2 != column)
+                if (candidates[digit])
                 {
-                    foreach (var row in rowsInBox)
-                    {
-                        Position cell = new Position(row, column2);
-                        if (IsUndefined(cell))
-                        {
-                            RemoveCandidate(cell, digit);
-                        }
-                    }
+                    candidates[digit] = false;
+                    _removedCandidates++;
                 }
             }
-        }
-    }
-
-    private void RemoveCandidatesInRestOfBoxRows(SortedSet<int> possibleDigits, SortedSet<int> rowsInBox, int row,
-        SortedSet<int> columnsInBox)
-    {
-        foreach (var digit in possibleDigits)
-        {
-            foreach (var row2 in rowsInBox)
-            {
-                if (row2 != row)
-                {
-                    foreach (var column in columnsInBox)
-                    {
-                        Position cell = new Position(row2, column);
-                        if (IsUndefined(cell))
-                        {
-                            RemoveCandidate(cell, digit);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void RemoveCandidate(Position cell, int digit)
-    {
-        var candidates = GetCandidates(cell);
-        if (candidates[digit])
-        {
-            candidates[digit] = false;
-            _removedCandidates++;
         }
     }
 
@@ -131,5 +103,4 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
     {
         return Cells[position.Row, position.Column]-1;
     }
-
 }

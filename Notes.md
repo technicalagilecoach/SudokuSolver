@@ -4,11 +4,6 @@
 - finish implementation of basic strategies
   - check if all elements of the basic strategies from https://www.sudokuwiki.org/Sudoku.htm are covered
   - identify relevant puzzles for each strategy and improve tests
-  - clean up/refactor 
-    - naked tuples
-    - hidden tuples
-    - BoxLineReduction
-    - PointingPairs
 - check where counting removed candidates is not done via member variable
 - improve statistics, error checking and debug support
   - should be helpful -> locate the problematic code as precisely as possible
@@ -24,6 +19,7 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- cleaned up BoxLineReduction
 - revised pointing pairs to pointing tuples 
     - PointingPairs strategy already covers triplets -> rename it to PointingTuples
     - refactoring for cleanup
