@@ -9,6 +9,7 @@
     - hidden tuples
     - BoxLineReduction
     - PointingPairs
+- check where counting removed candidates is not done via member variable
 - improve statistics, error checking and debug support
   - should be helpful -> locate the problematic code as precisely as possible
   - detect when puzzle can not be solved -> none of the strategies helps

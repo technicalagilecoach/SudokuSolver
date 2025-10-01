@@ -5,135 +5,112 @@ namespace SudokuSolver;
 
 public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
 {
+    int _removedCandidates = 0;
+    
     public bool Handle()
     {
-        var removedCandidates = 0;
+        _removedCandidates = 0;
         
-        //box after box:
         foreach (var box in AllBoxes)
         {
-            var boxIndices = GetIndicesForBox(box);
-            var (rowsInBox, columnsInBox) = GetRowsAndColumnsOfBox(boxIndices);
+            var (rowsInBox, columnsInBox) = GetRowsAndColumnsOfBox(GetIndicesForBox(box));
 
-            //for each row (intersecting the box)
             foreach (var row in rowsInBox)
             {
-                //find numbers which can only be inside the box (in this row)
-                var possibleDigits = new SortedSet<int>(AllDigits);
-                foreach (var column in AllColumns)
-                {
-                    Position cell = new Position(row, column);
-                    
-                    bool isOutsideOfBox = !columnsInBox.Contains(column);
-                    if (isOutsideOfBox)
-                    {
-                        if (IsUndefined(cell))
-                        {
-                            var candidates = GetCandidates(cell);
-                            for (var index = 0; index < candidates.Count; index++)
-                            {
-                                if (candidates[index])
-                                    possibleDigits.Remove(index);
-                            }
-                        }
-                        else
-                        {
-                            possibleDigits.Remove(GetValue(cell));
-                        } 
-                    }
-                    else
-                    {
-                        //also remove fixed values from within the box
-                        if (!IsUndefined(cell))
-                            possibleDigits.Remove(GetValue(cell));
-                    }
-                }
+                var possibleDigits = FindExclusiveDigitsForBox(columnsInBox, GetIndicesForRow(row),position => position.Column);
+                RemoveCandidatesInRestOfBoxRows(possibleDigits, rowsInBox, row, columnsInBox);
+            }
 
-                //remove these numbers as candidates in the rest of the box (on the other rows)
-                foreach (var digit in possibleDigits)
+            foreach (var column in columnsInBox)
+            {
+                var possibleDigits = FindExclusiveDigitsForBox(rowsInBox, GetIndicesForColumn(column), position => position.Row);
+                RemoveCandidatesInRestOfBoxColumns(possibleDigits, columnsInBox, column, rowsInBox);
+            }
+        }
+        
+        return _removedCandidates>0;
+    }
+
+    private SortedSet<int> FindExclusiveDigitsForBox(SortedSet<int> indicesInBox, List<Position> positions, Func<Position, int> projection)
+    {
+        var possibleDigits = new SortedSet<int>(AllDigits);
+        foreach (var cell in positions)
+        {
+            bool isOutsideOfBox = !indicesInBox.Contains(projection(cell));
+            
+            if (IsUndefined(cell))
+            {
+                if (isOutsideOfBox)
                 {
-                    foreach (var row2 in rowsInBox)
+                    var candidates = GetCandidates(cell);
+                    for (var index = 0; index < candidates.Count; index++)
                     {
-                        if (row2 != row)
-                        {
-                            foreach (var column in columnsInBox)
-                            {
-                                Position cell = new Position(row2, column);
-                                if (IsUndefined(cell))
-                                {
-                                   var candidates = GetCandidates(cell);
-                                   if (candidates[digit])
-                                   {
-                                       candidates[digit] = false;
-                                       removedCandidates++;
-                                   }
-                                }
-                            }
-                        }
+                        if (candidates[index])
+                            possibleDigits.Remove(index);
                     }
                 }
             }
-
-            //for each column (intersecting the box)
-            foreach (var column in columnsInBox)
+            else
             {
-                //find numbers which can only be inside the box (in this column)
-                var possibleDigits = new SortedSet<int>(AllDigits);
-                foreach (var row in AllRows)
+                possibleDigits.Remove(GetValue(cell));
+            }
+        }
+        return possibleDigits;
+    }
+
+    private void RemoveCandidatesInRestOfBoxColumns(SortedSet<int> possibleDigits, SortedSet<int> columnsInBox,
+        int column,
+        SortedSet<int> rowsInBox)
+    {
+        foreach (var digit in possibleDigits)
+        {
+            foreach (var column2 in columnsInBox)
+            {
+                if (column2 != column)
                 {
-                    Position cell = new Position(row, column);
-                    
-                    bool isOutsideOfBox = !rowsInBox.Contains(row);
-                    if (isOutsideOfBox)
+                    foreach (var row in rowsInBox)
                     {
+                        Position cell = new Position(row, column2);
                         if (IsUndefined(cell))
                         {
-                            var candidates = GetCandidates(cell);
-                            for (var index = 0; index < candidates.Count; index++)
-                            {
-                                if (candidates[index])
-                                    possibleDigits.Remove(index);
-                            }
-                        }
-                        else
-                        {
-                            possibleDigits.Remove(GetValue(cell));
-                        }
-                    }
-                    else
-                    {
-                        if (!IsUndefined(cell))
-                            possibleDigits.Remove(GetValue(cell));
-                    }
-                }
-
-                //remove these numbers as candidates in the rest of the box (on the other columns)
-                foreach (var digit in possibleDigits)
-                {
-                    foreach (var column2 in columnsInBox)
-                    {
-                        if (column2 != column)
-                        {
-                            foreach (var row in rowsInBox)
-                            {
-                                Position cell = new Position(row, column2);
-                                if (IsUndefined(cell))
-                                {
-                                    var candidates = GetCandidates(cell);
-                                    if (candidates[digit])
-                                    {
-                                        candidates[digit] = false;
-                                        removedCandidates++;
-                                    }
-                                }
-                            }
+                            RemoveCandidate(cell, digit);
                         }
                     }
                 }
             }
         }
-        
-        return removedCandidates>0;
+    }
+
+    private void RemoveCandidatesInRestOfBoxRows(SortedSet<int> possibleDigits, SortedSet<int> rowsInBox, int row,
+        SortedSet<int> columnsInBox)
+    {
+        foreach (var digit in possibleDigits)
+        {
+            foreach (var row2 in rowsInBox)
+            {
+                if (row2 != row)
+                {
+                    foreach (var column in columnsInBox)
+                    {
+                        Position cell = new Position(row2, column);
+                        if (IsUndefined(cell))
+                        {
+                            RemoveCandidate(cell, digit);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void RemoveCandidate(Position cell, int digit)
+    {
+        var candidates = GetCandidates(cell);
+        if (candidates[digit])
+        {
+            candidates[digit] = false;
+            _removedCandidates++;
+        }
     }
 
     private static (SortedSet<int>,SortedSet<int>) GetRowsAndColumnsOfBox(List<Position> boxIndices)
