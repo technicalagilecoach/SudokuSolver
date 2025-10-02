@@ -5,7 +5,6 @@
   - check if all elements of the basic strategies from https://www.sudokuwiki.org/Sudoku.htm are covered
   - identify relevant puzzles for each strategy and improve tests
 - self check for candidates == all free variables in an area must be available as candidate!
-- Grid 7 from 0096_sudoku.txt needs X-Wing strategy to be solved -> should be implemented next
 - check where counting removed candidates is not done via member variable
 - improve statistics, error checking and debug support
   - should be helpful -> locate the problematic code as precisely as possible
@@ -21,6 +20,8 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- Implemented X-Wing strategy - now also Grid 7 from 0096_sudoku.txt is solvable (all puzzles from this set are now solvable)
+  - there is a conflict with HiddenQuadruplets though - for now HiddenQuadruplets is deactivated
 - prototypes to narrow down what is going wrong when trying to solve Grid7 puzzle
   - try to store the last consistent state of the puzzle during solver run
   - exit solver loop with exception as soon as inconsistent state is reached

@@ -39,10 +39,12 @@ public class Solver(Puzzle puzzle)
                 Execute(HiddenTriplets); //removes candidates
 
                 Execute(NakedQuadruplets); //removes candidates
-                Execute(HiddenQuadruplets); //removes candidates
+                //Execute(HiddenQuadruplets); //removes candidates
 
                 Execute(PointingTuples); //removes candidates
                 Execute(BoxLineReduction); //removes candidates
+                
+                Execute(XWing); //removes candidates
             } while (_puzzleModified);
         }
         catch (Exception e)
@@ -152,5 +154,10 @@ public class Solver(Puzzle puzzle)
     private bool BoxLineReduction()
     {
         return new BoxLineReduction(puzzle).Handle();
+    }
+    
+    private bool XWing()
+    {
+        return new XWing(puzzle).Handle();
     }
 }

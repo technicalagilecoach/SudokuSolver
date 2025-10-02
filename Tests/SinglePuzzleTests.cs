@@ -180,7 +180,7 @@ public class SolveSudokuPuzzle
     }
     
     [TestMethod]
-    [Ignore]
+    //[Ignore]
     public void SolveGrid07()
     {
         const string puzzle =   "043080250\n"
