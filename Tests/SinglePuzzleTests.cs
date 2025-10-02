@@ -180,7 +180,6 @@ public class SolveSudokuPuzzle
     }
     
     [TestMethod]
-    //[Ignore]
     public void SolveGrid07()
     {
         const string puzzle =   "043080250\n"
@@ -193,6 +192,7 @@ public class SolveSudokuPuzzle
                               + "000000005\n"
                               + "034090710\n";
 
-        PrintPdfIfUnsolvable(puzzle,"/home/tac/src/SudokuSolver/Puzzles/result.pdf");
+        CheckForSolvability(puzzle);
+        //PrintPdfIfUnsolvable(puzzle,"/home/tac/src/SudokuSolver/Puzzles/result.pdf");
     }
 }
