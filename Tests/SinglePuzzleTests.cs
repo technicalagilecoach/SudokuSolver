@@ -19,6 +19,14 @@ public class SolveSudokuPuzzle
         Assert.AreEqual(expected, result);
     }
     
+    private static void PrintPdfIfUnsolvable(string puzzle, string filename)
+    {
+        puzzle = puzzle.Replace("\n", "");
+        var pdfFile = new FileInfo(filename);
+        SolverWrapper.Solve(puzzle, " ", out var unsolvedCells, out var strategyStats,pdfFile);
+        Assert.IsTrue(unsolvedCells==0);
+    }
+    
     [TestMethod]
     public void SolveEasyPuzzle()
     {
@@ -185,6 +193,6 @@ public class SolveSudokuPuzzle
                               + "000000005\n"
                               + "034090710\n";
 
-        CheckForSolvability(puzzle);
+        PrintPdfIfUnsolvable(puzzle,"/home/tac/src/SudokuSolver/Puzzles/result.pdf");
     }
 }

@@ -120,4 +120,13 @@ public class Puzzle
 
         return count;
     }
+
+    public static Puzzle Copy(Puzzle puzzle)
+    {
+        var puzzleString = puzzle.PrintCells();
+        puzzleString = puzzleString.Replace("\n", "");
+        var newPuzzle = new Puzzle();
+        newPuzzle.Init(puzzleString);
+        return newPuzzle;
+    }
 }

@@ -104,4 +104,59 @@ public static class ValidityChecker
 
         return true;
     }
+
+    public static bool CheckCandidates(Puzzle puzzle)
+    {
+        bool candidatesOk = true;
+        
+        foreach (var row in AllRows)
+        {
+            var positions = GetIndicesForRow(row);
+            candidatesOk = candidatesOk && CheckCandidatesForArea(puzzle, positions);
+        } 
+        
+        foreach (var column in AllColumns)
+        {
+            var positions = GetIndicesForColumn(column);
+            candidatesOk = candidatesOk && CheckCandidatesForArea(puzzle, positions);
+        } 
+        
+        foreach (var box in AllBoxes)
+        {
+            var positions = GetIndicesForBox(box);
+            candidatesOk = candidatesOk && CheckCandidatesForArea(puzzle, positions);
+        } 
+
+        return candidatesOk;
+    }
+
+    private static bool CheckCandidatesForArea(Puzzle puzzle, List<Position> positions)
+    {
+        SortedSet<int> fixedDigits = new SortedSet<int>();
+        SortedSet<int> candidateDigits = new SortedSet<int>();
+            
+        foreach (var pos in positions)
+        {
+            if (puzzle.IsUndefined(pos))
+            {
+                var candidates = puzzle.Candidates[pos.Row, pos.Column];
+                foreach (var digit in AllDigits)
+                {
+                    if (candidates[digit])
+                        candidateDigits.Add(digit);
+                }
+            }
+            else
+            {
+                fixedDigits.Add(puzzle.Cells[pos.Row, pos.Column]-1);
+            }
+        }
+            
+        var allDigits = AllDigits.ToHashSet();
+        bool haveCommonDigits = fixedDigits.Overlaps(candidateDigits);
+        var encounteredDigits = fixedDigits.Union(candidateDigits).ToHashSet();
+        bool allDigitsCovered = allDigits.SetEquals(encounteredDigits);
+        bool error = haveCommonDigits || !allDigitsCovered;
+        return error;
+    }
 }

@@ -14,32 +14,44 @@ public class Solver(Puzzle puzzle)
     
     public Dictionary<string,int> StrategyStats { get; } = new();
     public List<string> StrategyProtocol { get; } = new();
+
+    public string LastConsistentState { get; private set; } = "";
     
     public bool Solve()
     {
-        do
-        {
-            _puzzleModified = false;
+        LastConsistentState = puzzle.PrintCells();
 
-            Execute(PruneCandidates); //removes candidates
-            
-            Execute(NakedSingles); //fixes values
-            Execute(HiddenSingles); //fixes values
-            
-            Execute(NakedPairs); //removes candidates
-            Execute(HiddenPairs); //removes candidates
-            
-            Execute(NakedTriplets); //removes candidates
-            Execute(HiddenTriplets); //removes candidates
-            
-            Execute(NakedQuadruplets); //removes candidates
-            Execute(HiddenQuadruplets); //removes candidates
-            
-            Execute(PointingTuples); //removes candidates
-            Execute(BoxLineReduction); //removes candidates
-        } while (_puzzleModified);
+        try
+        {
+            do
+            {
+                _puzzleModified = false;
+
+                Execute(PruneCandidates); //removes candidates
+
+                Execute(NakedSingles); //fixes values
+                Execute(HiddenSingles); //fixes values
+
+                Execute(NakedPairs); //removes candidates
+                Execute(HiddenPairs); //removes candidates
+
+                Execute(NakedTriplets); //removes candidates
+                Execute(HiddenTriplets); //removes candidates
+
+                Execute(NakedQuadruplets); //removes candidates
+                Execute(HiddenQuadruplets); //removes candidates
+
+                Execute(PointingTuples); //removes candidates
+                Execute(BoxLineReduction); //removes candidates
+            } while (_puzzleModified);
+        }
+        catch (Exception e)
+        {
+            // ignored
+        }
 
         var isCorrect = Check(Cells);
+
 
         if (PerformChecks && !isCorrect)
         {
@@ -61,6 +73,7 @@ public class Solver(Puzzle puzzle)
         {
             var before = IsInconsistent();
             var puzzleBefore = puzzle.PrintCells();
+            LastConsistentState = puzzleBefore;
             
             string strategy = fun.Method.Name;
             if (!StrategyStats.ContainsKey(strategy))
@@ -74,11 +87,14 @@ public class Solver(Puzzle puzzle)
                 StrategyProtocol.Add(strategy);
             }
 
+            var candidatesOk = ValidityChecker.CheckCandidates(puzzle);
+            
             var gotWorse = (!before) && IsInconsistent();
             if (PerformChecks && gotWorse)
             {
                 var puzzleAfter = puzzle.PrintCells();
                 var diff = Puzzle.Difference(puzzleBefore, puzzleAfter);
+                throw new Exception();
             }
         }
     }

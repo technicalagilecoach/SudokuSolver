@@ -46,10 +46,16 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
         return numberOfUnsolvedPuzzles;
     }
     
-    public static string Solve(string puzzleString, string undefinedSymbol, out int numberOfUnsolvedCells, out Dictionary<string,int> strategyStats)
+    public static string Solve(string puzzleString, string undefinedSymbol, out int numberOfUnsolvedCells,
+        out Dictionary<string, int> strategyStats, FileInfo? pdfFile = null)
     {
         var puzzle = new Puzzle();
         puzzle.Init(puzzleString);
+        
+        Puzzle? origPuzzle = null;
+        if (pdfFile != null)
+            origPuzzle = Puzzle.Copy(puzzle);
+        
         Solver solver = new(puzzle);
         var solved = solver.Solve();
 
@@ -58,7 +64,17 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
         numberOfUnsolvedCells = 0;
         if (!solved)
             numberOfUnsolvedCells = puzzle.CountUndefinedCells();
-        
+
+        if (!solved && origPuzzle!=null && pdfFile != null)
+        {
+            var lastConsistentState = new Puzzle();
+            lastConsistentState.Init(solver.LastConsistentState.Replace("\n", ""));
+            var pc = new PruneCandidates(lastConsistentState);
+            pc.Handle();
+            
+            PdfWriter.WritePdfWithCandidates(origPuzzle, puzzle, lastConsistentState, pdfFile.FullName);
+        }
+
         var result = puzzle.PrintCells(undefinedSymbol);
         return result;
     }
