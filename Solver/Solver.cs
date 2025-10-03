@@ -52,7 +52,7 @@ public class Solver(Puzzle puzzle)
             // ignored
         }
 
-        var isCorrect = Check(Cells);
+        var isCorrect = Check(puzzle);
 
 
         if (PerformChecks && !isCorrect)
@@ -66,7 +66,7 @@ public class Solver(Puzzle puzzle)
 
     private bool IsInconsistent()
     {
-        return PerformChecks && !IsSolutionCorrect(puzzle.Cells);
+        return PerformChecks && !IsSolutionCorrect(puzzle);
     }
 
     public void Execute(Func<bool> fun)
