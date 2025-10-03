@@ -1,10 +1,14 @@
 # Notes
 
 ## To Do
-- finish implementation of basic strategies
-  - check if all elements of the basic strategies from https://www.sudokuwiki.org/Sudoku.htm are covered
+- stop solver when consistency checks fail! In particular the one for candidates!
+- verify implementation of all implemented strategies
+  - check consistency of candidates more strictly!
+  - investigate HiddenQuadruplets strategy with Grid 7 puzzle
   - identify relevant puzzles for each strategy and improve tests
-- self check for candidates == all free variables in an area must be available as candidate!
+- improve pdf output
+  - include name of puzzle, name of puzzle set, index in the set, ... 
+  - e.g. output puzzle in dot format to open in solver from https://www.sudokuwiki.org - provide hyperlink
 - improve statistics, error checking and debug support
   - should be helpful -> locate the problematic code as precisely as possible
   - detect when puzzle can not be solved -> none of the strategies helps
@@ -19,6 +23,8 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- The basic strategies from https://www.sudokuwiki.org/Sudoku.htm are covered as well as the X-Wing strategy.
+- Cleaned up self check for candidates == all free variables in an area must be available as candidate!
 - Always implement counting removed candidates and newly fixed cells using a member variable
 - Implemented X-Wing strategy - now also Grid 7 from 0096_sudoku.txt is solvable (all puzzles from this set are now solvable)
   - there is a conflict with HiddenQuadruplets though - for now HiddenQuadruplets is deactivated
