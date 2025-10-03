@@ -3,6 +3,8 @@ using static SudokuSolver.ValidityChecker;
 
 namespace SudokuSolver;
 
+internal class SolverException(string s) : Exception(s);
+
 public class Solver(Puzzle puzzle)
 {
     private int[,] Cells => puzzle.Cells;
@@ -10,7 +12,7 @@ public class Solver(Puzzle puzzle)
     
     private bool _puzzleModified = false;
 
-    private const bool PerformChecks = true;
+    private bool PerformChecks = true;
     
     public Dictionary<string,int> StrategyStats { get; } = new();
     public List<string> StrategyProtocol { get; } = new();
@@ -47,56 +49,47 @@ public class Solver(Puzzle puzzle)
                 Execute(XWing); //removes candidates
             } while (_puzzleModified);
         }
-        catch (Exception e)
+        catch (SolverException e)
         {
             // ignored
         }
 
-        var isCorrect = Check(puzzle);
+        return Check(puzzle);
+    }
 
-
-        if (PerformChecks && !isCorrect)
+    private void Execute(Func<bool> fun)
+    {
+        if (_puzzleModified) 
+            return;
+        
+        var before = true;
+        if (PerformChecks)
         {
-            var isInconsistent = IsInconsistent();
-            var state = puzzle.PrintCells();
+            before = AreFixedValuesConsistent(puzzle);
+            var puzzleBefore = puzzle.PrintCells();
+            if (!before)
+                throw new SolverException(puzzleBefore);
+            LastConsistentState = puzzleBefore;
         }
 
-        return isCorrect;
-    }
+        var strategy = fun.Method.Name;
+        StrategyStats.TryAdd(strategy, 0);
+            
+        _puzzleModified = fun();
 
-    private bool IsInconsistent()
-    {
-        return PerformChecks && !IsSolutionCorrect(puzzle);
-    }
-
-    public void Execute(Func<bool> fun)
-    {
-        if (!_puzzleModified)
+        if (_puzzleModified)
         {
-            var before = IsInconsistent();
-            var puzzleBefore = puzzle.PrintCells();
-            LastConsistentState = puzzleBefore;
-            
-            string strategy = fun.Method.Name;
-            if (!StrategyStats.ContainsKey(strategy))
-                StrategyStats[strategy] = 0;
-            
-            _puzzleModified = fun();
+            StrategyStats[strategy]++;
+            StrategyProtocol.Add(strategy);
+        }
 
-            if (_puzzleModified)
-            {
-                StrategyStats[strategy]++;
-                StrategyProtocol.Add(strategy);
-            }
-
-            var candidatesOk = ValidityChecker.AreCandidatesConsistent(puzzle);
-            
-            var gotWorse = (!before) && IsInconsistent();
-            if (PerformChecks && gotWorse)
+        if (PerformChecks)
+        {
+            var gotWorse = before && !AreFixedValuesConsistent(puzzle);
+            if (gotWorse)
             {
                 var puzzleAfter = puzzle.PrintCells();
-                var diff = Puzzle.Difference(puzzleBefore, puzzleAfter);
-                throw new Exception();
+                throw new SolverException(puzzleAfter);
             }
         }
     }

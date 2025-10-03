@@ -7,7 +7,7 @@ public static class ValidityChecker
 {
     public static bool Check(Puzzle puzzle)
     {
-        return IsPuzzleSolved(puzzle) && IsSolutionCorrect(puzzle);
+        return IsPuzzleSolved(puzzle) && IsPuzzleConsistent(puzzle);
     }
 
     private static bool IsPuzzleSolved(Puzzle puzzle)
@@ -15,7 +15,12 @@ public static class ValidityChecker
         return CountUndefinedCells(puzzle)==0;
     }
 
-    public static bool IsSolutionCorrect(Puzzle cells)
+    public static bool IsPuzzleConsistent(Puzzle puzzle)
+    {
+        return AreFixedValuesConsistent(puzzle) && AreCandidatesConsistent(puzzle);
+    }
+
+    public static bool AreFixedValuesConsistent(Puzzle cells)
     {
         if (!DistinctValuesInRows(cells))
             return false;
