@@ -5,17 +5,17 @@ namespace SudokuSolver;
 
 public static class ValidityChecker
 {
-    public static bool Check(int[,] cells)
+    public static bool Check(Puzzle puzzle)
     {
-        return IsPuzzleSolved(cells) && IsSolutionCorrect(cells);
+        return IsPuzzleSolved(puzzle) && IsSolutionCorrect(puzzle);
     }
 
-    private static bool IsPuzzleSolved(int[,] cells)
+    private static bool IsPuzzleSolved(Puzzle puzzle)
     {
-        return CountUndefinedCells(cells)==0;
+        return CountUndefinedCells(puzzle)==0;
     }
 
-    public static bool IsSolutionCorrect(int[,] cells)
+    public static bool IsSolutionCorrect(Puzzle cells)
     {
         if (!DistinctValuesInRows(cells))
             return false;
@@ -29,58 +29,58 @@ public static class ValidityChecker
         return true;
     }
 
-    public static int CountUndefinedCells(int[,] cells)
+    public static int CountUndefinedCells(Puzzle puzzle)
     {
         var count = 0;
         
         foreach (var pos in GetIndicesForAllCells())
         {
-            if (cells[pos.Row, pos.Column] == Undefined)
+            if (puzzle.Cells[pos.Row, pos.Column] == Undefined)
                 count++;
         }
 
         return count;
     }
     
-    private static bool DistinctValuesInRows(int[,] cells)
+    private static bool DistinctValuesInRows(Puzzle puzzle)
     {
         foreach (var row in AllRows)
         {
             var indices = GetIndicesForRow(row);
-            if (!DistinctValuesInArea(cells, indices)) 
+            if (!DistinctValuesInArea(puzzle, indices)) 
                 return false;
         }        
         return true;
     }
 
-    private static bool DistinctValuesInColumns(int[,] cells)
+    private static bool DistinctValuesInColumns(Puzzle puzzle)
     {
         foreach (var column in AllColumns)
         {
             var indices = GetIndicesForColumn(column);
-            if (!DistinctValuesInArea(cells, indices)) 
+            if (!DistinctValuesInArea(puzzle, indices)) 
                 return false;
         }        
         return true;
     }
 
-    private static bool DistinctValuesInBoxes(int[,] cells)
+    private static bool DistinctValuesInBoxes(Puzzle puzzle)
     {
         foreach (var box in AllBoxes)
         {
             var indices = GetIndicesForBox(box);
-            if (!DistinctValuesInArea(cells, indices)) 
+            if (!DistinctValuesInArea(puzzle, indices)) 
                 return false;
         }
         return true;
     }
     
-    private static bool DistinctValuesInArea(int[,] cells, List<Position> indices)
+    private static bool DistinctValuesInArea(Puzzle puzzle, List<Position> indices)
     {
         var values = new SortedSet<int>();
         foreach (var index in indices)
         {
-            var value = cells[index.Row, index.Column];
+            var value = puzzle.Cells[index.Row, index.Column];
             if (value != Undefined)
             {
                 var isNewValue = values.Add(value);
