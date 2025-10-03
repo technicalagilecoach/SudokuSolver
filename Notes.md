@@ -9,6 +9,7 @@
 - improve pdf output
   - include name of puzzle, name of puzzle set, index in the set, ... 
   - e.g. output puzzle in dot format to open in solver from https://www.sudokuwiki.org - provide hyperlink
+- a promising additional solver strategy is chute remote pairs
 - improve statistics, error checking and debug support
   - should be helpful -> locate the problematic code as precisely as possible
   - detect when puzzle can not be solved -> none of the strategies helps
