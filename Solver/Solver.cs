@@ -89,7 +89,7 @@ public class Solver(Puzzle puzzle)
                 StrategyProtocol.Add(strategy);
             }
 
-            var candidatesOk = ValidityChecker.CheckCandidates(puzzle);
+            var candidatesOk = ValidityChecker.AreCandidatesConsistent(puzzle);
             
             var gotWorse = (!before) && IsInconsistent();
             if (PerformChecks && gotWorse)

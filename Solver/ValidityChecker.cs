@@ -35,7 +35,7 @@ public static class ValidityChecker
         
         foreach (var pos in GetIndicesForAllCells())
         {
-            if (puzzle.Cells[pos.Row, pos.Column] == Undefined)
+            if (puzzle.IsUndefined(pos))
                 count++;
         }
 
@@ -78,11 +78,10 @@ public static class ValidityChecker
     private static bool DistinctValuesInArea(Puzzle puzzle, List<Position> positions)
     {
         var values = new SortedSet<int>();
-        foreach (var index in positions)
+        foreach (var position in positions)
         {
-            var value = puzzle.Cells[index.Row, index.Column];
-            if (value != Undefined)
-            {
+            if (!puzzle.IsUndefined(position)) {
+                var value = puzzle.Cells[position.Row, position.Column];
                 var isNewValue = values.Add(value);
                 if (!isNewValue)
                     return false;
@@ -92,42 +91,53 @@ public static class ValidityChecker
         return true;
     }
 
-    public static bool CheckCandidates(Puzzle puzzle)
+    public static bool AreCandidatesConsistent(Puzzle puzzle)
     {
         foreach (var row in AllRows)
         {
             var positions = GetIndicesForRow(row);
-            if (!CheckCandidatesForArea(puzzle, positions))
+            if (!AreCandidatesConsistentInArea(puzzle, positions))
                 return false;
         } 
         
         foreach (var column in AllColumns)
         {
             var positions = GetIndicesForColumn(column);
-            if (!CheckCandidatesForArea(puzzle, positions))
+            if (!AreCandidatesConsistentInArea(puzzle, positions))
                 return false;
         } 
         
         foreach (var box in AllBoxes)
         {
             var positions = GetIndicesForBox(box);
-            if (!CheckCandidatesForArea(puzzle, positions))
+            if (!AreCandidatesConsistentInArea(puzzle, positions))
                 return false;
         } 
 
         return true;
     }
 
-    private static bool CheckCandidatesForArea(Puzzle puzzle, List<Position> positions)
+    private static bool AreCandidatesConsistentInArea(Puzzle puzzle, List<Position> positions)
     {
-        SortedSet<int> fixedDigits = new SortedSet<int>();
-        SortedSet<int> candidateDigits = new SortedSet<int>();
+        var (fixedDigits,candidateDigits) = CollectCandidatesAndFixedDigits(puzzle, positions);
+
+        var haveCommonDigits = fixedDigits.Overlaps(candidateDigits);
+        var allDigitsCovered = AllDigits.ToHashSet().SetEquals(fixedDigits.Union(candidateDigits));
+        var consistent = !haveCommonDigits && allDigitsCovered;
+        
+        return consistent;
+    }
+
+    private static (HashSet<int>,HashSet<int>) CollectCandidatesAndFixedDigits(Puzzle puzzle, List<Position> positions)
+    {
+        var fixedDigits = new HashSet<int>();
+        var candidateDigits = new HashSet<int>();
             
-        foreach (var pos in positions)
+        foreach (var position in positions)
         {
-            if (puzzle.IsUndefined(pos))
+            if (puzzle.IsUndefined(position))
             {
-                var candidates = puzzle.Candidates[pos.Row, pos.Column];
+                var candidates = puzzle.Candidates[position.Row, position.Column];
                 foreach (var digit in AllDigits)
                 {
                     if (candidates[digit])
@@ -136,15 +146,10 @@ public static class ValidityChecker
             }
             else
             {
-                fixedDigits.Add(puzzle.Cells[pos.Row, pos.Column]-1);
+                fixedDigits.Add(puzzle.Cells[position.Row, position.Column]-1);
             }
         }
-            
-        var allDigits = AllDigits.ToHashSet();
-        bool haveCommonDigits = fixedDigits.Overlaps(candidateDigits);
-        var encounteredDigits = fixedDigits.Union(candidateDigits).ToHashSet();
-        bool allDigitsCovered = allDigits.SetEquals(encounteredDigits);
-        bool error = haveCommonDigits || !allDigitsCovered;
-        return error;
+
+        return (fixedDigits,candidateDigits);
     }
 }
