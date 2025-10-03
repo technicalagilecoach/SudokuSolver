@@ -29,8 +29,6 @@ public class Solver(Puzzle puzzle)
             {
                 _puzzleModified = false;
 
-                Execute(PruneCandidates); //removes candidates
-
                 Execute(NakedSingles); //fixes values
                 Execute(HiddenSingles); //fixes values
 
@@ -63,9 +61,11 @@ public class Solver(Puzzle puzzle)
             return;
         
         var before = true;
+        var beforeCandidates = true;
         if (PerformChecks)
         {
             before = AreFixedValuesConsistent(puzzle);
+            beforeCandidates = AreCandidatesConsistent(puzzle);
             var puzzleBefore = puzzle.PrintCells();
             if (!before)
                 throw new SolverException(puzzleBefore);
@@ -76,6 +76,7 @@ public class Solver(Puzzle puzzle)
         StrategyStats.TryAdd(strategy, 0);
             
         _puzzleModified = fun();
+        PruneCandidates();
 
         if (_puzzleModified)
         {
@@ -86,7 +87,8 @@ public class Solver(Puzzle puzzle)
         if (PerformChecks)
         {
             var gotWorse = before && !AreFixedValuesConsistent(puzzle);
-            if (gotWorse)
+            var candidatesGotWorse= beforeCandidates && !AreCandidatesConsistent(puzzle);
+            if (gotWorse||candidatesGotWorse)
             {
                 var puzzleAfter = puzzle.PrintCells();
                 throw new SolverException(puzzleAfter);

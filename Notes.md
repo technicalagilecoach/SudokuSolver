@@ -1,9 +1,7 @@
 # Notes
 
 ## To Do
-- stop solver when consistency checks fail! In particular the one for candidates!
 - verify implementation of all implemented strategies
-  - check consistency of candidates more strictly!
   - investigate HiddenQuadruplets strategy with Grid 7 puzzle
   - identify relevant puzzles for each strategy and improve tests
 - improve pdf output
@@ -24,6 +22,10 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- Stop solver when consistency checks fail! 
+  - In order to that for candidates PruneCandidates is no longer handled the same as the other strategies.
+  - As its purpose is to update the candidates after the other strategies.
+  - It is now called after each strategy in the Execute function. 
 - The basic strategies from https://www.sudokuwiki.org/Sudoku.htm are covered as well as the X-Wing strategy.
 - Cleaned up self check for candidates == all free variables in an area must be available as candidate!
 - Always implement counting removed candidates and newly fixed cells using a member variable
