@@ -46,38 +46,20 @@ public static class ValidityChecker
     {
         foreach (var row in AllRows)
         {
-            var values = new SortedSet<int>();
-            
-            foreach (var column in AllColumns)
-            {
-                var value = cells[row, column];
-                if (value != Undefined)
-                {
-                    var isNewValue = values.Add(value);
-                    if (!isNewValue)
-                        return false;
-                }
-            }
+            var indices = GetIndicesForRow(row);
+            if (!DistinctValuesInArea(cells, indices)) 
+                return false;
         }        
         return true;
     }
-    
+
     private static bool DistinctValuesInColumns(int[,] cells)
     {
         foreach (var column in AllColumns)
         {
-            var values = new SortedSet<int>();
-            
-            foreach (var row in AllRows)
-            {
-                var value = cells[row, column];
-                if (value != Undefined)
-                {
-                    var isNewValue = values.Add(value);
-                    if (!isNewValue)
-                        return false;
-                }
-            }
+            var indices = GetIndicesForColumn(column);
+            if (!DistinctValuesInArea(cells, indices)) 
+                return false;
         }        
         return true;
     }
@@ -87,18 +69,23 @@ public static class ValidityChecker
         foreach (var box in AllBoxes)
         {
             var indices = GetIndicesForBox(box);
-
-            var values = new SortedSet<int>();
-            
-            foreach (var index in indices)
+            if (!DistinctValuesInArea(cells, indices)) 
+                return false;
+        }
+        return true;
+    }
+    
+    private static bool DistinctValuesInArea(int[,] cells, List<Position> indices)
+    {
+        var values = new SortedSet<int>();
+        foreach (var index in indices)
+        {
+            var value = cells[index.Row, index.Column];
+            if (value != Undefined)
             {
-                var value = cells[index.Row, index.Column];
-                if (value != Undefined)
-                {
-                    var isNewValue = values.Add(value);
-                    if (!isNewValue)
-                        return false;
-                }
+                var isNewValue = values.Add(value);
+                if (!isNewValue)
+                    return false;
             }
         }
 

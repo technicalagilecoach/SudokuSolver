@@ -5,7 +5,6 @@
   - check if all elements of the basic strategies from https://www.sudokuwiki.org/Sudoku.htm are covered
   - identify relevant puzzles for each strategy and improve tests
 - self check for candidates == all free variables in an area must be available as candidate!
-
 - improve statistics, error checking and debug support
   - should be helpful -> locate the problematic code as precisely as possible
   - detect when puzzle can not be solved -> none of the strategies helps
