@@ -5,35 +5,36 @@ namespace SudokuSolver;
 
 internal class HiddenSingles(Puzzle puzzle) : Strategy(puzzle)
 {
+    private int _numberOfNewFixedCells;
     public bool Handle()
     {
-        var numberOfNewFixedCells = 0;
+        _numberOfNewFixedCells = 0;
             
         foreach (var row in AllRows)
         {
             var positions = GetIndicesForRow(row);
             var distribution = CountDigitDistributionInArea(positions);
-            ForEachCellInArea(positions, position => FixSingularValue(distribution, ref numberOfNewFixedCells, position));
+            ForEachCellInArea(positions, position => FixSingularValue(distribution, position));
         }     
         
         foreach (var column in AllColumns)
         {
             var positions = GetIndicesForColumn(column);
             var distribution = CountDigitDistributionInArea(positions);
-            ForEachCellInArea(positions, position => FixSingularValue(distribution, ref numberOfNewFixedCells, position));
+            ForEachCellInArea(positions, position => FixSingularValue(distribution, position));
         } 
         
         foreach (var box in AllBoxes)
         {
             var positions = GetIndicesForBox(box);
             var distribution = CountDigitDistributionInArea(positions);
-            ForEachCellInArea(positions, position => FixSingularValue(distribution, ref numberOfNewFixedCells, position));
+            ForEachCellInArea(positions, position => FixSingularValue(distribution, position));
         }
 
-        return numberOfNewFixedCells>0;
+        return _numberOfNewFixedCells>0;
     }
 
-    private void FixSingularValue(int[] values, ref int numberOfNewFixedCells, Position position)
+    private void FixSingularValue(int[] values, Position position)
     {
         foreach (var digit in AllDigits)
         {
@@ -41,7 +42,7 @@ internal class HiddenSingles(Puzzle puzzle) : Strategy(puzzle)
             if (IsUndefined(position) && isSingularDigit && IsCandidate(position, digit))
             {
                 SetValue(position, digit);
-                numberOfNewFixedCells++;
+                _numberOfNewFixedCells++;
                 break;
             }
         }

@@ -4,19 +4,18 @@ using static IndicesAndIterators;
 
 public class NakedSingles(Puzzle puzzle) : Strategy(puzzle)
 {
+    private int _numberOfNewFixedCells;
+    
     public bool Handle()
     {
-        var numberOfNewFixedCells = 0;
+        _numberOfNewFixedCells = 0;
         
-        ForEachCell(position =>
-        {
-            SelectUniqueValueForCell(position, ref numberOfNewFixedCells);
-        });
+        ForEachCell(SelectUniqueValueForCell);
 
-        return numberOfNewFixedCells > 0;
+        return _numberOfNewFixedCells > 0;
     }
     
-    private void SelectUniqueValueForCell(Position position, ref int count)
+    private void SelectUniqueValueForCell(Position position)
     {
         if (IsFixed(position)) 
             return;
@@ -26,6 +25,6 @@ public class NakedSingles(Puzzle puzzle) : Strategy(puzzle)
 
         SetValue(position, GetIndexOfFirstCandidate(position));
 
-        count++;
+        _numberOfNewFixedCells++;
     }
 }
