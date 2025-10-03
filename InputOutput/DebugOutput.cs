@@ -50,7 +50,7 @@ public static class DebugOutput
         var currentState = puzzle.PrintCells();
         Console.WriteLine(currentState);
             
-        var spaces = ValidityChecker.CountUndefinedCells(puzzle.Cells);
+        var spaces = ValidityChecker.CountUndefinedCells(puzzle);
         Console.WriteLine(spaces);
             
         var potentialValues = PrintPotentialValues(puzzle);

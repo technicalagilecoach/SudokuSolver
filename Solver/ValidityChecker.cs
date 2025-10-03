@@ -46,8 +46,8 @@ public static class ValidityChecker
     {
         foreach (var row in AllRows)
         {
-            var indices = GetIndicesForRow(row);
-            if (!DistinctValuesInArea(puzzle, indices)) 
+            var positions = GetIndicesForRow(row);
+            if (!DistinctValuesInArea(puzzle, positions)) 
                 return false;
         }        
         return true;
@@ -57,8 +57,8 @@ public static class ValidityChecker
     {
         foreach (var column in AllColumns)
         {
-            var indices = GetIndicesForColumn(column);
-            if (!DistinctValuesInArea(puzzle, indices)) 
+            var positions = GetIndicesForColumn(column);
+            if (!DistinctValuesInArea(puzzle, positions)) 
                 return false;
         }        
         return true;
@@ -68,17 +68,17 @@ public static class ValidityChecker
     {
         foreach (var box in AllBoxes)
         {
-            var indices = GetIndicesForBox(box);
-            if (!DistinctValuesInArea(puzzle, indices)) 
+            var positions = GetIndicesForBox(box);
+            if (!DistinctValuesInArea(puzzle, positions)) 
                 return false;
         }
         return true;
     }
     
-    private static bool DistinctValuesInArea(Puzzle puzzle, List<Position> indices)
+    private static bool DistinctValuesInArea(Puzzle puzzle, List<Position> positions)
     {
         var values = new SortedSet<int>();
-        foreach (var index in indices)
+        foreach (var index in positions)
         {
             var value = puzzle.Cells[index.Row, index.Column];
             if (value != Undefined)
@@ -94,27 +94,28 @@ public static class ValidityChecker
 
     public static bool CheckCandidates(Puzzle puzzle)
     {
-        bool candidatesOk = true;
-        
         foreach (var row in AllRows)
         {
             var positions = GetIndicesForRow(row);
-            candidatesOk = candidatesOk && CheckCandidatesForArea(puzzle, positions);
+            if (!CheckCandidatesForArea(puzzle, positions))
+                return false;
         } 
         
         foreach (var column in AllColumns)
         {
             var positions = GetIndicesForColumn(column);
-            candidatesOk = candidatesOk && CheckCandidatesForArea(puzzle, positions);
+            if (!CheckCandidatesForArea(puzzle, positions))
+                return false;
         } 
         
         foreach (var box in AllBoxes)
         {
             var positions = GetIndicesForBox(box);
-            candidatesOk = candidatesOk && CheckCandidatesForArea(puzzle, positions);
+            if (!CheckCandidatesForArea(puzzle, positions))
+                return false;
         } 
 
-        return candidatesOk;
+        return true;
     }
 
     private static bool CheckCandidatesForArea(Puzzle puzzle, List<Position> positions)
