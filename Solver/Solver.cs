@@ -25,6 +25,8 @@ public class Solver(Puzzle puzzle)
 
         try
         {
+            PruneCandidates(); //call it once after Init
+            
             do
             {
                 _puzzleModified = false;
@@ -76,7 +78,8 @@ public class Solver(Puzzle puzzle)
         StrategyStats.TryAdd(strategy, 0);
             
         _puzzleModified = fun();
-        PruneCandidates();
+        if (strategy is "NakedSingles" or "HiddenSingles")
+            PruneCandidates();
 
         if (_puzzleModified)
         {

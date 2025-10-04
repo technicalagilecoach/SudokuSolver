@@ -22,16 +22,49 @@ public class Strategy(Puzzle puzzle)
     {
         return !IsUndefined(position);
     }
-
+    
     protected void SetValue(Position position, int digit)
     { 
         Cells[position.Row,position.Column] = digit+1;
-        //Candidates[position.Row,position.Column].SetAll(false);
+    }
+    
+    protected int GetValue(Position position)
+    { 
+        return Cells[position.Row,position.Column];
     }
     
     protected BitArray GetCandidates(Position position)
     {
         return Candidates[position.Row, position.Column];
+    }
+    
+    protected void RemoveCandidates(Position position, List<int> digitsToRemove, ref int numberOfRemovedCandidates)
+    {
+        if (IsUndefined(position))
+        {
+            var candidates = GetCandidates(position);
+            foreach (var digit in digitsToRemove)
+            {
+                if (candidates[digit])
+                {
+                    candidates[digit] = false;
+                    numberOfRemovedCandidates++;
+                }
+            }
+        }
+    }
+    
+    protected void RemoveCandidate(Position position, int digit, ref int numberOfRemovedCandidates)
+    {
+        if (IsUndefined(position))
+        {
+            var candidates = GetCandidates(position);
+            if (candidates[digit])
+            {
+                candidates[digit] = false;
+                numberOfRemovedCandidates++;
+            }
+        }
     }
     
     protected bool IsCandidate(Position position, int digit)

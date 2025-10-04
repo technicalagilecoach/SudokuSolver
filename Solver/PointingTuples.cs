@@ -86,7 +86,7 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
         {
             foreach (var column in AllColumns.Where(column => !columnsWithUndefinedCells.Contains(column)))
             {
-                RemoveCandidate(row, column, digit);
+                RemoveCandidate(new Position(row, column), digit, ref _numberOfRemovedCandidates);
             }
         }
     }
@@ -97,17 +97,8 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
         {
             foreach (var row in AllRows.Where(row => !rowsWithUndefinedCells.Contains(row)))
             {
-                RemoveCandidate(row, column, digit);
+                RemoveCandidate(new Position(row, column), digit, ref _numberOfRemovedCandidates);
             }
-        }
-    }
-
-    private void RemoveCandidate(int row, int column, int digit)
-    {
-        if (IsUndefined(row,column) && Candidates[row,column][digit])
-        {
-            Candidates[row,column][digit] = false;
-            _numberOfRemovedCandidates++;
         }
     }
     

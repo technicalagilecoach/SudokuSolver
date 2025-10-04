@@ -21,31 +21,22 @@ public class PruneCandidates(Puzzle puzzle) : Strategy(puzzle)
         if (IsUndefined(position)) 
             return;
 
-        Candidates[position.Row,position.Column].SetAll(false); // here instead of in SetValue???
+        Candidates[position.Row,position.Column].SetAll(false);
+        
+        var digit = GetValue(position)-1;
         
         ForEachCellInAreaExcept(GetIndicesForRow(position.Row), position, pos =>
         {
-            RemoveCandidate(position, Candidates[pos.Row, pos.Column]);
+            RemoveCandidate(pos, digit, ref _numberOfRemovedCandidates);
         });
         ForEachCellInAreaExcept(GetIndicesForColumn(position.Column), position, pos =>
         {
-            RemoveCandidate(position, Candidates[pos.Row, pos.Column]);
+            RemoveCandidate(pos, digit, ref _numberOfRemovedCandidates);
         });
-        ForEachCellInAreaExcept(GetIndicesForBox(GetBoxIndex(position)), position, tuple  =>
+        ForEachCellInAreaExcept(GetIndicesForBox(GetBoxIndex(position)), position, pos  =>
         {
-            RemoveCandidate(position, Candidates[tuple.Row,tuple.Column]);
+            RemoveCandidate(pos, digit, ref _numberOfRemovedCandidates);
         });
-    }
-
-    private void RemoveCandidate(Position position, BitArray digits)
-    {
-        var digit = Cells[position.Row, position.Column];
-        
-        if (digits[digit - 1])
-        {
-            digits[digit - 1] = false;
-            _numberOfRemovedCandidates++;
-        }
     }
 
     private static void ForEachCellInAreaExcept(List<Position> positions, Position position, Action<Position> action)

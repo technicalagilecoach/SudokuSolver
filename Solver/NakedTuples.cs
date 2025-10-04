@@ -87,15 +87,7 @@ public class NakedTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
             {
                 if (!tuple.Item1.Contains(cell))
                 {
-                    var candidates = Candidates[cell.Row, cell.Column];
-                    foreach (var digit in numbers)
-                    {
-                        if (candidates[digit])
-                        {
-                            candidates[digit] = false;
-                            numberOfRemovedCandidates++;
-                        }
-                    }
+                    RemoveCandidates(cell, numbers.ToList(), ref numberOfRemovedCandidates);
                 }
             }
         }

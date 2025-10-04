@@ -5,7 +5,7 @@ namespace SudokuSolver;
 
 public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
 {
-    private int _removedCandidates = 0;
+    private int _removedCandidates;
     
     public bool Handle()
     {
@@ -23,7 +23,7 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
                 var remainingCells = allCellsInBox.Where(position => position.Row != row);
                 foreach (var cell in remainingCells)
                 {
-                    RemoveCandidate(cell, possibleDigits);
+                    RemoveCandidates(cell, possibleDigits.ToList(), ref _removedCandidates);
                 }
             }
 
@@ -34,7 +34,7 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
                 var remainingCells = allCellsInBox.Where(position => position.Column != column);
                 foreach (var cell in remainingCells)
                 {
-                    RemoveCandidate(cell, possibleDigits);
+                    RemoveCandidates(cell, possibleDigits.ToList(), ref _removedCandidates);
                 }
             }
         }
@@ -63,26 +63,10 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
             }
             else
             {
-                possibleDigits.Remove(GetValue(cell));
+                possibleDigits.Remove(GetValue(cell)-1);
             }
         }
         return possibleDigits;
-    }
-
-    private void RemoveCandidate(Position cell, SortedSet<int> digitsToRemove)
-    {
-        if (IsUndefined(cell))
-        {
-            var candidates = GetCandidates(cell);
-            foreach (var digit in digitsToRemove)
-            {
-                if (candidates[digit])
-                {
-                    candidates[digit] = false;
-                    _removedCandidates++;
-                }
-            }
-        }
     }
 
     private static (SortedSet<int>,SortedSet<int>) GetRowsAndColumnsOfBox(List<Position> boxIndices)
@@ -97,10 +81,5 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
         }
 
         return (rows,columns);
-    }
-
-    private int GetValue(Position position)
-    {
-        return Cells[position.Row, position.Column]-1;
     }
 }
