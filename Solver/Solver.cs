@@ -7,8 +7,8 @@ internal class SolverException(string s) : Exception(s);
 
 public class Solver(Puzzle puzzle)
 {
-    private int[,] Cells => puzzle.Cells;
-    private BitArray[,] Candidates => puzzle.Candidates;
+    //private int[,] Cells => puzzle.Cells;
+   // private BitArray[,] Candidates => puzzle.Candidates;
     
     private bool _puzzleModified = false;
 

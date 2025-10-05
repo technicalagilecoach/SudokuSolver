@@ -40,7 +40,7 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
             var count = 0;
             foreach (var column in AllColumns)
             {
-                if (filteredCandidates[row,column])
+                if (filteredCandidates[row-1,column-1])
                     count++;
             }
             if (count == 2)
@@ -56,7 +56,7 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
             bool areEqual = true;
             foreach (var column in AllColumns)
             {
-                if (filteredCandidates[rowCombination[0], column] != filteredCandidates[rowCombination[1], column])
+                if (filteredCandidates[rowCombination[0]-1, column-1] != filteredCandidates[rowCombination[1]-1, column-1])
                 {
                     areEqual = false;
                     break;
@@ -71,7 +71,7 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
             var xWingColumns = new List<int>();
             foreach (var column in AllColumns)
             {
-                if (filteredCandidates[pairOfRows[0],column] == true)
+                if (filteredCandidates[pairOfRows[0]-1,column-1] == true)
                     xWingColumns.Add(column);
             }
                 
@@ -79,14 +79,17 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
             {
                 if (pairOfRows[0] != row && pairOfRows[1] != row)
                 {
-                    if (Candidates[row, xWingColumns[0]][digit])
+                    var pos1 = new Position(row, xWingColumns[0]);
+                    var pos2 = new Position(row, xWingColumns[1]);
+                    
+                    if (GetCandidates(pos1)[digit])
                     {
-                        Candidates[row, xWingColumns[0]][digit] = false;
+                        GetCandidates(pos1)[digit] = false;
                         _numberOfRemovedCandidates++;
                     }
-                    if (Candidates[row, xWingColumns[1]][digit])
+                    if (GetCandidates(pos2)[digit])
                     {
-                        Candidates[row, xWingColumns[1]][digit] = false;
+                        GetCandidates(pos2)[digit] = false;
                         _numberOfRemovedCandidates++;
                     }
                 }
@@ -102,7 +105,7 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
             var count = 0;
             foreach (var row in AllRows)
             {
-                if (filteredCandidates[row,column])
+                if (filteredCandidates[row-1,column-1])
                     count++;
             }
             if (count == 2)
@@ -118,7 +121,7 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
             bool areEqual = true;
             foreach (var row in AllRows)
             {
-                if (filteredCandidates[row, columnCombination[0]] != filteredCandidates[row,columnCombination[1]])
+                if (filteredCandidates[row-1, columnCombination[0]-1] != filteredCandidates[row-1,columnCombination[1]-1])
                 {
                     areEqual = false;
                     break;
@@ -133,7 +136,7 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
             var xWingRows = new List<int>();
             foreach (var row in AllRows)
             {
-                if (filteredCandidates[row,pairOfColumns[0]] == true)
+                if (filteredCandidates[row-1,pairOfColumns[0]-1] == true)
                     xWingRows.Add(row);
             }
                 
@@ -141,21 +144,23 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
             {
                 if (pairOfColumns[0] != column && pairOfColumns[1] != column)
                 {
-                    if (Candidates[xWingRows[0],column][digit])
+                    var pos1 = new Position(xWingRows[0],column);
+                    var pos2 = new Position(xWingRows[1],column);
+                    
+                    if (GetCandidates(pos1)[digit])
                     {
-                        Candidates[xWingRows[0],column][digit] = false;
+                        GetCandidates(pos1)[digit] = false;
                         _numberOfRemovedCandidates++;
                     }
-                    if (Candidates[xWingRows[1],column][digit])
+                    if (GetCandidates(pos2)[digit])
                     {
-                        Candidates[xWingRows[1],column][digit] = false;
+                        GetCandidates(pos2)[digit] = false;
                         _numberOfRemovedCandidates++;
                     }
                 }
             }
         }
     }
-
     
     private bool[,] FilterCandidates(int digit)
     {
@@ -165,9 +170,9 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
             foreach (var column in AllColumns)
             {
                 if (GetCandidates(new Position(row,column))[digit])
-                    filteredCandidates[row,column] = true;
+                    filteredCandidates[row-1,column-1] = true;
                 else
-                    filteredCandidates[row,column] = false;
+                    filteredCandidates[row-1,column-1] = false;
             }
         }
 

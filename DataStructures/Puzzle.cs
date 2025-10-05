@@ -9,17 +9,32 @@ public class Puzzle
     public const int BoxSize = 3;
     public const int Undefined = 0;
 
-    public static readonly IEnumerable<int> AllColumns = Enumerable.Range(0, GridSize);
-    public static readonly IEnumerable<int> AllRows = Enumerable.Range(0, GridSize);
-    public static readonly IEnumerable<int> AllBoxes = Enumerable.Range(0, GridSize);
+    public static readonly IEnumerable<int> AllColumns = Enumerable.Range(1, GridSize);
+    public static readonly IEnumerable<int> AllRows = Enumerable.Range(1, GridSize);
+    public static readonly IEnumerable<int> AllBoxes = Enumerable.Range(1, GridSize);
     public static readonly IEnumerable<int> AllDigits = Enumerable.Range(0, GridSize);
 
-    public int[,] Cells { get; } = new int[GridSize, GridSize];
-    public BitArray[,] Candidates { get; } = new BitArray[GridSize, GridSize];
+    private int[,] Cells { get; } = new int[GridSize, GridSize];
+    private BitArray[,] Candidates { get; } = new BitArray[GridSize, GridSize];
 
     public bool IsUndefined(Position position)
     {
-        return Cells[position.Row, position.Column] == Undefined;
+        return GetCellValue(position) == Undefined;
+    }
+
+    public int GetCellValue(Position position)
+    {
+        return Cells[position.Row-1, position.Column-1];
+    }
+    
+    public void SetCellValue(Position position, int value)
+    {
+        Cells[position.Row-1, position.Column-1]=value;
+    }
+
+    public BitArray GetCandidates(Position position)
+    {
+        return Candidates[position.Row-1, position.Column-1];
     }
 
     public void Init(string puzzle)
@@ -28,15 +43,15 @@ public class Puzzle
 
         ForEachCell(position =>
         {
-            var symbol = rows[position.Row][position.Column].ToString();
+            var symbol = rows[position.Row-1][position.Column-1].ToString();
             var digit = symbol is " " or "." ? Undefined : int.Parse(symbol);
-            Cells[position.Row, position.Column] = digit;
+            SetCellValue(position,digit);
         });
 
         ForEachCell(position =>
         {
             BitArray candidates = InitializeCandidates(position);
-            Candidates[position.Row, position.Column] = candidates;
+            Candidates[position.Row-1, position.Column-1] = candidates;
         });
     }
 
@@ -62,7 +77,7 @@ public class Puzzle
         else
         {
             candidates.SetAll(false);
-            candidates[Cells[position.Row, position.Column] - 1] = true;
+            candidates[GetCellValue(position) - 1] = true;
         }
             
         return candidates;
@@ -90,12 +105,12 @@ public class Puzzle
     {
         var buffer = new StringWriter();
             
-        foreach (var row in Puzzle.AllDigits) 
+        foreach (var row in Puzzle.AllRows) 
         {
-            foreach (var column in Puzzle.AllDigits)
+            foreach (var column in Puzzle.AllColumns)
             {
                 Position position = new Position(row, column);
-                var v = Cells[position.Row, position.Column];
+                var v = GetCellValue(position);
                 buffer.Write(v == Puzzle.Undefined ? undefinedSymbol : v);
             } 
 
@@ -109,9 +124,9 @@ public class Puzzle
     {
         var count = 0;
 
-        foreach (var row in Puzzle.AllDigits)
+        foreach (var row in Puzzle.AllRows)
         {
-            foreach (var column in Puzzle.AllDigits)
+            foreach (var column in Puzzle.AllColumns)
             {
                 if (IsUndefined(new Position(row, column)))
                     count++;

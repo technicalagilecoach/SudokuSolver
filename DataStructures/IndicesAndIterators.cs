@@ -30,17 +30,17 @@ public static class IndicesAndIterators
 
     public static int GetBoxIndex(Position position)
     {
-        var boxLine = position.Row / Puzzle.BoxSize;
-        var boxColumn = position.Column / Puzzle.BoxSize;
+        var boxLine = (position.Row-1) / Puzzle.BoxSize;
+        var boxColumn = (position.Column-1) / Puzzle.BoxSize;
             
-        return boxLine * Puzzle.BoxSize + boxColumn;
+        return boxLine * Puzzle.BoxSize + boxColumn + 1;
     }
 
     public static Position GetBoxCoordinates(int box)
     {
-        var row = box / 3 * 3;
-        var column = box % 3 * 3;
-        return new Position(row, column);
+        var row = (box-1) / 3 * 3;
+        var column = (box-1) % 3 * 3;
+        return new Position(row+1, column+1);
     }
 
     public static List<Position> GetIndicesForAllCells()
@@ -48,9 +48,9 @@ public static class IndicesAndIterators
         if (IndicesForAllCells.Count!=0)
                 return IndicesForAllCells;
 
-        foreach (var row in Puzzle.AllDigits)
+        foreach (var row in Puzzle.AllRows)
         {
-            foreach (var column in Puzzle.AllDigits)
+            foreach (var column in Puzzle.AllColumns)
             {
                 IndicesForAllCells.Add(new Position(row, column));
             }
@@ -67,7 +67,7 @@ public static class IndicesAndIterators
         }
         
         var rowIndices = new List<Position>();
-        foreach (var c in Puzzle.AllDigits)
+        foreach (var c in Puzzle.AllColumns)
         {
             rowIndices.Add(new Position(row, c));
         }
@@ -84,7 +84,7 @@ public static class IndicesAndIterators
         }
         
         var columnIndices = new List<Position>();
-        foreach (var r in Puzzle.AllDigits)
+        foreach (var r in Puzzle.AllRows)
         {
             columnIndices.Add(new Position(r, column));
         }
@@ -110,7 +110,7 @@ public static class IndicesAndIterators
         var lineOffset = boxLine * Puzzle.BoxSize;
         var columnOffset = boxColumn * Puzzle.BoxSize;
 
-        var indices = Enumerable.Range(0, Puzzle.BoxSize).ToList();
+        var indices = Enumerable.Range(1, Puzzle.BoxSize).ToList();
         foreach (var l in indices)
         {
             foreach (var c in indices)

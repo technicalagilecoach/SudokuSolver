@@ -23,7 +23,7 @@ public class NakedSingles(Puzzle puzzle) : Strategy(puzzle)
         if (CountCandidates(position) != 1)
             return;
 
-        SetValue(position, GetIndexOfFirstCandidate(position));
+        SetValue(position, GetIndexOfFirstCandidate(position)+1);
 
         _numberOfNewFixedCells++;
     }

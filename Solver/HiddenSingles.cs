@@ -41,7 +41,7 @@ internal class HiddenSingles(Puzzle puzzle) : Strategy(puzzle)
             var isSingularDigit = values[digit] == 1;
             if (IsUndefined(position) && isSingularDigit && IsCandidate(position, digit))
             {
-                SetValue(position, digit);
+                SetValue(position, digit+1);
                 _numberOfNewFixedCells++;
                 break;
             }

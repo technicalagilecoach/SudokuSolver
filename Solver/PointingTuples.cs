@@ -55,7 +55,7 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
             {
                 if (candidates[digit])
                 {
-                    candidatesInRelevantAreas[projection(position) % 3, digit]++; //count how many times the candidate occurs in this row
+                    candidatesInRelevantAreas[(projection(position)-1) % 3, digit]++; //count how many times the candidate occurs in this row
                     candidatesFound = true;
                 }
             }

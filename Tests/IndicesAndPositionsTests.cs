@@ -6,9 +6,9 @@ namespace SudokuSolverTests;
 public class IndicesAndPositionsTests
 {
     [TestMethod]
-    [DataRow(1, 1, 0)]
-    [DataRow(2, 4, 1)]
-    [DataRow(8, 8, 8)]
+    [DataRow(1, 1, 1)]
+    [DataRow(2, 4, 2)]
+    [DataRow(8, 8, 9)]
     public void GetBoxIndexTest(int row, int column, int expectedBoxIndex)
     {
         var result = IndicesAndIterators.GetBoxIndex(new Position(row, column));
@@ -16,21 +16,33 @@ public class IndicesAndPositionsTests
     }
         
     [TestMethod]
-    [DataRow(0, 0, 0)]
-    [DataRow(1, 0, 3)]
-    [DataRow(2, 0, 6)]
-    [DataRow(3, 3, 0)]
-    [DataRow(4, 3, 3)]
-    [DataRow(5, 3, 6)]
-    [DataRow(6, 6, 0)]
-    [DataRow(7, 6, 3)]
-    [DataRow(8, 6, 6)]
+    [DataRow(1, 1, 1)]
+    [DataRow(2, 1, 4)]
+    [DataRow(3, 1, 7)]
+    [DataRow(4, 4, 1)]
+    [DataRow(5, 4, 4)]
+    [DataRow(6, 4, 7)]
+    [DataRow(7, 7, 1)]
+    [DataRow(8, 7, 4)]
+    [DataRow(9, 7, 7)]
     public void GetBoxCoordinatesTest(int box, int expectedRow, int expectedColumn)
     {
         var result = IndicesAndIterators.GetBoxCoordinates(box);
 
         Assert.AreEqual(expectedRow, result.Row);
         Assert.AreEqual(expectedColumn, result.Column);
+    }
+
+    [TestMethod]
+    [DataRow(1, 1, 1)]
+    [DataRow(3, 9, 3)]
+    [DataRow(6, 6, 5)]
+    [DataRow(9, 9, 9)]
+    public void GetIndicesForBoxTest(int row, int column, int expectedBox)
+    {
+        Position position = new Position(row, column);
+        var boxIndex = IndicesAndIterators.GetBoxIndex(position);
+        Assert.AreEqual(expectedBox, boxIndex);
     }
 
     [TestMethod]

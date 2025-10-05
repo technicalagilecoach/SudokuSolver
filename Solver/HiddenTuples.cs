@@ -62,7 +62,7 @@ public class HiddenTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle: puzzl
         {
             foreach (var position in tuple.Item1)
             {
-                var digitsToRemove = AllDigits.Where(x => !tuple.Item2.Contains(x + 1)).ToList();
+                var digitsToRemove = AllDigits.Where(x => !tuple.Item2.Contains(x+1)).ToList();
                 RemoveCandidates(position, digitsToRemove, ref _numberOfRemovedCandidates);
             }
         }
@@ -83,7 +83,7 @@ public class HiddenTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle: puzzl
 
                 foreach (var number in tuple)
                 {
-                    if (candidates[number - 1])
+                    if (candidates[number-1])
                         count++;
                 }
                 

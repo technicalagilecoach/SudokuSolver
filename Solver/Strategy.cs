@@ -5,17 +5,17 @@ namespace SudokuSolver;
 
 public class Strategy(Puzzle puzzle)
 {
-    protected int[,] Cells => puzzle.Cells;
-    protected BitArray[,] Candidates => puzzle.Candidates;
+    //protected int[,] Cells => puzzle.Cells;
+    //protected BitArray[,] Candidates => puzzle.Candidates;
 
     protected bool IsUndefined(int row, int column)
     {
-        return Cells[row, column] == Undefined;
+        return puzzle.GetCellValue(new Position(row,column))== Undefined;
     }
 
     protected bool IsUndefined(Position position)
     {
-        return Cells[position.Row, position.Column] == Undefined;
+        return puzzle.GetCellValue(position) == Undefined;
     }
 
     protected bool IsFixed(Position position)
@@ -23,19 +23,19 @@ public class Strategy(Puzzle puzzle)
         return !IsUndefined(position);
     }
     
-    protected void SetValue(Position position, int digit)
+    protected void SetValue(Position position, int value)
     { 
-        Cells[position.Row,position.Column] = digit+1;
+        puzzle.SetCellValue(position, value);
     }
     
     protected int GetValue(Position position)
     { 
-        return Cells[position.Row,position.Column];
+        return puzzle.GetCellValue(position);
     }
     
     protected BitArray GetCandidates(Position position)
     {
-        return Candidates[position.Row, position.Column];
+        return puzzle.GetCandidates(position);
     }
     
     protected void RemoveCandidates(Position position, List<int> digitsToRemove, ref int numberOfRemovedCandidates)
@@ -76,7 +76,7 @@ public class Strategy(Puzzle puzzle)
     {
         var count = 0;
             
-        foreach (bool bit in Candidates[position.Row, position.Column])
+        foreach (bool bit in GetCandidates(position))
         {
             if (bit)
                 count++;
@@ -88,11 +88,11 @@ public class Strategy(Puzzle puzzle)
     protected int GetIndexOfFirstCandidate(Position position)
     {
         var index = 0;
-        foreach (var pv in Candidates[position.Row, position.Column])
+        foreach (var pv in GetCandidates(position))
         {
             if ((bool)pv)
             {
-                Candidates[position.Row, position.Column][index] = false;
+                GetCandidates(position)[index] = false;
                 break;
             }
 

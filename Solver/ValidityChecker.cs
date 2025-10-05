@@ -86,7 +86,7 @@ public static class ValidityChecker
         foreach (var position in positions)
         {
             if (!puzzle.IsUndefined(position)) {
-                var value = puzzle.Cells[position.Row, position.Column];
+                var value = puzzle.GetCellValue(position);
                 var isNewValue = values.Add(value);
                 if (!isNewValue)
                     return false;
@@ -142,7 +142,7 @@ public static class ValidityChecker
         {
             if (puzzle.IsUndefined(position))
             {
-                var candidates = puzzle.Candidates[position.Row, position.Column];
+                var candidates = puzzle.GetCandidates(position);
                 foreach (var digit in AllDigits)
                 {
                     if (candidates[digit])
@@ -151,7 +151,7 @@ public static class ValidityChecker
             }
             else
             {
-                fixedDigits.Add(puzzle.Cells[position.Row, position.Column]-1);
+                fixedDigits.Add(puzzle.GetCellValue(position)-1);
             }
         }
 

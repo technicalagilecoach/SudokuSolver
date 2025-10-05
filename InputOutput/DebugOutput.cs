@@ -26,9 +26,9 @@ public static class DebugOutput
 
         IndicesAndIterators.ForEachCell(position =>
         {
-            if (puzzle.Cells[position.Row, position.Column] == Puzzle.Undefined)
+            if (puzzle.GetCellValue(position) == Puzzle.Undefined)
             {
-                var pValues = puzzle.Candidates[position.Row,position.Column];
+                var pValues = puzzle.GetCandidates(position);
 
                 var values = "";
                 foreach (var index in Puzzle.AllDigits)
@@ -63,9 +63,9 @@ public static class DebugOutput
         IndicesAndIterators.ForEachCell(position =>
             {
                 
-                if (puzzle.Cells[position.Row, position.Column] == Puzzle.Undefined)
+                if (puzzle.GetCellValue(position) == Puzzle.Undefined)
                 {
-                    var pValues = puzzle.Candidates[position.Row,position.Column];
+                    var pValues = puzzle.GetCandidates(position);
                     var values = new List<int>();
                     foreach (var index in Puzzle.AllDigits)
                     {
@@ -77,7 +77,7 @@ public static class DebugOutput
                 }
                 else
                 {
-                    var v = puzzle.Cells[position.Row, position.Column];
+                    var v = puzzle.GetCellValue(position);
                     data.Add("V:"+v.ToString());
                 }
             } 

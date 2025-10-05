@@ -53,10 +53,11 @@ public static class PdfWriter
         for (var row = 0; row < 9; row++)
         {
             for (var column = 0; column < 9; column++) {
-                var value = lastConsistentState.Cells[row, column];
+                Position position = new Position(row, column);
+                var value = lastConsistentState.GetCellValue(position);
                 if (value != 0)
                 {
-                    var origValue = origPuzzle.Cells[row, column];
+                    var origValue = origPuzzle.GetCellValue(position);
                     var brush = value == origValue ? XBrushes.Red : XBrushes.Black;
                     var font = value == origValue ? boldFont : regularFont;
                     
@@ -118,10 +119,11 @@ public static class PdfWriter
         for (var row = 0; row < 9; row++)
         {
             for (var column = 0; column < 9; column++) {
-                var value = lastConsistentState.Cells[row, column];
+                Position position = new Position(row, column);
+                var value = lastConsistentState.GetCellValue(position);
                 if (value != 0)
                 {
-                    var origValue = origPuzzle.Cells[row, column];
+                    var origValue = origPuzzle.GetCellValue(position);
                     var brush = value == origValue ? XBrushes.Red : XBrushes.Black;
                     var font = value == origValue ? boldFont : regularFont;
                     
@@ -131,7 +133,7 @@ public static class PdfWriter
                 }
                 else
                 {
-                   var candidates = lastConsistentState.Candidates[row, column];
+                   var candidates = lastConsistentState.GetCandidates(position);
                    string c = "";
                    for (var i = 0; i < 9; i++)
                    {

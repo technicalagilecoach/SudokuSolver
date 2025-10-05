@@ -21,7 +21,7 @@ public class PruneCandidates(Puzzle puzzle) : Strategy(puzzle)
         if (IsUndefined(position)) 
             return;
 
-        Candidates[position.Row,position.Column].SetAll(false);
+        GetCandidates(position).SetAll(false);
         
         var digit = GetValue(position)-1;
         
