@@ -151,7 +151,7 @@ public static class ValidityChecker
             }
             else
             {
-                fixedDigits.Add(puzzle.GetCellValue(position)-1);
+                fixedDigits.Add(puzzle.GetCellValue(position));
             }
         }
 

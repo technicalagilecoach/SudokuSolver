@@ -41,7 +41,7 @@ public class Solver(Puzzle puzzle)
                 Execute(HiddenTriplets); //removes candidates
 
                 Execute(NakedQuadruplets); //removes candidates
-                //Execute(HiddenQuadruplets); //removes candidates
+                Execute(HiddenQuadruplets); //removes candidates
 
                 Execute(PointingTuples); //removes candidates
                 Execute(BoxLineReduction); //removes candidates

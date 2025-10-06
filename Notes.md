@@ -2,7 +2,6 @@
 
 ## To Do
 - verify implementation of all implemented strategies
-  - investigate HiddenQuadruplets strategy with Grid 7 puzzle
   - identify relevant puzzles for each strategy and improve tests
 - clean up use of SortedSet vs List
 - improve pdf output
@@ -23,6 +22,8 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- HiddenQuadruplets strategy is no longer problematic with Grid 7 puzzle
+  - due to changes/corrections related to rows/column/box indices and values now all starting with 1 
 - Change use of indices, etc. AllRows, AllColumns, AllBoxes and AllDigits now all start at 1 instead of 0.
   - This should simplify debugging, in particular now the values in the cells correspond to the actual values.
 - Unified use of GetValue/SetValue
