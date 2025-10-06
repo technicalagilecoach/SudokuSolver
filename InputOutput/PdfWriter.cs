@@ -10,7 +10,7 @@ namespace SudokuSolver;
 
 public static class PdfWriter
 {
-    public static void WritePdf(Puzzle origPuzzle, Puzzle puzzle, Puzzle lastConsistentState, string fileName)
+    public static void WritePdf(Puzzle origPuzzle, Puzzle lastConsistentState, string fileName)
     {
         if (Capabilities.Build.IsCoreBuild)
             GlobalFontSettings.FontResolver = new FailsafeFontResolver();
@@ -75,7 +75,7 @@ public static class PdfWriter
         document.Save(fileName);
     }
     
-    public static void WritePdfWithCandidates(Puzzle origPuzzle, Puzzle puzzle, Puzzle lastConsistentState, string fileName)
+    public static void WritePdfWithCandidates(Puzzle origPuzzle, Puzzle lastConsistentState, string fileName)
     {
         if (Capabilities.Build.IsCoreBuild)
             GlobalFontSettings.FontResolver = new FailsafeFontResolver();

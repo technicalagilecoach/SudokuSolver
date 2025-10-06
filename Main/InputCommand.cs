@@ -23,13 +23,26 @@ public class InputCommand : ICommand
     [CommandOption("statistics", 's', Description = "Show statistics about the solver strategies which were used for each puzzle.")]
     public bool Statistics { get; set; } = false;
     
+    [CommandOption("pdf", 'p', Description = "Create a pdf version of the unsolved puzzle. If the input contains multiple puzzles it only returns the first puzzle.")]
+    public FileInfo? PdfFile { get; set; }
+    
     public ValueTask ExecuteAsync(IConsole console)
     {
         CheckIfFileIsMissing(FileName);
         var fileStream = TryToInitializeFileStream();
         var fileType = CheckFileType(FileName.FullName);
 
-        RunSolver(console, fileType, fileStream);
+        if (PdfFile is not null)
+        {
+            var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName, out var puzzleNames);
+            var puzzle = new Puzzle();
+            puzzle.Init(allPuzzles[0]);
+            PdfWriter.WritePdf(puzzle, puzzle, PdfFile.FullName);
+        }
+        else
+        {
+            RunSolver(console, fileType, fileStream);
+        }
 
         // If the execution is not meant to be asynchronous,
         // return an empty task at the end of the method.

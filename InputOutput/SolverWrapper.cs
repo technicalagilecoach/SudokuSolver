@@ -72,7 +72,7 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
             var pc = new PruneCandidates(lastConsistentState);
             pc.Handle();
             
-            PdfWriter.WritePdfWithCandidates(origPuzzle, puzzle, lastConsistentState, pdfFile.FullName);
+            PdfWriter.WritePdfWithCandidates(origPuzzle, lastConsistentState, pdfFile.FullName);
         }
 
         var result = puzzle.PrintCells(undefinedSymbol);
