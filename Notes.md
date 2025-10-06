@@ -23,6 +23,8 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- Change use of indices, etc. AllRows, AllColumns, AllBoxes and AllDigits now all start at 1 instead of 0.
+  - This should simplify debugging, in particular now the values in the cells correspond to the actual values.
 - Unified use of GetValue/SetValue
 - Unify removal of candidates with RemoveCandidate(s) methods
 - Always implement counting removed candidates and newly fixed cells using a member variable

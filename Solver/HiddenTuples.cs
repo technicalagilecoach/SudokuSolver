@@ -42,14 +42,14 @@ public class HiddenTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle: puzzl
 
     private List<List<int>> GeneratePotentialNumberTuples(List<Position> allCellsOfInterest)
     {
-        var digitDistribution = CountDigitDistributionInArea(allCellsOfInterest);
-        var relevantDigits = digitDistribution.Where(x=> x<=TupleSize).ToList();
+        var numberDistribution = CountDigitDistributionInArea(allCellsOfInterest).ToList();
 
         SortedSet<int> relevantNumbers = [];
-        for (var digit = 0; digit < relevantDigits.Count; digit++)
+        foreach (var number in AllDigits)
         {
-            if (relevantDigits[digit]>0)
-                relevantNumbers.Add(digit+1);
+            var x = numberDistribution[number-1];
+            if (x>0 && x<=TupleSize)
+                relevantNumbers.Add(number);
         }
 
         var numberTuples = Combinations<int>(relevantNumbers.ToList(),TupleSize);
@@ -62,8 +62,8 @@ public class HiddenTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle: puzzl
         {
             foreach (var position in tuple.Item1)
             {
-                var digitsToRemove = AllDigits.Where(x => !tuple.Item2.Contains(x+1)).ToList();
-                RemoveCandidates(position, digitsToRemove, ref _numberOfRemovedCandidates);
+                var numbersToRemove = AllDigits.Where(x => !tuple.Item2.Contains(x)).ToList();
+                RemoveCandidates(position, numbersToRemove, ref _numberOfRemovedCandidates);
             }
         }
     }

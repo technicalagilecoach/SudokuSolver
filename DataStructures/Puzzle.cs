@@ -12,7 +12,7 @@ public class Puzzle
     public static readonly IEnumerable<int> AllColumns = Enumerable.Range(1, GridSize);
     public static readonly IEnumerable<int> AllRows = Enumerable.Range(1, GridSize);
     public static readonly IEnumerable<int> AllBoxes = Enumerable.Range(1, GridSize);
-    public static readonly IEnumerable<int> AllDigits = Enumerable.Range(0, GridSize);
+    public static readonly IEnumerable<int> AllDigits = Enumerable.Range(1, GridSize);
 
     private int[,] Cells { get; } = new int[GridSize, GridSize];
     private BitArray[,] Candidates { get; } = new BitArray[GridSize, GridSize];

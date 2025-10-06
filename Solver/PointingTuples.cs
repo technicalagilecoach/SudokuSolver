@@ -51,11 +51,11 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
         foreach (var position in allCellsInBox.Where(IsUndefined))
         {
             var candidates = GetCandidates(position);
-            foreach (var digit in AllDigits)
+            foreach (var number in AllDigits)
             {
-                if (candidates[digit])
+                if (candidates[number-1])
                 {
-                    candidatesInRelevantAreas[(projection(position)-1) % 3, digit]++; //count how many times the candidate occurs in this row
+                    candidatesInRelevantAreas[(projection(position)-1) % 3, number-1]++; //count how many times the candidate occurs in this row
                     candidatesFound = true;
                 }
             }
@@ -68,12 +68,12 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
     {
         var pointingTuples = new List<(int, int)>();
         
-        foreach (var digit in AllDigits)
+        foreach (var number in AllDigits)
         {
-            int offset = GetIndexOfPositiveComponent(candidateCountPerArea[0,digit], candidateCountPerArea[1,digit], candidateCountPerArea[2,digit]);
+            int offset = GetIndexOfPositiveComponent(candidateCountPerArea[0,number-1], candidateCountPerArea[1,number-1], candidateCountPerArea[2,number-1]);
             if (offset >= 0)
             {
-                pointingTuples.Add((digit, baseIndex+offset));                    
+                pointingTuples.Add((number, baseIndex+offset));                    
             }
         }
 
@@ -82,22 +82,22 @@ public class PointingTuples(Puzzle puzzle) : Strategy(puzzle) {
     
     private void RemoveCandidatesInRows(List<(int, int)> pointingTuplesInRows, HashSet<int> columnsWithUndefinedCells)
     {
-        foreach (var (digit, row) in pointingTuplesInRows)
+        foreach (var (number, row) in pointingTuplesInRows)
         {
             foreach (var column in AllColumns.Where(column => !columnsWithUndefinedCells.Contains(column)))
             {
-                RemoveCandidate(new Position(row, column), digit, ref _numberOfRemovedCandidates);
+                RemoveCandidate(new Position(row, column), number, ref _numberOfRemovedCandidates);
             }
         }
     }
 
     private void RemoveCandidatesInColumns(List<(int, int)> pointingTuplesInColumns, HashSet<int> rowsWithUndefinedCells)
     {
-        foreach (var (digit, column) in pointingTuplesInColumns)
+        foreach (var (number, column) in pointingTuplesInColumns)
         {
             foreach (var row in AllRows.Where(row => !rowsWithUndefinedCells.Contains(row)))
             {
-                RemoveCandidate(new Position(row, column), digit, ref _numberOfRemovedCandidates);
+                RemoveCandidate(new Position(row, column), number, ref _numberOfRemovedCandidates);
             }
         }
     }

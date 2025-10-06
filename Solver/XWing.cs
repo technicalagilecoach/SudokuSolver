@@ -11,9 +11,9 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
     {
         _numberOfRemovedCandidates = 0;
 
-        foreach (var digit in AllDigits)
+        foreach (var number in AllDigits)
         {
-            var filteredCandidates = FilterCandidates(digit);
+            var filteredCandidates = FilterCandidates(number);
             
             //find X-Wings for rows
             // - consider only rows where the candidate occurs exactly twice
@@ -21,18 +21,18 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
             //eliminate candidates
             // - in the remainder of the columns where the two rows have the candidate 
 
-            XWingRows(filteredCandidates, digit);
+            XWingRows(filteredCandidates, number);
 
             //find X-Wings for columns
             //eliminate candidates
             
-            XWingColumns(filteredCandidates, digit);
+            XWingColumns(filteredCandidates, number);
         }
 
         return _numberOfRemovedCandidates>0;
     }
 
-    private void XWingRows(bool[,] filteredCandidates, int digit)
+    private void XWingRows(bool[,] filteredCandidates, int number)
     {
         List<int> candidateRows = [];
         foreach (var row in AllRows)
@@ -82,14 +82,14 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
                     var pos1 = new Position(row, xWingColumns[0]);
                     var pos2 = new Position(row, xWingColumns[1]);
                     
-                    if (GetCandidates(pos1)[digit])
+                    if (GetCandidates(pos1)[number-1])
                     {
-                        GetCandidates(pos1)[digit] = false;
+                        GetCandidates(pos1)[number-1] = false;
                         _numberOfRemovedCandidates++;
                     }
-                    if (GetCandidates(pos2)[digit])
+                    if (GetCandidates(pos2)[number-1])
                     {
-                        GetCandidates(pos2)[digit] = false;
+                        GetCandidates(pos2)[number-1] = false;
                         _numberOfRemovedCandidates++;
                     }
                 }
@@ -97,7 +97,7 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
         }
     }
 
-    private void XWingColumns(bool[,] filteredCandidates, int digit)
+    private void XWingColumns(bool[,] filteredCandidates, int number)
     {
         List<int> candidateColumns = [];
         foreach (var column in AllColumns)
@@ -147,14 +147,14 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
                     var pos1 = new Position(xWingRows[0],column);
                     var pos2 = new Position(xWingRows[1],column);
                     
-                    if (GetCandidates(pos1)[digit])
+                    if (GetCandidates(pos1)[number-1])
                     {
-                        GetCandidates(pos1)[digit] = false;
+                        GetCandidates(pos1)[number-1] = false;
                         _numberOfRemovedCandidates++;
                     }
-                    if (GetCandidates(pos2)[digit])
+                    if (GetCandidates(pos2)[number-1])
                     {
-                        GetCandidates(pos2)[digit] = false;
+                        GetCandidates(pos2)[number-1] = false;
                         _numberOfRemovedCandidates++;
                     }
                 }
@@ -162,14 +162,14 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
         }
     }
     
-    private bool[,] FilterCandidates(int digit)
+    private bool[,] FilterCandidates(int number)
     {
         var filteredCandidates = new bool[GridSize, GridSize];
         foreach (var row in AllRows)
         {
             foreach (var column in AllColumns)
             {
-                if (GetCandidates(new Position(row,column))[digit])
+                if (GetCandidates(new Position(row,column))[number-1])
                     filteredCandidates[row-1,column-1] = true;
                 else
                     filteredCandidates[row-1,column-1] = false;

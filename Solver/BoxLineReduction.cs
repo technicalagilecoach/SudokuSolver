@@ -18,23 +18,23 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
 
             foreach (var row in rowsInBox)
             {
-                var possibleDigits = FindDigitsExclusiveInBox(columnsInBox, GetIndicesForRow(row),position => position.Column);
+                var possibleNumbers = FindDigitsExclusiveInBox(columnsInBox, GetIndicesForRow(row),position => position.Column);
                 
                 var remainingCells = allCellsInBox.Where(position => position.Row != row);
                 foreach (var cell in remainingCells)
                 {
-                    RemoveCandidates(cell, possibleDigits.ToList(), ref _removedCandidates);
+                    RemoveCandidates(cell, possibleNumbers.ToList(), ref _removedCandidates);
                 }
             }
 
             foreach (var column in columnsInBox)
             {
-                var possibleDigits = FindDigitsExclusiveInBox(rowsInBox, GetIndicesForColumn(column), position => position.Row);
+                var possibleNumbers = FindDigitsExclusiveInBox(rowsInBox, GetIndicesForColumn(column), position => position.Row);
                 
                 var remainingCells = allCellsInBox.Where(position => position.Column != column);
                 foreach (var cell in remainingCells)
                 {
-                    RemoveCandidates(cell, possibleDigits.ToList(), ref _removedCandidates);
+                    RemoveCandidates(cell, possibleNumbers.ToList(), ref _removedCandidates);
                 }
             }
         }
@@ -44,7 +44,7 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
 
     private SortedSet<int> FindDigitsExclusiveInBox(SortedSet<int> indicesInBox, List<Position> positions, Func<Position, int> projection)
     {
-        var possibleDigits = new SortedSet<int>(AllDigits);
+        var possibleNumbers = new SortedSet<int>(AllDigits);
         foreach (var cell in positions)
         {
             bool isOutsideOfBox = !indicesInBox.Contains(projection(cell));
@@ -54,19 +54,19 @@ public class BoxLineReduction(Puzzle puzzle) : Strategy(puzzle)
                 if (isOutsideOfBox)
                 {
                     var candidates = GetCandidates(cell);
-                    for (var index = 0; index < candidates.Count; index++)
+                    foreach (var number in AllDigits) 
                     {
-                        if (candidates[index])
-                            possibleDigits.Remove(index);
+                        if (candidates[number-1])
+                            possibleNumbers.Remove(number);
                     }
                 }
             }
             else
             {
-                possibleDigits.Remove(GetValue(cell)-1);
+                possibleNumbers.Remove(GetValue(cell));
             }
         }
-        return possibleDigits;
+        return possibleNumbers;
     }
 
     private static (SortedSet<int>,SortedSet<int>) GetRowsAndColumnsOfBox(List<Position> boxIndices)

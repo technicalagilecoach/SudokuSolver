@@ -145,7 +145,7 @@ public static class ValidityChecker
                 var candidates = puzzle.GetCandidates(position);
                 foreach (var digit in AllDigits)
                 {
-                    if (candidates[digit])
+                    if (candidates[digit-1])
                         candidateDigits.Add(digit);
                 }
             }

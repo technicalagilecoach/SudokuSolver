@@ -67,7 +67,7 @@ public class NakedTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
                 var candidates = GetCandidates(position);
                 foreach (var digit in AllDigits)
                 {
-                    if (candidates[digit])
+                    if (candidates[digit-1])
                         sortedSet.Add(digit); 
                 }
             }

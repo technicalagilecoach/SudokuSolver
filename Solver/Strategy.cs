@@ -38,30 +38,30 @@ public class Strategy(Puzzle puzzle)
         return puzzle.GetCandidates(position);
     }
     
-    protected void RemoveCandidates(Position position, List<int> digitsToRemove, ref int numberOfRemovedCandidates)
+    protected void RemoveCandidates(Position position, List<int> valuesToRemove, ref int numberOfRemovedCandidates)
     {
         if (IsUndefined(position))
         {
             var candidates = GetCandidates(position);
-            foreach (var digit in digitsToRemove)
+            foreach (var digit in valuesToRemove)
             {
-                if (candidates[digit])
+                if (candidates[digit-1])
                 {
-                    candidates[digit] = false;
+                    candidates[digit-1] = false;
                     numberOfRemovedCandidates++;
                 }
             }
         }
     }
     
-    protected void RemoveCandidate(Position position, int digit, ref int numberOfRemovedCandidates)
+    protected void RemoveCandidate(Position position, int value, ref int numberOfRemovedCandidates)
     {
         if (IsUndefined(position))
         {
             var candidates = GetCandidates(position);
-            if (candidates[digit])
+            if (candidates[value-1])
             {
-                candidates[digit] = false;
+                candidates[value-1] = false;
                 numberOfRemovedCandidates++;
             }
         }
@@ -69,7 +69,7 @@ public class Strategy(Puzzle puzzle)
     
     protected bool IsCandidate(Position position, int digit)
     {
-        return GetCandidates(position)[digit];
+        return GetCandidates(position)[digit-1];
     }
 
     protected int CountCandidates(Position position)
@@ -85,14 +85,14 @@ public class Strategy(Puzzle puzzle)
         return count;
     }
     
-    protected int GetIndexOfFirstCandidate(Position position)
+    protected int GetValueOfFirstCandidate(Position position)
     {
-        var index = 0;
+        var index = 1;
         foreach (var pv in GetCandidates(position))
         {
             if ((bool)pv)
             {
-                GetCandidates(position)[index] = false;
+                //GetCandidates(position)[index] = false;
                 break;
             }
 
@@ -111,8 +111,8 @@ public class Strategy(Puzzle puzzle)
             var candidates = GetCandidates(position);
             foreach (var digit in AllDigits)
             {
-                if (candidates[digit])
-                    distribution[digit]++;
+                if (candidates[digit-1])
+                    distribution[digit-1]++;
             }
         }
         

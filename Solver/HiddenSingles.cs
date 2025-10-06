@@ -38,10 +38,10 @@ internal class HiddenSingles(Puzzle puzzle) : Strategy(puzzle)
     {
         foreach (var digit in AllDigits)
         {
-            var isSingularDigit = values[digit] == 1;
+            var isSingularDigit = values[digit-1] == 1;
             if (IsUndefined(position) && isSingularDigit && IsCandidate(position, digit))
             {
-                SetValue(position, digit+1);
+                SetValue(position, digit);
                 _numberOfNewFixedCells++;
                 break;
             }

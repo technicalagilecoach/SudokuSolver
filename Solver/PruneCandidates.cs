@@ -23,19 +23,19 @@ public class PruneCandidates(Puzzle puzzle) : Strategy(puzzle)
 
         GetCandidates(position).SetAll(false);
         
-        var digit = GetValue(position)-1;
+        var value = GetValue(position);
         
         ForEachCellInAreaExcept(GetIndicesForRow(position.Row), position, pos =>
         {
-            RemoveCandidate(pos, digit, ref _numberOfRemovedCandidates);
+            RemoveCandidate(pos, value, ref _numberOfRemovedCandidates);
         });
         ForEachCellInAreaExcept(GetIndicesForColumn(position.Column), position, pos =>
         {
-            RemoveCandidate(pos, digit, ref _numberOfRemovedCandidates);
+            RemoveCandidate(pos, value, ref _numberOfRemovedCandidates);
         });
         ForEachCellInAreaExcept(GetIndicesForBox(GetBoxIndex(position)), position, pos  =>
         {
-            RemoveCandidate(pos, digit, ref _numberOfRemovedCandidates);
+            RemoveCandidate(pos, value, ref _numberOfRemovedCandidates);
         });
     }
 
