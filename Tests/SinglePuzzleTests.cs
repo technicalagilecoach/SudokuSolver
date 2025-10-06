@@ -26,7 +26,15 @@ public class SolveSudokuPuzzle
         SolverWrapper.Solve(puzzle, " ", out var unsolvedCells, out var strategyStats,pdfFile);
         Assert.IsTrue(unsolvedCells==0);
     }
-    
+
+    private static void PrintOriginalPuzzle(string puzzle, string filename)
+    {
+        puzzle = puzzle.Replace("\n", "");
+        Puzzle p = new Puzzle();
+        p.Init(puzzle);
+        PdfWriter.WritePdf(p,p, p, filename);
+    }
+
     [TestMethod]
     public void SolveEasyPuzzle()
     {
@@ -193,6 +201,7 @@ public class SolveSudokuPuzzle
                               + "034090710\n";
 
         CheckForSolvability(puzzle);
-        //PrintPdfIfUnsolvable(puzzle,"/home/tac/src/SudokuSolver/Puzzles/result.pdf");
+        //PrintPdfIfUnsolvable(puzzle,"/home/armin/src/SudokuSolver/Puzzles/result.pdf");
+        //PrintOriginalPuzzle(puzzle,"/home/armin/src/SudokuSolver/Puzzles/result.pdf");
     }
 }

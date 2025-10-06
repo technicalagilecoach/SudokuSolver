@@ -1,6 +1,7 @@
 # Notes
 
 ## To Do
+- create pdf for single unsolved puzzles
 - verify implementation of all implemented strategies
   - identify relevant puzzles for each strategy and improve tests
 - clean up use of SortedSet vs List
@@ -22,6 +23,7 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- Possibility to create a pdf for a single unsolved puzzle -> not exposed at the CLI yet.
 - HiddenQuadruplets strategy is no longer problematic with Grid 7 puzzle
   - due to changes/corrections related to rows/column/box indices and values now all starting with 1 
 - Change use of indices, etc. AllRows, AllColumns, AllBoxes and AllDigits now all start at 1 instead of 0.

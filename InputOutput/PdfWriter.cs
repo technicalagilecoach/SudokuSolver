@@ -4,6 +4,8 @@ using PdfSharp.Fonts;
 using PdfSharp.Pdf;
 using PdfSharp.Snippets.Font;
 
+using static SudokuSolver.Puzzle;
+
 namespace SudokuSolver;
 
 public static class PdfWriter
@@ -50,9 +52,10 @@ public static class PdfWriter
         var regularFont = new XFont("Times New Roman", 10, XFontStyleEx.Regular);
         var boldFont = new XFont("Times New Roman", 10, XFontStyleEx.Bold);
 
-        for (var row = 0; row < 9; row++)
+        foreach(var row in AllRows)
         {
-            for (var column = 0; column < 9; column++) {
+            foreach(var column in AllColumns) 
+            {
                 Position position = new Position(row, column);
                 var value = lastConsistentState.GetCellValue(position);
                 if (value != 0)
@@ -62,7 +65,7 @@ public static class PdfWriter
                     var font = value == origValue ? boldFont : regularFont;
                     
                     gfx.DrawString(value.ToString(), font, brush, 
-                        new XRect(topLeft.X+column*distance, topLeft.Y+row*distance,
+                        new XRect(topLeft.X+(column-1)*distance, topLeft.Y+(row-1)*distance,
                             distance, distance), XStringFormats.Center);
                 }
             }   
@@ -116,9 +119,10 @@ public static class PdfWriter
 
         var smallFont = new XFont("Times New Roman", 5, XFontStyleEx.Regular);
         
-        for (var row = 0; row < 9; row++)
+        foreach(var row in AllRows)
         {
-            for (var column = 0; column < 9; column++) {
+            foreach(var column in AllColumns) 
+            {
                 Position position = new Position(row, column);
                 var value = lastConsistentState.GetCellValue(position);
                 if (value != 0)
@@ -128,7 +132,7 @@ public static class PdfWriter
                     var font = value == origValue ? boldFont : regularFont;
                     
                     gfx.DrawString(value.ToString(), font, brush, 
-                        new XRect(topLeft.X+column*distance, topLeft.Y+row*distance,
+                        new XRect(topLeft.X+(column-1)*distance, topLeft.Y+(row-1)*distance,
                             distance, distance), XStringFormats.Center);
                 }
                 else
@@ -142,7 +146,7 @@ public static class PdfWriter
                    }
 
                    gfx.DrawString(c, smallFont, XBrushes.Black, 
-                        new XRect(topLeft.X+column*distance, topLeft.Y+row*distance,
+                        new XRect(topLeft.X+(column-1)*distance, topLeft.Y+(row-1)*distance,
                             distance, distance), XStringFormats.Center);
                 }
             }   
