@@ -4,9 +4,6 @@
 - verify implementation of all implemented strategies
   - identify relevant puzzles for each strategy and improve tests
 - clean up use of SortedSet vs List
-- improve pdf output
-  - include name of puzzle, name of puzzle set, index in the set, ... 
-  - e.g. output puzzle in dot format to open in solver from https://www.sudokuwiki.org - provide hyperlink
 - a promising additional solver strategy is chute remote pairs
 - improve statistics, error checking and debug support
   - should be helpful -> locate the problematic code as precisely as possible
@@ -22,6 +19,10 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- improved pdf output
+    - include name of puzzle
+    - provide hyperlink to open puzzle in solver from https://www.sudokuwiki.org
+    - refactoring of code in PdfWriter
 - Create pdf for a single unsolved puzzle via CLI.
 - Possibility to create a pdf for a single unsolved puzzle -> not exposed at the CLI yet.
 - HiddenQuadruplets strategy is no longer problematic with Grid 7 puzzle

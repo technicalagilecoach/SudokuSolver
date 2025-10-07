@@ -32,7 +32,7 @@ public class SolveSudokuPuzzle
         puzzle = puzzle.Replace("\n", "");
         Puzzle p = new Puzzle();
         p.Init(puzzle);
-        PdfWriter.WritePdf(p, p, filename);
+        PdfWriter.WritePdf(filename, p, p, false, filename);
     }
 
     [TestMethod]

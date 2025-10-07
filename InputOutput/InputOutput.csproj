@@ -17,6 +17,7 @@
     <ItemGroup>
       <PackageReference Include="CliFx" Version="2.3.6" />
       <PackageReference Include="PDFsharp" Version="6.2.2" />
+      <PackageReference Include="PDFsharp-MigraDoc" Version="6.2.2" />
     </ItemGroup>
 
 </Project>
