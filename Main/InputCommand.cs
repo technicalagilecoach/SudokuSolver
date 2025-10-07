@@ -37,7 +37,10 @@ public class InputCommand : ICommand
             var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName, out var puzzleNames);
             var puzzle = new Puzzle();
             puzzle.Init(allPuzzles[0]);
-            PdfWriter.WritePdf(puzzleNames[0], puzzle, puzzle, false, PdfFile.FullName);
+            
+            string name = puzzleNames.Count==0?FileName.Name:puzzleNames[0];
+            
+            PdfWriter.WritePdf(name, puzzle, puzzle, false, PdfFile.FullName);
         }
         else
         {
