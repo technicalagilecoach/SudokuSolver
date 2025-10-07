@@ -18,13 +18,10 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
             //find X-Wings for rows
             // - consider only rows where the candidate occurs exactly twice
             // - check if two of these rows have the candidates in the same columns
-            //eliminate candidates
+            //remove candidates
             // - in the remainder of the columns where the two rows have the candidate 
 
             XWingRows(filteredCandidates, number);
-
-            //find X-Wings for columns
-            //eliminate candidates
             
             XWingColumns(filteredCandidates, number);
         }

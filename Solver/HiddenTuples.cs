@@ -15,28 +15,28 @@ public class HiddenTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle: puzzl
         foreach (var row in AllRows)
         {
             var allCellsOfInterest = GetIndicesForRow(row).Where(IsUndefined).ToList();
-            FindHiddenTuplesAndEliminateCandidates(allCellsOfInterest);
+            FindHiddenTuplesAndRemoveCandidates(allCellsOfInterest);
         }
         
         foreach (var column in AllColumns)
         {
             var allCellsOfInterest = GetIndicesForColumn(column).Where(IsUndefined).ToList();;
-            FindHiddenTuplesAndEliminateCandidates(allCellsOfInterest);
+            FindHiddenTuplesAndRemoveCandidates(allCellsOfInterest);
         }
         
         foreach (var box in AllBoxes)
         {
             var allCellsOfInterest = GetIndicesForBox(box).Where(IsUndefined).ToList();;
-            FindHiddenTuplesAndEliminateCandidates(allCellsOfInterest);
+            FindHiddenTuplesAndRemoveCandidates(allCellsOfInterest);
         }
         
         return _numberOfRemovedCandidates > 0;
     }
 
-    private void FindHiddenTuplesAndEliminateCandidates(List<Position> allCellsOfInterest)
+    private void FindHiddenTuplesAndRemoveCandidates(List<Position> allCellsOfInterest)
     {
         var numberTuples = GeneratePotentialNumberTuples(allCellsOfInterest);
-        var hiddenTuples = IdentifyHiddenTuples(allCellsOfInterest, numberTuples);
+        var hiddenTuples = FindHiddenTuples(allCellsOfInterest, numberTuples);
         RemoveCandidatesBasedOnHiddenTuples(hiddenTuples);
     }
 
@@ -68,7 +68,7 @@ public class HiddenTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle: puzzl
         }
     }
 
-    private List<(List<Position>, List<int>)> IdentifyHiddenTuples(List<Position> allCellsOfInterest, List<List<int>> numberTuples)
+    private List<(List<Position>, List<int>)> FindHiddenTuples(List<Position> allCellsOfInterest, List<List<int>> numberTuples)
     {
         var hiddenTuples = new List<(List<Position>,List<int>)>();
 

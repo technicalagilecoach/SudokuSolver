@@ -13,28 +13,28 @@ public class NakedTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
         foreach (var row in AllRows)
         {
             var allCellsOfInterest = GetIndicesForRow(row).Where(IsUndefined).ToList();
-            FindNakedTuplesAndEliminateCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
+            FindNakedTuplesAndRemoveCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         foreach (var column in AllColumns)
         {
             var allCellsOfInterest = GetIndicesForColumn(column).Where(IsUndefined).ToList();;
-            FindNakedTuplesAndEliminateCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
+            FindNakedTuplesAndRemoveCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         foreach (var box in AllBoxes)
         {
             var allCellsOfInterest = GetIndicesForBox(box).Where(IsUndefined).ToList();;
-            FindNakedTuplesAndEliminateCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
+            FindNakedTuplesAndRemoveCandidates(allCellsOfInterest, ref numberOfRemovedCandidates);
         }
         
         return numberOfRemovedCandidates > 0;
     }
 
-    private void FindNakedTuplesAndEliminateCandidates(List<Position> allCellsOfInterest, ref int numberOfRemovedCandidates)
+    private void FindNakedTuplesAndRemoveCandidates(List<Position> allCellsOfInterest, ref int numberOfRemovedCandidates)
     {
         var tuples = GeneratePotentialNakedTuples(allCellsOfInterest);
-        var nakedTuples = IdentifyNakedTuples(tuples);
+        var nakedTuples = FindNakedTuples(tuples);
 
         RemoveCandidatesBasedOnNakedTuples(allCellsOfInterest, nakedTuples, ref numberOfRemovedCandidates);
     }
@@ -49,7 +49,7 @@ public class NakedTuples(Puzzle puzzle, int tupleSize) : Strategy(puzzle)
         return Combinations(tupleCandidates, TupleSize);
     }
 
-    private List<Tuple<List<Position>, SortedSet<int>>> IdentifyNakedTuples(List<List<Position>> tuples)
+    private List<Tuple<List<Position>, SortedSet<int>>> FindNakedTuples(List<List<Position>> tuples)
     {
         List<Tuple<List<Position>,SortedSet<int>>> nakedTuples = [];
         foreach (var tuple in tuples)

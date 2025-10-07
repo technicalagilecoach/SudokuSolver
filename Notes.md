@@ -1,17 +1,13 @@
 # Notes
 
 ## To Do
-- verify implementation of all implemented strategies
-  - identify relevant puzzles for each strategy and improve tests
-- clean up use of SortedSet vs List
-- a promising additional solver strategy is chute remote pairs
-- improve statistics, error checking and debug support
-  - should be helpful -> locate the problematic code as precisely as possible
-  - detect when puzzle can not be solved -> none of the strategies helps
-  - detect errors -> puzzle got into an inconsistent state
-  - statistics can be activated on demand (impact on solver performance)
-  - detailed diagnostics can be activated on demand (impact on solver performance)
-  - clean up code for printing solutions in DebugOutput -> currently not used
+- reduce number of test puzzle - check that there is at least one test for every strategy
+- add tests and assertions in IndicesAndPositionsTests.cs
+- clean up/refactor
+  - XWing strategy
+  - SolverWrapper
+  - helper functions in SinglePuzzleTests.cs
+  - improve -1 index calculations for accessing candidates
 - make project ready to publish
     - find a name for the project
     - decide on a license before publishing on GitHub
@@ -19,6 +15,8 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- sorted notes and unifie naming, e.g. eliminate==remove, find==identify
+- currently all implemented strategies "seem" to work correctly (puzzles can be solved and self checks pass)
 - improved pdf output
     - include name of puzzle
     - provide hyperlink to open puzzle in solver from https://www.sudokuwiki.org
@@ -94,7 +92,18 @@
 - handling pairs for boxes
 - pointing pairs strategy implemented
 
-## Ideas 
+## Version 2.0
+- increase capability of solver with more advanced strategies
+- one promising additional solver strategy is chute remote pairs
+- improve statistics, error checking and debug support
+  - should be helpful -> locate the problematic code as precisely as possible
+  - detect when puzzle can not be solved -> none of the strategies helps
+  - detect errors -> puzzle got into an inconsistent state
+  - statistics can be activated on demand (impact on solver performance)
+  - detailed diagnostics can be activated on demand (impact on solver performance)
+  - clean up code for printing solutions in DebugOutput -> currently not used
+
+## Ideas and Thoughts 
 - row, columns and boxes can be treated equally when using a container with all cells/indices of that box
 - brute force search is not implemented but could help if all other strategies fail
 - implement more strategies mentioned at https://www.sudokuwiki.org/Sudoku.htm
@@ -102,11 +111,10 @@
 - ideas for code improvement
   - consider using ImmutableList where it is feasible, e.g. in Combinations method
   - use Enumerable more instead of expanded lists
-  - use typealiases to make code more readable
+  - use typealiases to make code more readable - is this possible with C#?
   - in InputSolver.RunSolver all puzzles are run through the solver before any output is written
     - consider calling solver and writing output puzzle after puzzle
   - parallel execution when many puzzles are processed
   - perform pruning etc. only based on actually changed cells
-
-## Limitations
+  - clean up use of SortedSet vs List
 - Grid.Init assumes that the input puzzles always follows the expected syntax -> no error handling otherwise
