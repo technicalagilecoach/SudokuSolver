@@ -96,4 +96,45 @@ public class Writer(bool unsolved, string undefinedSymbol, Input.FileType fileTy
             }
         }
     }
+    
+    public void WriteStatistics(IConsole console, List<string> puzzleNames, List<Dictionary<string,int>> stats)
+    {
+        var summary = SumUpStatistics();
+
+        for (var i = 0; i < stats.Count; i++)
+        {
+            WriteStatsLine(puzzleNames[i], stats[i]);
+        }
+        
+        console.Output.WriteLine();
+        WriteStatsLine("Summary", summary);
+        return;
+
+        void WriteStatsLine(string puzzleName, Dictionary<string, int> stat)
+        {
+            console.Output.Write(puzzleName + " - ");
+            
+            foreach (var strategy in stat)
+            {
+                string formatString = "{0,4}";
+                console.Output.Write(strategy.Key + ": " + String.Format(formatString, strategy.Value) + " ");
+            }
+            console.Output.WriteLine();
+        }
+
+        Dictionary<string, int> SumUpStatistics()
+        {
+            var dictionary = new Dictionary<string, int>();
+            foreach (var stat in stats)
+            {
+                foreach (var strategy in stat)
+                {
+                    dictionary.TryAdd(strategy.Key, 0);
+                    dictionary[strategy.Key] += strategy.Value;
+                }
+            }
+
+            return dictionary;
+        }
+    }
 }
