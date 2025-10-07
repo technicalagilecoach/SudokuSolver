@@ -1,5 +1,4 @@
 using CliFx.Infrastructure;
-using static SudokuSolver.SolverWrapper;
 
 namespace SudokuSolver;
 
@@ -97,8 +96,11 @@ public class Writer(bool unsolved, string undefinedSymbol, Input.FileType fileTy
         }
     }
     
-    public void WriteStatistics(IConsole console, List<string> puzzleNames, List<Dictionary<string,int>> stats)
+    public void WriteStatistics(IConsole console, List<string> puzzleNames, List<Dictionary<string, int>> stats)
     {
+        if (puzzleNames.Count == 0)
+            puzzleNames = Enumerable.Range(1, stats.Count).Select(i => i.ToString()).ToList();
+        
         var summary = SumUpStatistics();
 
         for (var i = 0; i < stats.Count; i++)
