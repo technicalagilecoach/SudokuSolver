@@ -2,10 +2,9 @@
 
 ## To Do
 - reduce number of test puzzle - check that there is at least one test for every strategy
-- add tests and assertions in IndicesAndPositionsTests.cs
 - clean up/refactor
   - XWing strategy
-  - SolverWrapper
+  - SolverWrapper (also find a new name for this)
   - helper functions in SinglePuzzleTests.cs
   - improve -1 index calculations for accessing candidates
 - make project ready to publish
@@ -15,7 +14,10 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
-- sorted notes and unifie naming, e.g. eliminate==remove, find==identify
+- removed unused code in IndicesAndIterators.cs
+  - was no longer needed because of Combinations method and generic NakedTuples and HiddenTuples strategies
+- added assertions in IndicesAndPositionsTests.cs
+- sorted notes and unified naming, e.g. eliminate==remove, find==identify
 - currently all implemented strategies "seem" to work correctly (puzzles can be solved and self checks pass)
 - improved pdf output
     - include name of puzzle
