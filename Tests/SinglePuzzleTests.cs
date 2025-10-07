@@ -39,7 +39,6 @@ public class SolveSudokuPuzzle
     public void SolveEasyPuzzle()
     {
         //https://sudoku-puzzles.net/sudoku-easy
-        //unit propagation is sufficient for solution
         const string puzzle = " 7 583 2 \n" +
                               " 592  3  \n" +
                               "34   65 7\n" +
@@ -49,7 +48,7 @@ public class SolveSudokuPuzzle
                               "914835 76\n" +
                               " 3 7 1495\n" +
                               "567429 13\n";
-        
+        // NakedSingles
         CheckForSolvability(puzzle);
     }
 
@@ -57,7 +56,6 @@ public class SolveSudokuPuzzle
     public void SolveMediumPuzzle()
     {
         //https://sudoku-puzzles.net/sudoku-medium/620/
-        //unit propagation is sufficient for solution
         const string puzzle = " 92 3 1 4\n" +
                               " 4   1  9\n" +
                               "  8 947  \n" +
@@ -67,12 +65,11 @@ public class SolveSudokuPuzzle
                               "     3 1 \n" +
                               "2  78 435\n" +
                               "  51     \n";
-
+        // NakedSingles
         CheckForSolvability(puzzle);
     }
 
     [TestMethod]
-    //[Ignore]
     public void SolvePuzzleWithHiddenPairs()
     {
         //from https://www.sudokuwiki.org/sudoku.htm?bd=720408030080000047401076802810739000000851000000264080209680413340000008168943275
@@ -99,6 +96,9 @@ public class SolveSudokuPuzzle
         // Hidden Pairs strategy works as the next step, afterward Hidden Singles is applicable!
         // Naked Triple strategy is then needed to continue!
         
+        // HiddenSingles, HiddenPairs
+        // not solvable, at least not currently
+        
         CompareWithExpectedOutcome(puzzle, expected,"0");
     }
     
@@ -117,6 +117,8 @@ public class SolveSudokuPuzzle
                                 + " 75 6  2 \n"
                                 + "2  5   8 \n";
            
+        // NakedSingles, HiddenSingles
+        
         CheckForSolvability(puzzle);
     }
 
@@ -134,40 +136,8 @@ public class SolveSudokuPuzzle
                               + "     84  \n"
                               + "  5 2    \n";
 
-        CheckForSolvability(puzzle);
-    }
- 
-    [TestMethod]
-    [Ignore]
-    public void SolveAIEscargot2006Puzzle()
-    {
-        const string puzzle =   "1    7 9 \n"
-                              + " 3  2   8\n"
-                              + "  96  5  \n"
-                              + "  53  9  \n"
-                              + " 1  8   2\n"
-                              + "6    4   \n"
-                              + "3      1 \n"
-                              + " 4      7\n"
-                              + "  7   3  \n";
-
-        CheckForSolvability(puzzle);
-    }
+        // NakedSingles, HiddenSingles, NakedPairs, HiddenPairs, Pointing Tuples
         
-    [TestMethod]
-    [Ignore]
-    public void SolveArtoInkala2012Puzzle()
-    {
-        const string puzzle = "  53     \n"
-                              + "8      2 \n"
-                              + " 7  1 5  \n"
-                              + "4    53  \n"
-                              + " 1  7   6\n"
-                              + "  32   8 \n"
-                              + " 6 5    9\n"
-                              + "  4    3 \n"
-                              + "     97  \n";
-
         CheckForSolvability(puzzle);
     }
 
@@ -184,6 +154,8 @@ public class SolveSudokuPuzzle
                               + "034059000\n"
                               + "507000000\n";
        
+        // NakedSingles, HiddenSingles
+        
         CheckForSolvability(puzzle);
     }
     
@@ -200,8 +172,8 @@ public class SolveSudokuPuzzle
                               + "000000005\n"
                               + "034090710\n";
 
+        // NakedSingles, HiddenSingles, NakedPairs, HiddenPairs, Pointing Tuples, BoxLineReduction, XWing
+        
         CheckForSolvability(puzzle);
-        //PrintPdfIfUnsolvable(puzzle,"/home/armin/src/SudokuSolver/Puzzles/result.pdf");
-        //PrintOriginalPuzzle(puzzle,"/home/armin/src/SudokuSolver/Puzzles/result.pdf");
     }
 }

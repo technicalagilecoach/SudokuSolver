@@ -2,6 +2,7 @@
 
 ## To Do
 - reduce number of test puzzle - check that there is at least one test for every strategy
+  - seems like NakedTriplets/HiddenTriplets as well as NakedQuadruplets/HiddenQuadruplets are not used in my test sets
 - clean up/refactor
   - XWing strategy
   - SolverWrapper (also find a new name for this)
@@ -14,6 +15,7 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- improved statistics output to identify puzzles which require specific strategies more easily
 - removed unused code in IndicesAndIterators.cs
   - was no longer needed because of Combinations method and generic NakedTuples and HiddenTuples strategies
 - added assertions in IndicesAndPositionsTests.cs
