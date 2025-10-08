@@ -1,5 +1,11 @@
 .vs/
-SudokuSolver/bin/
-SudokuSolver/obj/
-SudokuSolverCore/bin/
-SudokuSolverCore/obj/
+DataStructures/bin/
+DataStructures/obj/
+InputOutput/bin/
+InputOutput/obj/
+Main/bin/
+Main/obj/
+Solver/bin/
+Solver/obj/
+Tests/bin/
+Tests/obj/
