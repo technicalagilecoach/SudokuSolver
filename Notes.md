@@ -2,16 +2,15 @@
 
 ## To Do
 - clean up/refactor
-  - XWing strategy
   - SolverWrapper (also find a new name for this) 
-  - improve -1 index calculations for accessing candidates
 - make project ready to publish
-    - find a name for the project
-    - decide on a license before publishing on GitHub
-    - polish the code to make the GitHub-repo public
-    - remove data from git retrospectively, e.g. puzzle files, this notes, ...
+  - find a name for the project
+  - decide on a license before publishing on GitHub
+  - polish the code to make the GitHub-repo public
+  - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- some cleanup for XWing strategy -> still two versions of most methods
 - helper functions in SinglePuzzleTests.cs -> removed
 - reduce number of test puzzle - check that there is at least one test for every strategy
   - seems like NakedTriplets/HiddenTriplets as well as NakedQuadruplets/HiddenQuadruplets are not used in my test sets
@@ -123,6 +122,7 @@
   - parallel execution when many puzzles are processed
   - perform pruning etc. only based on actually changed cells
   - clean up use of SortedSet vs List
+  - improve -1 index calculations for accessing candidates --> need a better idea for this
 - Grid.Init assumes that the input puzzles always follows the expected syntax -> no error handling otherwise
 
 ## Sudoku Puzzles for Testing

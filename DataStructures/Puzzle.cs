@@ -109,7 +109,7 @@ public class Puzzle
         {
             foreach (var column in Puzzle.AllColumns)
             {
-                Position position = new Position(row, column);
+                var position = new Position(row, column);
                 var v = GetCellValue(position);
                 buffer.Write(v == Puzzle.Undefined ? undefinedSymbol : v);
             } 
