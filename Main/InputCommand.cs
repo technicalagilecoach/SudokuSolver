@@ -36,7 +36,7 @@ public class InputCommand : ICommand
         {
             var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName, out var puzzleNames);
             var puzzle = new Puzzle();
-            puzzle.Init(allPuzzles[0]);
+            puzzle.Init(allPuzzles[Number-1]);
             
             string name = puzzleNames.Count==0?FileName.Name:puzzleNames[0];
             
