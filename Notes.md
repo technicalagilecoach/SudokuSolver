@@ -1,11 +1,10 @@
 # Notes
 
 ## To Do
-
 - clean up/refactor
   - XWing strategy
   - SolverWrapper (also find a new name for this)
-  - helper functions in SinglePuzzleTests.cs
+  
   - improve -1 index calculations for accessing candidates
 - make project ready to publish
     - find a name for the project
@@ -14,6 +13,7 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- helper functions in SinglePuzzleTests.cs -> removed
 - reduce number of test puzzle - check that there is at least one test for every strategy
   - seems like NakedTriplets/HiddenTriplets as well as NakedQuadruplets/HiddenQuadruplets are not used in my test sets
   - included selected puzzles from 0096_sudoku.txt directly in SinglePuzzleTests

@@ -6,11 +6,11 @@ public static class DebugOutput
     {
         var buffer = new StringWriter();
             
-        foreach (var row in Puzzle.AllDigits) {
-            foreach (var column in Puzzle.AllDigits)
+        foreach (var row in Puzzle.AllRows) {
+            foreach (var column in Puzzle.AllColumns)
             {
-                Position position = new Position(row, column);
-                var v = cells[position.Row, position.Column];
+                var position = new Position(row, column);
+                var v = cells[position.Row-1, position.Column-1];
                 buffer.Write(v == Puzzle.Undefined ? " ":v);
             } 
 
@@ -31,11 +31,11 @@ public static class DebugOutput
                 var pValues = puzzle.GetCandidates(position);
 
                 var values = "";
-                foreach (var index in Puzzle.AllDigits)
+                foreach (var digit in Puzzle.AllDigits)
                 {
-                    var kv = pValues[index];
+                    var kv = pValues[digit-1];
                     if (kv)
-                        values += " " + (index + 1);
+                        values += " " + (digit);
                 }
 
                 buffer.Write(position.Row + " " + position.Column + ":" + values + "\n");
@@ -67,11 +67,11 @@ public static class DebugOutput
                 {
                     var pValues = puzzle.GetCandidates(position);
                     var values = new List<int>();
-                    foreach (var index in Puzzle.AllDigits)
+                    foreach (var digit in Puzzle.AllDigits)
                     {
-                        var kv = pValues[index];
+                        var kv = pValues[digit-1];
                         if (kv)
-                            values.Add(index + 1);
+                            values.Add(digit);
                     }
                     data.Add("C:"+string.Join("", values));
                 }
