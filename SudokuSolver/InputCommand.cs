@@ -5,26 +5,26 @@ using CliFx.Infrastructure;
 
 namespace SudokuSolver;
 
-[Command(Description = "A simple command line Sudoku solver.")]
+[Command(Description = "A simple command line Sudoku solver written in C#. The source code can be found here: https://github.com/technicalagilecoach/SudokuSolver.")]
 public class InputCommand : ICommand
 {
     [CommandParameter(0, Description = "A file containing one or more Sudoku puzzles to solve.")]
     public required FileInfo FileName { get; set; }
 
+    [CommandOption("number", 'n', Description = "Number of the puzzle to be solved from a file with multiple puzzles. All puzzles will be solved for \"0\".")]
+    public int Number { get; set; }
+    
     [CommandOption("output", 'o', Description = "File to store the results.")]
     public FileInfo? OutputFile { get; set; }
 
-    [CommandOption("number", 'n', Description = "Number of the puzzle to be solved from a file with multiple puzzles.")]
-    public int Number { get; set; }
-
-    [CommandOption("unsolved", 'u', Description = "Output the unsolved puzzles only. This option only applies to input files with multiple puzzles.")]
-    public bool Unsolved { get; set; } = false;
+    [CommandOption("pdf", 'p', Description = "Create a pdf version of the unsolved puzzle. If the input contains multiple puzzles it only returns the first puzzle.")]
+    public FileInfo? PdfFile { get; set; }
 
     [CommandOption("statistics", 's', Description = "Show statistics about the solver strategies which were used for each puzzle.")]
     public bool Statistics { get; set; } = false;
     
-    [CommandOption("pdf", 'p', Description = "Create a pdf version of the unsolved puzzle. If the input contains multiple puzzles it only returns the first puzzle.")]
-    public FileInfo? PdfFile { get; set; }
+    [CommandOption("unsolved", 'u', Description = "Output the unsolved puzzles only. This option only applies to input files with multiple puzzles.")]
+    public bool Unsolved { get; set; } = false;
     
     public ValueTask ExecuteAsync(IConsole console)
     {
