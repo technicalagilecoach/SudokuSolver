@@ -1,11 +1,13 @@
-# A simple Sudoku solver
-The initial commit presents a quick and dirty implementation of a solver for Sudoku puzzles.
+# Sudoku Solver
 
-The solver is capable of solving simple Sudoku puzzles, where during the solution process there is always at least one unsolved field which has a unique solution. It cannot solve hard puzzles, for which one has to choose between two potential values during the solution process.
+A command line Sudoku solver written in C#. 
 
-The code was written without TDD and without having clean code principles in mind. Only some minor refactorings (extract method and rename symbol) where used to simplify debugging. The goal was to solve the first puzzle as soon as possible. No attention was given to readability or maintainability (or even performance) of the code. Version control was not used.
+It implements several solution strategies described by Andrew Stuart at https://www.sudokuwiki.org/Sudoku.htm.
 
-At the moment, changing the solver in order to handle hard puzzles as well, seems like a daunting task. I've reached the point where the code got hard to change quite quickly. And I've already spent almost half of the time to debug stupid mistakes (mostly caused by confusing index variables when using copy and paste).
+The solver is capable of solving Sudoku puzzles of average difficulty, this should be sufficient for most puzzles you encounter in newspapers. 
 
-- Will I be able to make the code easy to change by rigorously refactoring the code?
-- Could this situation have been avoided by using strict TDD from the start?
+Currently it can solve all [50 puzzles](https://projecteuler.info/resources/documents/0096_sudoku.txt) from [Project Euler - Problem 96 Su Doku](https://projecteuler.net/problem=96).
+
+## Usage
+
+![command line usage of the solver](CommandLineUsage.png)
