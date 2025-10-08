@@ -67,18 +67,22 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
 
         if (!solved && origPuzzle!=null && pdfFile != null)
         {
-            var lastConsistentState = new Puzzle();
-            lastConsistentState.Init(solver.LastConsistentState.Replace("\n", ""));
-            var pc = new PruneCandidates(lastConsistentState);
-            pc.Handle();
-            
-            PdfWriter.WritePdf(pdfFile.Name, origPuzzle, lastConsistentState, false, pdfFile.FullName);
+            WriteLastConsistentStateToPdf(pdfFile, solver.LastConsistentState, origPuzzle);
         }
 
         var result = puzzle.PrintCells(undefinedSymbol);
         return result;
     }
-    
+
+    private static void WriteLastConsistentStateToPdf(FileInfo pdfFile, string lastConsistentState, Puzzle origPuzzle)
+    {
+        var lastConsistentPuzzle = new Puzzle();
+        lastConsistentPuzzle.Init(lastConsistentState.Replace("\n", ""));
+        var pc = new PruneCandidates(lastConsistentPuzzle);
+        pc.Handle();
+        PdfWriter.WritePdf(pdfFile.Name, origPuzzle, lastConsistentPuzzle, false, pdfFile.FullName);
+    }
+
     private static string CreateMessageForSinglePuzzle(int count)
     {
         return count == 0

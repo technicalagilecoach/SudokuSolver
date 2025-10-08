@@ -1,15 +1,15 @@
 # Notes
 
 ## To Do
-- clean up/refactor
-  - SolverWrapper (also find a new name for this) 
 - make project ready to publish
   - find a name for the project
   - decide on a license before publishing on GitHub
   - polish the code to make the GitHub-repo public
+  - update the Readme.md file
   - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- clean up/refactor SolverWrapper? -> good for now
 - some cleanup for XWing strategy -> still two versions of most methods
 - helper functions in SinglePuzzleTests.cs -> removed
 - reduce number of test puzzle - check that there is at least one test for every strategy
