@@ -34,13 +34,7 @@ public class InputCommand : ICommand
 
         if (PdfFile is not null)
         {
-            var allPuzzles = Input.ReadPuzzlesFromFile(FileName.FullName, out var puzzleNames);
-            var puzzle = new Puzzle();
-            puzzle.Init(allPuzzles[Number-1]);
-            
-            string name = puzzleNames.Count==0?FileName.Name:puzzleNames[0];
-            
-            PdfWriter.WritePdf(name, puzzle, puzzle, false, PdfFile.FullName);
+            Writer.WritePuzzle(FileName, PdfFile, Number);
         }
         else
         {
@@ -61,6 +55,10 @@ public class InputCommand : ICommand
         var output = "";
 
         var solver = new SolverWrapper(undefinedSymbol, fileType, allPuzzles);
+        
+        if (Number < 0 || Number > allPuzzles.Count)
+            throw new IndexOutOfRangeException();
+        
         var results = solver.SolvePuzzles(Number, ref output, ref solvedPuzzles);
        
         var writer = new Writer(Unsolved, undefinedSymbol, fileType, puzzleNames);

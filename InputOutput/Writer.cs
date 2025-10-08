@@ -96,6 +96,19 @@ public class Writer(bool unsolved, string undefinedSymbol, Input.FileType fileTy
         }
     }
     
+    public static void WritePuzzle(FileInfo fileName, FileInfo pdfFile, int number)
+    {
+        var allPuzzles = Input.ReadPuzzlesFromFile(fileName.FullName, out var puzzleNames);
+        
+        if (number <= 0 || number > allPuzzles.Count)
+            throw new IndexOutOfRangeException();
+        
+        var puzzle = new Puzzle();
+        puzzle.Init(allPuzzles[number-1]);
+        var name = puzzleNames.Count==0?fileName.Name:puzzleNames[0];
+        PdfWriter.WritePdf(name, puzzle, puzzle, false, pdfFile.FullName);
+    }
+    
     public void WriteStatistics(IConsole console, List<string> puzzleNames, List<Dictionary<string, int>> stats)
     {
         if (puzzleNames.Count == 0)

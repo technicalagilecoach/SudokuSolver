@@ -12,7 +12,7 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
         List<string> results = [];
         if (FileType == Input.FileType.SinglePuzzle || number > 0)
         {
-            var result = Solve(AllPuzzles[GetIndexFromNumber(number)], UndefinedSymbol, out var count, out var strategyStats);
+            var result = Solve(AllPuzzles[number-1], UndefinedSymbol, out var count, out var strategyStats);
             results.Add(result);
             StrategyStatistics.Add(strategyStats);
             output = CreateMessageForSinglePuzzle(count);
@@ -79,21 +79,6 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
         return result;
     }
     
-    private int GetIndexFromNumber(int number)
-    {
-        int index = 0;
-
-        if (FileType == Input.FileType.SinglePuzzle)
-            index = 0;
-        else
-            index = number - 1;
-
-        if (index < 0 || index >= AllPuzzles.Count)
-            throw new IndexOutOfRangeException();
-        
-        return index;
-    }
-
     private static string CreateMessageForSinglePuzzle(int count)
     {
         return count == 0
