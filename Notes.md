@@ -1,8 +1,7 @@
 # Notes
 
 ## To Do
-- reduce number of test puzzle - check that there is at least one test for every strategy
-  - seems like NakedTriplets/HiddenTriplets as well as NakedQuadruplets/HiddenQuadruplets are not used in my test sets
+
 - clean up/refactor
   - XWing strategy
   - SolverWrapper (also find a new name for this)
@@ -15,6 +14,10 @@
     - remove data from git retrospectively, e.g. puzzle files, this notes, ...
 
 ## Done
+- reduce number of test puzzle - check that there is at least one test for every strategy
+  - seems like NakedTriplets/HiddenTriplets as well as NakedQuadruplets/HiddenQuadruplets are not used in my test sets
+  - included selected puzzles from 0096_sudoku.txt directly in SinglePuzzleTests
+  - removed puzzles from other sources as well as the corresponding tests
 - improved statistics output to identify puzzles which require specific strategies more easily
 - removed unused code in IndicesAndIterators.cs
   - was no longer needed because of Combinations method and generic NakedTuples and HiddenTuples strategies
@@ -122,3 +125,8 @@
   - perform pruning etc. only based on actually changed cells
   - clean up use of SortedSet vs List
 - Grid.Init assumes that the input puzzles always follows the expected syntax -> no error handling otherwise
+
+## Sudoku Puzzles for Testing
+- https://projecteuler.info/resources/documents/0096_sudoku.txt
+- https://www.sudokuwiki.org/top50000.zip
+- https://www.sudokuwiki.org/Just17.zip
