@@ -3,8 +3,7 @@
 ## To Do
 - clean up/refactor
   - XWing strategy
-  - SolverWrapper (also find a new name for this)
-  
+  - SolverWrapper (also find a new name for this) 
   - improve -1 index calculations for accessing candidates
 - make project ready to publish
     - find a name for the project

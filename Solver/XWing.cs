@@ -6,6 +6,18 @@ namespace SudokuSolver;
 public class XWing(Puzzle puzzle) : Strategy(puzzle) 
 {
     private int _numberOfRemovedCandidates;
+
+    private bool[,] FilteredCandidates { get; set; } = null!;
+
+    private bool GetFilteredCandidate(Position position)
+    {
+        return FilteredCandidates[position.Row-1, position.Column-1];
+    }
+
+    private void SetFilteredCandidate(Position position, bool value)
+    {
+        FilteredCandidates[position.Row-1, position.Column-1] = value;
+    }
     
     public bool Handle()
     {
@@ -13,47 +25,37 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
 
         foreach (var number in AllDigits)
         {
-            var filteredCandidates = FilterCandidates(number);
-            
-            //find X-Wings for rows
-            // - consider only rows where the candidate occurs exactly twice
-            // - check if two of these rows have the candidates in the same columns
-            //remove candidates
-            // - in the remainder of the columns where the two rows have the candidate 
-
-            XWingRows(filteredCandidates, number);
-            
-            XWingColumns(filteredCandidates, number);
+            FilterCandidates(number);
+            XWingRows(number);
+            XWingColumns(number);
         }
 
         return _numberOfRemovedCandidates>0;
     }
 
-    private void XWingRows(bool[,] filteredCandidates, int number)
+    private void XWingRows(int number)
     {
-        List<int> candidateRows = [];
-        foreach (var row in AllRows)
-        {
-            var count = 0;
-            foreach (var column in AllColumns)
-            {
-                if (filteredCandidates[row-1,column-1])
-                    count++;
-            }
-            if (count == 2)
-                candidateRows.Add(row);
-        }
+        var rowCombinations = FindCandidatesForXWingRows();
+        var xWingRows = FindXWingRows(rowCombinations);
+        RemoveCandidatesBasedOnXWingRows(number, xWingRows);
+    }
 
-        var rowCombinations = Combinations<int>(candidateRows,2);
+    private void XWingColumns(int number)
+    {
+        var columnCombinations = FindCandidatesForXWingColumns();
+        var xWingColumns = FindXWingColumns(columnCombinations);
+        RemoveCandidatesBasedOnXWingColumns(number, xWingColumns);
+    }
 
+    private List<List<int>> FindXWingRows(List<List<int>> rowCombinations)
+    {
         var xWingRows = new List<List<int>>();
-            
         foreach (var rowCombination in rowCombinations)
         {
-            bool areEqual = true;
+            var areEqual = true;
             foreach (var column in AllColumns)
             {
-                if (filteredCandidates[rowCombination[0]-1, column-1] != filteredCandidates[rowCombination[1]-1, column-1])
+                if (GetFilteredCandidate(new Position(rowCombination[0], column)) != GetFilteredCandidate(new Position(rowCombination[1], column)))
                 {
                     areEqual = false;
                     break;
@@ -63,62 +65,18 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
                 xWingRows.Add(rowCombination);
         }
 
-        foreach (var pairOfRows in xWingRows)
-        {
-            var xWingColumns = new List<int>();
-            foreach (var column in AllColumns)
-            {
-                if (filteredCandidates[pairOfRows[0]-1,column-1] == true)
-                    xWingColumns.Add(column);
-            }
-                
-            foreach (var row in AllRows)
-            {
-                if (pairOfRows[0] != row && pairOfRows[1] != row)
-                {
-                    var pos1 = new Position(row, xWingColumns[0]);
-                    var pos2 = new Position(row, xWingColumns[1]);
-                    
-                    if (GetCandidates(pos1)[number-1])
-                    {
-                        GetCandidates(pos1)[number-1] = false;
-                        _numberOfRemovedCandidates++;
-                    }
-                    if (GetCandidates(pos2)[number-1])
-                    {
-                        GetCandidates(pos2)[number-1] = false;
-                        _numberOfRemovedCandidates++;
-                    }
-                }
-            }
-        }
+        return xWingRows;
     }
-
-    private void XWingColumns(bool[,] filteredCandidates, int number)
+    
+    private List<List<int>> FindXWingColumns(List<List<int>> columnCombinations)
     {
-        List<int> candidateColumns = [];
-        foreach (var column in AllColumns)
-        {
-            var count = 0;
-            foreach (var row in AllRows)
-            {
-                if (filteredCandidates[row-1,column-1])
-                    count++;
-            }
-            if (count == 2)
-                candidateColumns.Add(column);
-        }
-
-        var columnCombinations = Combinations<int>(candidateColumns,2);
-
         var xWingColumns = new List<List<int>>();
-            
         foreach (var columnCombination in columnCombinations)
         {
-            bool areEqual = true;
+            var areEqual = true;
             foreach (var row in AllRows)
             {
-                if (filteredCandidates[row-1, columnCombination[0]-1] != filteredCandidates[row-1,columnCombination[1]-1])
+                if (GetFilteredCandidate(new Position(row, columnCombination[0])) != GetFilteredCandidate(new Position(row, columnCombination[1])))
                 {
                     areEqual = false;
                     break;
@@ -128,12 +86,89 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
                 xWingColumns.Add(columnCombination);
         }
 
+        return xWingColumns;
+    }
+
+    private void RemoveCandidatesBasedOnXWingRows(int number, List<List<int>> xWingRows)
+    {
+        foreach (var pairOfRows in xWingRows)
+        {
+            var xWingColumns = new List<int>();
+            foreach (var column in AllColumns)
+            {
+                if (GetFilteredCandidate(new Position(pairOfRows[0],column)))
+                    xWingColumns.Add(column);
+            }
+                
+            foreach (var row in AllRows)
+            {
+                if (pairOfRows[0] != row && pairOfRows[1] != row)
+                {
+                    var pos1 = new Position(row, xWingColumns[0]);
+                    var pos2 = new Position(row, xWingColumns[1]);
+                    var index = number - 1;
+                    
+                    if (GetCandidates(pos1)[index])
+                    {
+                        GetCandidates(pos1)[index] = false;
+                        _numberOfRemovedCandidates++;
+                    }
+                    if (GetCandidates(pos2)[index])
+                    {
+                        GetCandidates(pos2)[index] = false;
+                        _numberOfRemovedCandidates++;
+                    }
+                }
+            }
+        }
+    }
+    
+    private List<List<int>> FindCandidatesForXWingColumns()
+    {
+        List<int> candidateColumns = [];
+        foreach (var column in AllColumns)
+        {
+            var count = 0;
+            foreach (var row in AllRows)
+            {
+                if (GetFilteredCandidate(new Position(row, column)))
+                    count++;
+            }
+            if (count == 2)
+                candidateColumns.Add(column);
+        }
+
+        var columnCombinations = Combinations<int>(candidateColumns,2);
+        return columnCombinations;
+    }
+
+    private List<List<int>> FindCandidatesForXWingRows()
+    {
+        List<int> candidateRows = [];
+        foreach (var row in AllRows)
+        {
+            var count = 0;
+            foreach (var column in AllColumns)
+            {
+                if (GetFilteredCandidate(new Position(row, column)))
+                    count++;
+            }
+            if (count == 2)
+                candidateRows.Add(row);
+        }
+
+        var rowCombinations = Combinations<int>(candidateRows,2);
+        return rowCombinations;
+    }
+    
+    private void RemoveCandidatesBasedOnXWingColumns(int number, List<List<int>> xWingColumns)
+    {
         foreach (var pairOfColumns in xWingColumns)
         {
             var xWingRows = new List<int>();
             foreach (var row in AllRows)
             {
-                if (filteredCandidates[row-1,pairOfColumns[0]-1] == true)
+                if (GetFilteredCandidate(new Position(row,pairOfColumns[0])))
                     xWingRows.Add(row);
             }
                 
@@ -143,36 +178,36 @@ public class XWing(Puzzle puzzle) : Strategy(puzzle)
                 {
                     var pos1 = new Position(xWingRows[0],column);
                     var pos2 = new Position(xWingRows[1],column);
+                    var index = number - 1;
                     
-                    if (GetCandidates(pos1)[number-1])
+                    if (GetCandidates(pos1)[index])
                     {
-                        GetCandidates(pos1)[number-1] = false;
+                        GetCandidates(pos1)[index] = false;
                         _numberOfRemovedCandidates++;
                     }
-                    if (GetCandidates(pos2)[number-1])
+                    if (GetCandidates(pos2)[index])
                     {
-                        GetCandidates(pos2)[number-1] = false;
+                        GetCandidates(pos2)[index] = false;
                         _numberOfRemovedCandidates++;
                     }
                 }
             }
         }
     }
-    
-    private bool[,] FilterCandidates(int number)
+
+    private void FilterCandidates(int number)
     {
-        var filteredCandidates = new bool[GridSize, GridSize];
+        FilteredCandidates = new bool[GridSize, GridSize];
         foreach (var row in AllRows)
         {
             foreach (var column in AllColumns)
             {
-                if (GetCandidates(new Position(row,column))[number-1])
-                    filteredCandidates[row-1,column-1] = true;
+                var position = new Position(row, column);
+                if (GetCandidates(position)[number-1])
+                    SetFilteredCandidate(position, true);
                 else
-                    filteredCandidates[row-1,column-1] = false;
+                    SetFilteredCandidate(position, false);
             }
         }
-
-        return filteredCandidates;
     }
 }
