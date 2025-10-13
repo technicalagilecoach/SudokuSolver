@@ -47,6 +47,8 @@ public class Solver(Puzzle puzzle)
                 Execute(BoxLineReduction); //removes candidates
                 
                 Execute(XWing); //removes candidates
+                
+                Execute(GuessAndTry);
             } while (_puzzleModified);
         }
         catch (SolverException e)
@@ -78,7 +80,7 @@ public class Solver(Puzzle puzzle)
         StrategyStats.TryAdd(strategy, 0);
             
         _puzzleModified = fun();
-        if (strategy is "NakedSingles" or "HiddenSingles")
+        if (strategy is "NakedSingles" or "HiddenSingles" or "GuessAndTry")
             PruneCandidates();
 
         if (_puzzleModified)
@@ -157,5 +159,10 @@ public class Solver(Puzzle puzzle)
     private bool XWing()
     {
         return new XWing(puzzle).Handle();
+    }
+
+    private bool GuessAndTry()
+    {
+        return new GuessAndTry(puzzle).Handle();
     }
 }
