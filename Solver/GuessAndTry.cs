@@ -51,11 +51,11 @@ public class GuessAndTry(Puzzle puzzle) : Strategy(puzzle)
                     cellWithTwoCandidates = position;
                     firstCandidate = numbers[0];
                     secondCandidate = numbers[1];
-                    break;
+                    return cellWithTwoCandidates;
                 }
             }
         }
 
-        return cellWithTwoCandidates;
+        return null;
     }
 }
