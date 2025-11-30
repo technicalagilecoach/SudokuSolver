@@ -73,15 +73,7 @@ public partial class SudokuGridViewModel : ViewModelBase
         cell.IsSelected = true;
     }
 
-    [RelayCommand]
-    private void InputNumber(int number)
-    {
-        if (SelectedCell != null && !SelectedCell.IsGiven)
-        {
-            SelectedCell.SetValue(number);
-            UpdatePuzzleFromCell(SelectedCell);
-        }
-    }
+    
 
     [RelayCommand]
     private void ClearCell()

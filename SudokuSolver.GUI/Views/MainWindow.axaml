@@ -58,31 +58,7 @@
 
             <!-- Control Panel -->
             <StackPanel Grid.Column="1" Margin="20,0,0,0" Width="200">
-                <TextBlock Text="Number Input" FontWeight="Bold" Margin="0,0,0,10"/>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    
-                    <Button Grid.Column="0" Grid.Row="0" Content="1" Command="{Binding SudokuGrid.InputNumberCommand}" CommandParameter="1" Margin="2"/>
-                    <Button Grid.Column="1" Grid.Row="0" Content="2" Command="{Binding SudokuGrid.InputNumberCommand}" CommandParameter="2" Margin="2"/>
-                    <Button Grid.Column="2" Grid.Row="0" Content="3" Command="{Binding SudokuGrid.InputNumberCommand}" CommandParameter="3" Margin="2"/>
-                    <Button Grid.Column="0" Grid.Row="1" Content="4" Command="{Binding SudokuGrid.InputNumberCommand}" CommandParameter="4" Margin="2"/>
-                    <Button Grid.Column="1" Grid.Row="1" Content="5" Command="{Binding SudokuGrid.InputNumberCommand}" CommandParameter="5" Margin="2"/>
-                    <Button Grid.Column="2" Grid.Row="1" Content="6" Command="{Binding SudokuGrid.InputNumberCommand}" CommandParameter="6" Margin="2"/>
-                    <Button Grid.Column="0" Grid.Row="2" Content="7" Command="{Binding SudokuGrid.InputNumberCommand}" CommandParameter="7" Margin="2"/>
-                    <Button Grid.Column="1" Grid.Row="2" Content="8" Command="{Binding SudokuGrid.InputNumberCommand}" CommandParameter="8" Margin="2"/>
-                    <Button Grid.Column="2" Grid.Row="2" Content="9" Command="{Binding SudokuGrid.InputNumberCommand}" CommandParameter="9" Margin="2"/>
-                </Grid>
-
-                <Separator Margin="0,20,0,10"/>
+                <Separator Margin="0,0,0,10"/>
                 
                 <Button Content="Clear Cell" Command="{Binding SudokuGrid.ClearCellCommand}" Margin="0,0,0,10"/>
                 <Button Content="Solve Puzzle" Command="{Binding SudokuGrid.SolvePuzzleCommand}" Margin="0,0,0,10"/>
