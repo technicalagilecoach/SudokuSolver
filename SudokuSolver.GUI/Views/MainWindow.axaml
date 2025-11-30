@@ -9,8 +9,9 @@
         x:Class="SudokuSolver.GUI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Sudoku Solver"
-        Width="1200" Height="700">
+Title="Sudoku Solver"
+         Width="1200" Height="700"
+         MinWidth="1050" MinHeight="600">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -48,16 +49,18 @@
         <!-- Main Content -->
         <Grid Grid.Row="1" Margin="20">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*" MinWidth="400"/>
+                <ColumnDefinition Width="Auto" MinWidth="200"/>
+                <ColumnDefinition Width="300" MinWidth="250"/>
             </Grid.ColumnDefinitions>
 
             <!-- Sudoku Grid -->
-            <local:SudokuGridControl Grid.Column="0" DataContext="{Binding SudokuGrid}"/>
+            <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <local:SudokuGridControl DataContext="{Binding SudokuGrid}"/>
+            </Grid>
 
             <!-- Control Panel -->
-            <StackPanel Grid.Column="1" Margin="20,0,0,0" Width="200">
+            <StackPanel Grid.Column="1" Margin="20,0,0,0" MinWidth="200">
                 <Separator Margin="0,0,0,10"/>
                 
                 <Button Content="Clear Cell" Command="{Binding SudokuGrid.ClearCellCommand}" Margin="0,0,0,10"/>
@@ -73,7 +76,7 @@
             </StackPanel>
 
             <!-- Solving Steps Panel -->
-            <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Margin="20,0,0,0">
+            <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Margin="20,0,0,0" MinWidth="250">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
