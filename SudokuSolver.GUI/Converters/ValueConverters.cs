@@ -31,7 +31,7 @@ public class SelectedToBackgroundConverter : IValueConverter
     {
         if (value is bool isSelected)
         {
-            return isSelected ? Avalonia.Media.Color.FromArgb(255, 230, 240, 250) : Avalonia.Media.Color.FromArgb(255, 255, 255, 255);
+            return isSelected ? Avalonia.Media.Color.FromArgb(255, 240, 248, 255) : Avalonia.Media.Color.FromArgb(255, 255, 255, 255);
         }
         return Avalonia.Media.Colors.White;
     }

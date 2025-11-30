@@ -58,7 +58,7 @@ Title="Sudoku Solver"
             
 
             <!-- Solving Steps Panel -->
-            <Border Grid.Column="1" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="6" Margin="20,0,0,0" MinWidth="250" Background="#FAFAFA">
+            <Border Grid.Column="1" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="6" Margin="20,0,0,0" MinWidth="250" Background="#F8F8F8">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -70,7 +70,7 @@ Title="Sudoku Solver"
 
                     <!-- Solve Puzzle Button -->
                     <Button Grid.Row="0" Content="Solve Puzzle" Command="{Binding SudokuGrid.SolvePuzzleCommand}" Margin="10,10,10,5"
-                            Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
+                            Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0" HorizontalAlignment="Center"/>
                     
                     <!-- Steps Header -->
                     <TextBlock Grid.Row="1" Text="Solving Steps" FontWeight="Bold" FontSize="16" Margin="10,10,10,5" Foreground="#333333"/>
@@ -78,16 +78,16 @@ Title="Sudoku Solver"
                     <!-- Playback Controls -->
                     <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,5" HorizontalAlignment="Center">
                         <Button Content="⏮" Command="{Binding SolvingSteps.StepBackwardCommand}" Margin="2" Width="30" Height="30" 
-                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"/>
                         <Button Content="{Binding SolvingSteps.IsPlaying, Converter={StaticResource BooleanToPlayPauseStringConverter}}" 
                                 Command="{Binding SolvingSteps.PlayPauseCommand}" Margin="2" Width="30" Height="30"
-                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"/>
                         <Button Content="⏭" Command="{Binding SolvingSteps.StepForwardCommand}" Margin="2" Width="30" Height="30"
-                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"/>
                         <Button Content="⏹" Command="{Binding SolvingSteps.ResetCommand}" Margin="2" Width="30" Height="30"
-                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"/>
                         <Button Content="⏩" Command="{Binding SolvingSteps.GoToEndCommand}" Margin="2" Width="30" Height="30"
-                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"/>
                     </StackPanel>
 
                     <!-- Steps List -->
@@ -95,7 +95,7 @@ Title="Sudoku Solver"
                         <ItemsControl ItemsSource="{Binding SolvingSteps.Steps}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border BorderBrush="#D0D0D0" BorderThickness="1" CornerRadius="4" 
+                                    <Border BorderBrush="#D8D8D8" BorderThickness="1" CornerRadius="4" 
                                             Background="{Binding IsSelected, Converter={StaticResource SelectedToBackgroundConverter}}"
                                             Margin="0,2" Padding="8">
                                         <Grid>
