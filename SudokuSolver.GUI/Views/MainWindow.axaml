@@ -37,10 +37,7 @@ Title="Sudoku Solver"
                 <Separator/>
                 <MenuItem Header="Exit"/>
             </MenuItem>
-            <MenuItem Header="Edit">
-                <MenuItem Header="Clear Puzzle" Command="{Binding SudokuGrid.ClearPuzzleCommand}"/>
-                <MenuItem Header="Clear Cell" Command="{Binding SudokuGrid.ClearCellCommand}"/>
-            </MenuItem>
+            
             <MenuItem Header="Solve">
                 <MenuItem Header="Solve Puzzle" Command="{Binding SudokuGrid.SolvePuzzleCommand}"/>
             </MenuItem>
@@ -50,7 +47,6 @@ Title="Sudoku Solver"
         <Grid Grid.Row="1" Margin="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="400"/>
-                <ColumnDefinition Width="Auto" MinWidth="200"/>
                 <ColumnDefinition Width="300" MinWidth="250"/>
             </Grid.ColumnDefinitions>
 
@@ -59,37 +55,27 @@ Title="Sudoku Solver"
                 <local:SudokuGridControl DataContext="{Binding SudokuGrid}"/>
             </Grid>
 
-            <!-- Control Panel -->
-            <StackPanel Grid.Column="1" Margin="20,0,0,0" MinWidth="200">
-                <Separator Margin="0,0,0,10"/>
-                
-                <Button Content="Clear Cell" Command="{Binding SudokuGrid.ClearCellCommand}" Margin="0,0,0,10"/>
-                <Button Content="Solve Puzzle" Command="{Binding SudokuGrid.SolvePuzzleCommand}" Margin="0,0,0,10"/>
-                <Button Content="Clear Puzzle" Command="{Binding SudokuGrid.ClearPuzzleCommand}" Margin="0,0,0,10"/>
-
-                <Separator Margin="0,20,0,10"/>
-                
-                <TextBlock Text="Status" FontWeight="Bold" Margin="0,0,0,5"/>
-                <TextBlock Text="{Binding SudokuGrid.Status}" Margin="0,0,0,10"/>
-                
-                <ProgressBar IsVisible="{Binding SudokuGrid.IsSolving}" Margin="0,0,0,10" IsIndeterminate="True"/>
-            </StackPanel>
+            
 
             <!-- Solving Steps Panel -->
-            <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Margin="20,0,0,0" MinWidth="250">
+            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Margin="20,0,0,0" MinWidth="250">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
+                    <!-- Solve Puzzle Button -->
+                    <Button Grid.Row="0" Content="Solve Puzzle" Command="{Binding SudokuGrid.SolvePuzzleCommand}" Margin="10,10,10,5"/>
+                    
                     <!-- Steps Header -->
-                    <TextBlock Grid.Row="0" Text="Solving Steps" FontWeight="Bold" FontSize="16" Margin="10,10,10,5"/>
+                    <TextBlock Grid.Row="1" Text="Solving Steps" FontWeight="Bold" FontSize="16" Margin="10,10,10,5"/>
 
                     <!-- Playback Controls -->
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,5" HorizontalAlignment="Center">
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,5" HorizontalAlignment="Center">
                         <Button Content="⏮" Command="{Binding SolvingSteps.StepBackwardCommand}" Margin="2" Width="30" Height="30"/>
                         <Button Content="{Binding SolvingSteps.IsPlaying, Converter={StaticResource BooleanToPlayPauseStringConverter}}" 
                                 Command="{Binding SolvingSteps.PlayPauseCommand}" Margin="2" Width="30" Height="30"/>
@@ -99,7 +85,7 @@ Title="Sudoku Solver"
                     </StackPanel>
 
                     <!-- Steps List -->
-                    <ScrollViewer Grid.Row="2" Margin="10,5">
+                    <ScrollViewer Grid.Row="3" Margin="10,5">
                         <ItemsControl ItemsSource="{Binding SolvingSteps.Steps}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -127,7 +113,7 @@ Title="Sudoku Solver"
                     </ScrollViewer>
 
                     <!-- Steps Status -->
-                    <StackPanel Grid.Row="3" Margin="10">
+                    <StackPanel Grid.Row="4" Margin="10">
                         <TextBlock Text="Playback Speed" FontWeight="Bold" Margin="0,0,0,5"/>
                         <Slider Value="{Binding SolvingSteps.PlaybackSpeed}" Minimum="100" Maximum="3000" TickFrequency="100" 
                                 IsSnapToTickEnabled="True" Margin="0,0,0,5"/>

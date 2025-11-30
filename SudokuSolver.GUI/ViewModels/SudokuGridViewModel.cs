@@ -75,15 +75,7 @@ public partial class SudokuGridViewModel : ViewModelBase
 
     
 
-    [RelayCommand]
-    private void ClearCell()
-    {
-        if (SelectedCell != null && !SelectedCell.IsGiven)
-        {
-            SelectedCell.Clear();
-            UpdatePuzzleFromCell(SelectedCell);
-        }
-    }
+    
 
     [RelayCommand]
     private async Task SolvePuzzleAsync()
@@ -129,12 +121,7 @@ public partial class SudokuGridViewModel : ViewModelBase
     
     public Action<Solver>? OnSolvingCompleted;
 
-    [RelayCommand]
-    private void ClearPuzzle()
-    {
-        InitializeEmptyPuzzle();
-        Status = "Ready";
-    }
+    
 
     [RelayCommand]
     public void LoadPuzzle(string puzzleString)
