@@ -8,6 +8,19 @@ using Avalonia;
 
 namespace SudokuSolver.GUI.ViewModels;
 
+public enum HighlightType
+{
+    None,
+    ValuePlacement,
+    CandidateElimination,
+    PrimaryPattern,
+    SecondaryPattern,
+    AffectedRow,
+    AffectedColumn,
+    AffectedBox,
+    Conflict
+}
+
 public partial class SudokuCellViewModel : ViewModelBase
 {
     [ObservableProperty]
@@ -30,6 +43,21 @@ public partial class SudokuCellViewModel : ViewModelBase
     
     [ObservableProperty]
     private string _candidates = "";
+    
+    [ObservableProperty]
+    private HighlightType _highlightType = HighlightType.None;
+    
+    [ObservableProperty]
+    private List<int> _highlightedCandidates = new();
+    
+    [ObservableProperty]
+    private List<int> _eliminatedCandidates = new();
+    
+    [ObservableProperty]
+    private bool _isPrimaryPatternCell;
+    
+    [ObservableProperty]
+    private bool _isSecondaryPatternCell;
 
     public Position Position { get; }
     
@@ -47,16 +75,11 @@ public partial class SudokuCellViewModel : ViewModelBase
     public bool HasValue => Value != 0;
     public bool ShowCandidates => Value == 0 && !string.IsNullOrEmpty(Candidates);
     public string FontWeight => IsGiven ? "Bold" : "Normal";
-    public SolidColorBrush TextColor => IsGiven ? new SolidColorBrush(Color.FromArgb(255, 100, 100, 100)) : 
-                                        HasConflict ? new SolidColorBrush(Color.FromArgb(255, 230, 120, 120)) :
-                                        new SolidColorBrush(Color.FromArgb(255, 120, 120, 120));
-    
-    public SolidColorBrush BackgroundColor => IsSelected ? new SolidColorBrush(Color.FromArgb(255, 240, 248, 255)) : // Lighter blue
-                                               IsStepHighlighted ? new SolidColorBrush(Color.FromArgb(255, 255, 252, 240)) : // Lighter yellow
-                                               IsHighlighted ? new SolidColorBrush(Color.FromArgb(255, 248, 248, 255)) : // Lighter lavender
-                                               IsGiven ? new SolidColorBrush(Color.FromArgb(255, 252, 252, 252)) : // Even lighter gray
-                                               HasConflict ? new SolidColorBrush(Color.FromArgb(255, 255, 245, 245)) : // Lighter red
-                                               new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)); // Pure white
+    public SolidColorBrush TextColor => GetTextColor();
+    public SolidColorBrush BackgroundColor => GetBackgroundColor();
+    public SolidColorBrush CandidateColor(int candidate) => GetCandidateColor(candidate);
+    public bool IsCandidateHighlighted(int candidate) => HighlightedCandidates.Contains(candidate);
+    public bool IsCandidateEliminated(int candidate) => EliminatedCandidates.Contains(candidate);
     
 public Thickness BorderThickness => GetBorderThickness();
     
@@ -127,6 +150,26 @@ public Thickness BorderThickness => GetBorderThickness();
         UpdateCandidateGrid();
         OnPropertyChanged(nameof(ShowCandidates));
     }
+    
+    partial void OnHighlightedCandidatesChanged(List<int> value)
+    {
+        OnPropertyChanged(nameof(IsCandidateHighlighted));
+        OnPropertyChanged(nameof(CandidateColor));
+    }
+    
+    partial void OnEliminatedCandidatesChanged(List<int> value)
+    {
+        OnPropertyChanged(nameof(IsCandidateEliminated));
+        OnPropertyChanged(nameof(CandidateColor));
+    }
+    
+    partial void OnHighlightTypeChanged(HighlightType value)
+    {
+        OnPropertyChanged(nameof(TextColor));
+        OnPropertyChanged(nameof(BackgroundColor));
+        OnPropertyChanged(nameof(IsPrimaryPatternCell));
+        OnPropertyChanged(nameof(IsSecondaryPatternCell));
+    }
 
     private void UpdateCandidateGrid()
     {
@@ -149,24 +192,9 @@ public Thickness BorderThickness => GetBorderThickness();
         Value = puzzle.GetCellValue(Position);
         IsGiven = Value != 0;
         
-        if (Value == 0)
-        {
-            var candidates = puzzle.GetCandidates(Position);
-            var candidateList = new List<string>();
-            for (int i = 0; i < candidates.Length; i++)
-            {
-                if (candidates[i])
-                    candidateList.Add((i + 1).ToString());
-            }
-            Candidates = string.Join(",", candidateList);
-        }
-        else
-        {
-            Candidates = "";
-        }
+        UpdateCandidatesFromPuzzle(puzzle);
         
         OnPropertyChanged(nameof(HasValue));
-        OnPropertyChanged(nameof(ShowCandidates));
         OnPropertyChanged(nameof(FontWeight));
         OnPropertyChanged(nameof(TextColor));
         OnPropertyChanged(nameof(BackgroundColor));
@@ -203,5 +231,95 @@ public Thickness BorderThickness => GetBorderThickness();
     public void SetConflict(bool hasConflict)
     {
         HasConflict = hasConflict;
+    }
+    
+    private SolidColorBrush GetTextColor()
+    {
+        return IsGiven ? new SolidColorBrush(Color.FromArgb(255, 100, 100, 100)) : 
+               HasConflict ? new SolidColorBrush(Color.FromArgb(255, 230, 120, 120)) :
+               HighlightType switch
+               {
+                   HighlightType.ValuePlacement => new SolidColorBrush(Color.FromArgb(255, 0, 150, 0)), // Dark green
+                   HighlightType.PrimaryPattern => new SolidColorBrush(Color.FromArgb(255, 0, 0, 200)), // Blue
+                   HighlightType.SecondaryPattern => new SolidColorBrush(Color.FromArgb(255, 200, 0, 200)), // Purple
+                   _ => new SolidColorBrush(Color.FromArgb(255, 120, 120, 120)) // Gray
+               };
+    }
+    
+    private SolidColorBrush GetBackgroundColor()
+    {
+        if (IsSelected)
+            return new SolidColorBrush(Color.FromArgb(255, 240, 248, 255)); // Light blue
+        
+        return HighlightType switch
+        {
+            HighlightType.ValuePlacement => new SolidColorBrush(Color.FromArgb(255, 240, 255, 240)), // Light green
+            HighlightType.CandidateElimination => new SolidColorBrush(Color.FromArgb(255, 255, 245, 240)), // Light red
+            HighlightType.PrimaryPattern => new SolidColorBrush(Color.FromArgb(255, 240, 248, 255)), // Light blue
+            HighlightType.SecondaryPattern => new SolidColorBrush(Color.FromArgb(255, 248, 240, 255)), // Light purple
+            HighlightType.AffectedRow => new SolidColorBrush(Color.FromArgb(255, 255, 250, 240)), // Light orange
+            HighlightType.AffectedColumn => new SolidColorBrush(Color.FromArgb(255, 240, 255, 250)), // Light cyan
+            HighlightType.AffectedBox => new SolidColorBrush(Color.FromArgb(255, 250, 240, 255)), // Light pink
+            HighlightType.Conflict => new SolidColorBrush(Color.FromArgb(255, 255, 230, 230)), // Light red
+            HighlightType.None when IsStepHighlighted => new SolidColorBrush(Color.FromArgb(255, 255, 252, 240)), // Light yellow
+            HighlightType.None when IsHighlighted => new SolidColorBrush(Color.FromArgb(255, 248, 248, 255)), // Light lavender
+            HighlightType.None when IsGiven => new SolidColorBrush(Color.FromArgb(255, 252, 252, 252)), // Light gray
+            _ => new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)) // White
+        };
+    }
+    
+    private SolidColorBrush GetCandidateColor(int candidate)
+    {
+        if (IsCandidateEliminated(candidate))
+            return new SolidColorBrush(Color.FromArgb(255, 200, 100, 100)); // Red for eliminated
+        
+        if (IsCandidateHighlighted(candidate))
+            return new SolidColorBrush(Color.FromArgb(255, 100, 100, 200)); // Blue for highlighted
+        
+        return new SolidColorBrush(Color.FromArgb(255, 180, 180, 180)); // Default gray
+    }
+    
+    public void SetHighlightType(HighlightType highlightType, List<int>? highlightedCandidates = null, List<int>? eliminatedCandidates = null)
+    {
+        HighlightType = highlightType;
+        HighlightedCandidates = highlightedCandidates ?? new List<int>();
+        EliminatedCandidates = eliminatedCandidates ?? new List<int>();
+        
+        // Update pattern cell flags
+        IsPrimaryPatternCell = highlightType == HighlightType.PrimaryPattern;
+        IsSecondaryPatternCell = highlightType == HighlightType.SecondaryPattern;
+        
+        // Notify property changes
+        OnPropertyChanged(nameof(TextColor));
+        OnPropertyChanged(nameof(BackgroundColor));
+        OnPropertyChanged(nameof(IsCandidateHighlighted));
+        OnPropertyChanged(nameof(IsCandidateEliminated));
+        OnPropertyChanged(nameof(CandidateColor));
+    }
+    
+    public void ClearHighlights()
+    {
+        SetHighlightType(HighlightType.None);
+    }
+    
+    public void UpdateCandidatesFromPuzzle(Puzzle puzzle)
+    {
+        if (Value == 0)
+        {
+            var candidates = puzzle.GetCandidates(Position);
+            var candidateList = new List<string>();
+            for (int i = 0; i < candidates.Length; i++)
+            {
+                if (candidates[i])
+                    candidateList.Add((i + 1).ToString());
+            }
+            Candidates = string.Join(",", candidateList);
+        }
+        else
+        {
+            Candidates = "";
+        }
+        
+        OnPropertyChanged(nameof(ShowCandidates));
     }
 }

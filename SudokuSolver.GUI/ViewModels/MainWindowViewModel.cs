@@ -29,7 +29,7 @@ public partial class MainWindowViewModel : ViewModelBase
     
     private void OnSolvingCompleted(Solver solver)
     {
-        _solvingSteps.LoadStepsFromSolver(solver);
+        SolvingSteps.LoadStepsFromSolver(solver);
     }
     
     private string NormalizePuzzleFormat(string puzzleText, string fileExtension)
