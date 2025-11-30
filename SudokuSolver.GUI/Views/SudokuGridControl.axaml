@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SudokuSolver.GUI.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="450"
+             x:Class="SudokuSolver.GUI.Views.SudokuGridControl"
+             x:DataType="vm:SudokuGridViewModel">
+
+    <Border BorderBrush="Black" BorderThickness="3" CornerRadius="2" Background="#F5F5F5">
+        <ItemsControl ItemsSource="{Binding Cells}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="vm:SudokuCellViewModel">
+                                <Border 
+                                    Name="CellBorder"
+                                    BorderBrush="Black" 
+                                    BorderThickness="{Binding BorderThickness}"
+                                    Background="{Binding BackgroundColor}"
+                                    Width="50" Height="50"
+                                    Margin="0"
+                                    Cursor="Hand"
+                                    Tapped="OnCellTapped">
+                                    <Grid>
+                                        <!-- Given numbers styling -->
+                                        <TextBlock 
+                                            Text="{Binding Value}"
+                                            FontSize="20"
+                                            FontWeight="{Binding FontWeight}"
+                                            Foreground="{Binding TextColor}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsVisible="{Binding HasValue}"/>
+                                        
+                                        <!-- Candidates display for empty cells -->
+                                        <ItemsControl 
+                                            ItemsSource="{Binding CandidateGrid}"
+                                            IsVisible="{Binding ShowCandidates}"
+                                            Margin="2">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="*,*,*"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock 
+                                                        Text="{Binding}"
+                                                        FontSize="8"
+                                                        Foreground="#666"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Border>
+</UserControl>

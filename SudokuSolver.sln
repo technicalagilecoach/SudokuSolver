@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStructures", "DataStruc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InputOutput", "InputOutput\InputOutput.csproj", "{249750B5-5A10-4363-97FE-84AACF618E99}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuSolver.GUI", "SudokuSolver.GUI\SudokuSolver.GUI.csproj", "{ACCD303F-45C8-4EF3-B703-2ED52FF59E9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{249750B5-5A10-4363-97FE-84AACF618E99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{249750B5-5A10-4363-97FE-84AACF618E99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{249750B5-5A10-4363-97FE-84AACF618E99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACCD303F-45C8-4EF3-B703-2ED52FF59E9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACCD303F-45C8-4EF3-B703-2ED52FF59E9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACCD303F-45C8-4EF3-B703-2ED52FF59E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACCD303F-45C8-4EF3-B703-2ED52FF59E9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

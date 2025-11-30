@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using System.Collections;
+using System.Diagnostics;
 using static SudokuSolver.ValidityChecker;
 
 namespace SudokuSolver;
@@ -16,8 +17,12 @@ public class Solver(Puzzle puzzle)
     
     public Dictionary<string,int> StrategyStats { get; } = new();
     public List<string> StrategyProtocol { get; } = new();
+    public List<SolvingStepData> SolvingSteps { get; } = new();
 
     public string LastConsistentState { get; private set; } = "";
+    
+    public Puzzle Puzzle => puzzle;
+    private int _stepCounter = 0;
     
     public bool Solve()
     {
@@ -64,11 +69,13 @@ public class Solver(Puzzle puzzle)
         
         var before = true;
         var beforeCandidates = true;
+        var puzzleBefore = "";
+        
         if (PerformChecks)
         {
             before = AreFixedValuesConsistent(puzzle);
             beforeCandidates = AreCandidatesConsistent(puzzle);
-            var puzzleBefore = puzzle.PrintCells();
+            puzzleBefore = puzzle.PrintCells();
             if (!before)
                 throw new SolverException(puzzleBefore);
             LastConsistentState = puzzleBefore;
@@ -76,8 +83,11 @@ public class Solver(Puzzle puzzle)
 
         var strategy = fun.Method.Name;
         StrategyStats.TryAdd(strategy, 0);
-            
+        
+        var stopwatch = Stopwatch.StartNew();
         _puzzleModified = fun();
+        stopwatch.Stop();
+        
         if (strategy is "NakedSingles" or "HiddenSingles")
             PruneCandidates();
 
@@ -85,6 +95,18 @@ public class Solver(Puzzle puzzle)
         {
             StrategyStats[strategy]++;
             StrategyProtocol.Add(strategy);
+            
+            // Capture solving step data
+            var stepData = new SolvingStepData(++_stepCounter, strategy, puzzleBefore)
+            {
+                PuzzleStateAfter = puzzle.PrintCells(),
+                ExecutionTime = stopwatch.Elapsed
+            };
+            
+            // Track cell modifications (simplified - could be enhanced)
+            TrackCellModifications(puzzleBefore, stepData);
+            
+            SolvingSteps.Add(stepData);
         }
 
         if (PerformChecks)
@@ -96,6 +118,24 @@ public class Solver(Puzzle puzzle)
                 var puzzleAfter = puzzle.PrintCells();
                 throw new SolverException(puzzleAfter);
             }
+        }
+    }
+    
+    private void TrackCellModifications(string beforeState, SolvingStepData stepData)
+    {
+        var afterState = puzzle.PrintCells();
+        
+        // Simple comparison - could be enhanced for better tracking
+        if (beforeState != afterState)
+        {
+            // This is a simplified approach - a full implementation would
+            // track individual cell changes and candidate removals
+            stepData.ModifiedCells.Add(new CellModification
+            {
+                Position = new Position(1, 1), // Placeholder
+                OldValue = 0,
+                NewValue = 1
+            });
         }
     }
 
