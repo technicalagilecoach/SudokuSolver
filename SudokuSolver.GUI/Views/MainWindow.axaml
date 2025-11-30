@@ -20,6 +20,10 @@ Title="Sudoku Solver"
     <Window.Resources>
         <converters:BooleanToPlayPauseStringConverter x:Key="BooleanToPlayPauseStringConverter"/>
         <converters:SelectedToBackgroundConverter x:Key="SelectedToBackgroundConverter"/>
+        <converters:CandidateIndexToColorConverter x:Key="CandidateIndexToColorConverter"/>
+        <converters:BooleanToFontWeightConverter x:Key="BooleanToFontWeightConverter"/>
+        <converters:BooleanToStrikethroughConverter x:Key="BooleanToStrikethroughConverter"/>
+        <converters:HighlightTypeToColorConverter x:Key="HighlightTypeToColorConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -65,6 +69,7 @@ Title="Sudoku Solver"
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
@@ -123,8 +128,19 @@ Title="Sudoku Solver"
                         <TextBlock Text="Playback Speed" FontWeight="Bold" Margin="0,0,0,5" Foreground="#333333"/>
                         <Slider Value="{Binding SolvingSteps.PlaybackSpeed}" Minimum="100" Maximum="3000" TickFrequency="100" 
                                 IsSnapToTickEnabled="True" Margin="0,0,0,5"/>
+                        <CheckBox Content="Enable Animations" IsChecked="{Binding SolvingSteps.EnableAnimations}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SolvingSteps.Status}" FontSize="11" Foreground="#666666"/>
                     </StackPanel>
+                    
+                    <!-- Strategy Explanation Panel -->
+                    <Border Grid.Row="5" BorderBrush="#D0D0D0" BorderThickness="1" CornerRadius="4" Margin="10,5,10,10" Background="#FFFFFF">
+                        <StackPanel Margin="8">
+                            <TextBlock Text="Strategy Explanation" FontWeight="Bold" FontSize="12" Margin="0,0,0,5" Foreground="#333333"/>
+                            <ScrollViewer MaxHeight="120" VerticalScrollBarVisibility="Auto">
+                                <TextBlock Text="{Binding SolvingSteps.StrategyExplanation}" FontSize="10" Foreground="#666666" TextWrapping="Wrap"/>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
                 </Grid>
             </Border>
         </Grid>

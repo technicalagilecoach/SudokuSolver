@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:SudokuSolver.GUI.ViewModels"
+             xmlns:converters="using:SudokuSolver.GUI.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="450"
@@ -28,6 +29,11 @@
                                     Margin="0"
                                     Cursor="Hand"
                                     Tapped="OnCellTapped">
+                                    <Border.Transitions>
+                                        <Transitions>
+                                            <BrushTransition Property="Background" Duration="0:0:0.3"/>
+                                        </Transitions>
+                                    </Border.Transitions>
                                     <Grid>
                                         <!-- Given numbers styling -->
                                         <TextBlock 
@@ -37,29 +43,42 @@
                                             Foreground="{Binding TextColor}"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
-                                            IsVisible="{Binding HasValue}"/>
+                                            IsVisible="{Binding HasValue}">
+                                            <TextBlock.Transitions>
+                                                <Transitions>
+                                                    <BrushTransition Property="Foreground" Duration="0:0:0.3"/>
+                                                    <DoubleTransition Property="FontSize" Duration="0:0:0.2"/>
+                                                </Transitions>
+                                            </TextBlock.Transitions>
+                                        </TextBlock>
                                         
-                                        <!-- Candidates display for empty cells -->
-                                        <ItemsControl 
-                                            ItemsSource="{Binding CandidateGrid}"
-                                            IsVisible="{Binding ShowCandidates}"
-                                            Margin="2">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="*,*,*"/>
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock 
-                                                        Text="{Binding}"
-                                                        FontSize="8"
-                                                        Foreground="#BBBBBB"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"/>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                         <!-- Enhanced candidates display for empty cells -->
+                                         <ItemsControl 
+                                             ItemsSource="{Binding CandidateGrid}"
+                                             IsVisible="{Binding ShowCandidates}"
+                                             Margin="2">
+                                             <ItemsControl.ItemsPanel>
+                                                 <ItemsPanelTemplate>
+                                                     <Grid ColumnDefinitions="*,*,*" RowDefinitions="*,*,*"/>
+                                                 </ItemsPanelTemplate>
+                                             </ItemsControl.ItemsPanel>
+                                             <ItemsControl.ItemTemplate>
+                                                 <DataTemplate>
+                                                     <Border 
+                                                         Background="#F8F8F8"
+                                                         CornerRadius="2"
+                                                         Margin="0.5"
+                                                         MinWidth="12" MinHeight="12">
+                                                         <TextBlock 
+                                                             Text="{Binding}"
+                                                             FontSize="7"
+                                                             Foreground="#666666"
+                                                             HorizontalAlignment="Center"
+                                                             VerticalAlignment="Center"/>
+                                                     </Border>
+                                                 </DataTemplate>
+                                             </ItemsControl.ItemTemplate>
+                                         </ItemsControl>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
