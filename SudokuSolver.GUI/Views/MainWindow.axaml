@@ -58,7 +58,7 @@ Title="Sudoku Solver"
             
 
             <!-- Solving Steps Panel -->
-            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Margin="20,0,0,0" MinWidth="250">
+            <Border Grid.Column="1" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="6" Margin="20,0,0,0" MinWidth="250" Background="#FAFAFA">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -69,19 +69,25 @@ Title="Sudoku Solver"
                     </Grid.RowDefinitions>
 
                     <!-- Solve Puzzle Button -->
-                    <Button Grid.Row="0" Content="Solve Puzzle" Command="{Binding SudokuGrid.SolvePuzzleCommand}" Margin="10,10,10,5"/>
+                    <Button Grid.Row="0" Content="Solve Puzzle" Command="{Binding SudokuGrid.SolvePuzzleCommand}" Margin="10,10,10,5"
+                            Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
                     
                     <!-- Steps Header -->
-                    <TextBlock Grid.Row="1" Text="Solving Steps" FontWeight="Bold" FontSize="16" Margin="10,10,10,5"/>
+                    <TextBlock Grid.Row="1" Text="Solving Steps" FontWeight="Bold" FontSize="16" Margin="10,10,10,5" Foreground="#333333"/>
 
                     <!-- Playback Controls -->
                     <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,5" HorizontalAlignment="Center">
-                        <Button Content="⏮" Command="{Binding SolvingSteps.StepBackwardCommand}" Margin="2" Width="30" Height="30"/>
+                        <Button Content="⏮" Command="{Binding SolvingSteps.StepBackwardCommand}" Margin="2" Width="30" Height="30" 
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
                         <Button Content="{Binding SolvingSteps.IsPlaying, Converter={StaticResource BooleanToPlayPauseStringConverter}}" 
-                                Command="{Binding SolvingSteps.PlayPauseCommand}" Margin="2" Width="30" Height="30"/>
-                        <Button Content="⏭" Command="{Binding SolvingSteps.StepForwardCommand}" Margin="2" Width="30" Height="30"/>
-                        <Button Content="⏹" Command="{Binding SolvingSteps.ResetCommand}" Margin="2" Width="30" Height="30"/>
-                        <Button Content="⏩" Command="{Binding SolvingSteps.GoToEndCommand}" Margin="2" Width="30" Height="30"/>
+                                Command="{Binding SolvingSteps.PlayPauseCommand}" Margin="2" Width="30" Height="30"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
+                        <Button Content="⏭" Command="{Binding SolvingSteps.StepForwardCommand}" Margin="2" Width="30" Height="30"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
+                        <Button Content="⏹" Command="{Binding SolvingSteps.ResetCommand}" Margin="2" Width="30" Height="30"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
+                        <Button Content="⏩" Command="{Binding SolvingSteps.GoToEndCommand}" Margin="2" Width="30" Height="30"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#C0C0C0"/>
                     </StackPanel>
 
                     <!-- Steps List -->
@@ -89,9 +95,9 @@ Title="Sudoku Solver"
                         <ItemsControl ItemsSource="{Binding SolvingSteps.Steps}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="2" 
+                                    <Border BorderBrush="#D0D0D0" BorderThickness="1" CornerRadius="4" 
                                             Background="{Binding IsSelected, Converter={StaticResource SelectedToBackgroundConverter}}"
-                                            Margin="0,2" Padding="5">
+                                            Margin="0,2" Padding="8">
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
@@ -102,9 +108,9 @@ Title="Sudoku Solver"
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
                                             
-                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding StepNumber}" FontWeight="Bold" Margin="0,0,5,0"/>
-                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding StrategyName}" FontWeight="SemiBold"/>
-                                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Description}" FontSize="11" Foreground="Gray"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding StepNumber}" FontWeight="Bold" Margin="0,0,5,0" Foreground="#333333"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding StrategyName}" FontWeight="SemiBold" Foreground="#333333"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Description}" FontSize="11" Foreground="#666666"/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -114,10 +120,10 @@ Title="Sudoku Solver"
 
                     <!-- Steps Status -->
                     <StackPanel Grid.Row="4" Margin="10">
-                        <TextBlock Text="Playback Speed" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <TextBlock Text="Playback Speed" FontWeight="Bold" Margin="0,0,0,5" Foreground="#333333"/>
                         <Slider Value="{Binding SolvingSteps.PlaybackSpeed}" Minimum="100" Maximum="3000" TickFrequency="100" 
                                 IsSnapToTickEnabled="True" Margin="0,0,0,5"/>
-                        <TextBlock Text="{Binding SolvingSteps.Status}" FontSize="11" Foreground="Gray"/>
+                        <TextBlock Text="{Binding SolvingSteps.Status}" FontSize="11" Foreground="#666666"/>
                     </StackPanel>
                 </Grid>
             </Border>

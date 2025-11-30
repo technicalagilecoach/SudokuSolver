@@ -7,7 +7,7 @@
              x:Class="SudokuSolver.GUI.Views.SudokuGridControl"
              x:DataType="vm:SudokuGridViewModel">
 
-    <Border BorderBrush="Black" BorderThickness="3" CornerRadius="2" Background="#F5F5F5">
+    <Border BorderBrush="#E0E0E0" BorderThickness="2" CornerRadius="4" Background="#FAFAFA">
         <ItemsControl ItemsSource="{Binding Cells}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -21,7 +21,7 @@
                             <DataTemplate DataType="vm:SudokuCellViewModel">
                                 <Border 
                                     Name="CellBorder"
-                                    BorderBrush="Black" 
+                                    BorderBrush="#D0D0D0" 
                                     BorderThickness="{Binding BorderThickness}"
                                     Background="{Binding BackgroundColor}"
                                     Width="50" Height="50"
@@ -54,7 +54,7 @@
                                                     <TextBlock 
                                                         Text="{Binding}"
                                                         FontSize="8"
-                                                        Foreground="#666"
+                                                        Foreground="#999999"
                                                         HorizontalAlignment="Center"
                                                         VerticalAlignment="Center"/>
                                                 </DataTemplate>

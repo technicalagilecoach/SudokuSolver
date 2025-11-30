@@ -47,16 +47,16 @@ public partial class SudokuCellViewModel : ViewModelBase
     public bool HasValue => Value != 0;
     public bool ShowCandidates => Value == 0 && !string.IsNullOrEmpty(Candidates);
     public string FontWeight => IsGiven ? "Bold" : "Normal";
-    public SolidColorBrush TextColor => IsGiven ? new SolidColorBrush(Colors.Black) : 
-                                        HasConflict ? new SolidColorBrush(Colors.Red) :
-                                        new SolidColorBrush(Colors.Black);
+    public SolidColorBrush TextColor => IsGiven ? new SolidColorBrush(Color.FromArgb(255, 80, 80, 80)) : 
+                                        HasConflict ? new SolidColorBrush(Color.FromArgb(255, 220, 100, 100)) :
+                                        new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
     
-    public SolidColorBrush BackgroundColor => IsSelected ? new SolidColorBrush(Color.FromArgb(255, 173, 216, 230)) : // Light blue
-                                               IsStepHighlighted ? new SolidColorBrush(Color.FromArgb(255, 255, 255, 224)) : // Light yellow
-                                               IsHighlighted ? new SolidColorBrush(Color.FromArgb(255, 230, 230, 250)) : // Lavender
-                                               IsGiven ? new SolidColorBrush(Color.FromArgb(255, 245, 245, 245)) : // Very light gray
-                                               HasConflict ? new SolidColorBrush(Color.FromArgb(255, 255, 200, 200)) : // Light red
-                                               new SolidColorBrush(Colors.White);
+    public SolidColorBrush BackgroundColor => IsSelected ? new SolidColorBrush(Color.FromArgb(255, 230, 240, 250)) : // Lighter blue
+                                               IsStepHighlighted ? new SolidColorBrush(Color.FromArgb(255, 255, 250, 230)) : // Lighter yellow
+                                               IsHighlighted ? new SolidColorBrush(Color.FromArgb(255, 245, 245, 250)) : // Lighter lavender
+                                               IsGiven ? new SolidColorBrush(Color.FromArgb(255, 250, 250, 250)) : // Even lighter gray
+                                               HasConflict ? new SolidColorBrush(Color.FromArgb(255, 255, 240, 240)) : // Lighter red
+                                               new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)); // Pure white
     
 public Thickness BorderThickness => GetBorderThickness();
     
