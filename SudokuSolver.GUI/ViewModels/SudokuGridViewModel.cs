@@ -138,12 +138,67 @@ public partial class SudokuGridViewModel : ViewModelBase
 
     
 
+    private void PrunePuzzleCandidates()
+    {
+        // Remove candidates based on existing values in the puzzle
+        for (int row = 0; row < Puzzle.GridSize; row++)
+        {
+            for (int col = 0; col < Puzzle.GridSize; col++)
+            {
+                var position = new Position(row + 1, col + 1);
+                var value = _puzzle.GetCellValue(position);
+                
+                if (value != 0)
+                {
+                    // Remove this value from candidates in the same row
+                    for (int c = 0; c < Puzzle.GridSize; c++)
+                    {
+                        if (c != col)
+                        {
+                            var rowPos = new Position(row + 1, c + 1);
+                            var candidates = _puzzle.GetCandidates(rowPos);
+                            candidates[value - 1] = false;
+                        }
+                    }
+                    
+                    // Remove this value from candidates in the same column
+                    for (int r = 0; r < Puzzle.GridSize; r++)
+                    {
+                        if (r != row)
+                        {
+                            var colPos = new Position(r + 1, col + 1);
+                            var candidates = _puzzle.GetCandidates(colPos);
+                            candidates[value - 1] = false;
+                        }
+                    }
+                    
+                    // Remove this value from candidates in the same box
+                    var boxRow = (row / 3) * 3;
+                    var boxCol = (col / 3) * 3;
+                    for (int r = boxRow; r < boxRow + 3; r++)
+                    {
+                        for (int c = boxCol; c < boxCol + 3; c++)
+                        {
+                            if (r != row || c != col)
+                            {
+                                var boxPos = new Position(r + 1, c + 1);
+                                var candidates = _puzzle.GetCandidates(boxPos);
+                                candidates[value - 1] = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     [RelayCommand]
     public void LoadPuzzle(string puzzleString)
     {
         try
         {
             _puzzle.Init(puzzleString);
+            PrunePuzzleCandidates();
             UpdateAllCellsFromPuzzle();
             Status = "Puzzle loaded";
         }

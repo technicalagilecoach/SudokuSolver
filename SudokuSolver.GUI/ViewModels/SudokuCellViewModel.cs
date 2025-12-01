@@ -188,9 +188,10 @@ public Thickness BorderThickness => GetBorderThickness();
         if (Value == 0 && !string.IsNullOrEmpty(Candidates))
         {
             var candidateList = Candidates.Split(',');
+            CandidateGrid.Clear();
             for (int i = 0; i < 9; i++)
             {
-                CandidateGrid[i] = candidateList.Contains((i + 1).ToString()) ? (i + 1).ToString() : "";
+                CandidateGrid.Add(candidateList.Contains((i + 1).ToString()) ? (i + 1).ToString() : "");
             }
         }
         else
