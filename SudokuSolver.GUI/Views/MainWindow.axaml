@@ -56,7 +56,9 @@ Title="Sudoku Solver"
 
             <!-- Sudoku Grid -->
             <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <local:SudokuGridControl DataContext="{Binding SudokuGrid}"/>
+                <Viewbox Stretch="Uniform">
+                    <local:SudokuGridControl DataContext="{Binding SudokuGrid}"/>
+                </Viewbox>
             </Grid>
 
             

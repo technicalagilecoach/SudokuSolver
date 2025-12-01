@@ -9,7 +9,7 @@
              x:DataType="vm:SudokuGridViewModel">
 
     <Border BorderBrush="Black" BorderThickness="2" CornerRadius="0" Background="#FFFFFF">
-<ItemsControl ItemsSource="{Binding Cells}">
+    <ItemsControl ItemsSource="{Binding Cells}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical" Spacing="0"/>
@@ -99,5 +99,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-    </Border>
+</Border>
 </UserControl>
