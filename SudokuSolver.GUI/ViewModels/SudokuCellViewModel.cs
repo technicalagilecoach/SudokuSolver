@@ -103,13 +103,13 @@ public Thickness BorderThickness => GetBorderThickness();
         var bottom = 0.5;
         
         // Thicker borders for 3x3 box divisions
-        // Right border after columns 3 and 6
+        // Right border after columns 3 and 6 - extend to center in gap
         if (Position.Column == 3 || Position.Column == 6)
-            right = 2.0;
+            right = 4.0;
             
-        // Bottom border after rows 3 and 6  
+        // Bottom border after rows 3 and 6 - extend to center in gap
         if (Position.Row == 3 || Position.Row == 6)
-            bottom = 2.0;
+            bottom = 4.0;
             
         return new Thickness(left, top, right, bottom);
     }
