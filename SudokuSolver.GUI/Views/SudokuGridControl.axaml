@@ -52,33 +52,40 @@
                                             </TextBlock.Transitions>
                                         </TextBlock>
                                         
-                                         <!-- Enhanced candidates display for empty cells -->
-                                         <ItemsControl 
-                                             ItemsSource="{Binding CandidateGrid}"
-                                             IsVisible="{Binding ShowCandidates}"
-                                             Margin="2">
-                                             <ItemsControl.ItemsPanel>
-                                                 <ItemsPanelTemplate>
-                                                     <Grid ColumnDefinitions="*,*,*" RowDefinitions="*,*,*"/>
-                                                 </ItemsPanelTemplate>
-                                             </ItemsControl.ItemsPanel>
-                                             <ItemsControl.ItemTemplate>
-                                                 <DataTemplate>
-                                                     <Border 
-                                                         Background="#F8F8F8"
-                                                         CornerRadius="2"
-                                                         Margin="0.5"
-                                                         MinWidth="12" MinHeight="12">
-                                                         <TextBlock 
-                                                             Text="{Binding}"
-                                                             FontSize="7"
-                                                             Foreground="#666666"
-                                                             HorizontalAlignment="Center"
-                                                             VerticalAlignment="Center"/>
-                                                     </Border>
-                                                 </DataTemplate>
-                                             </ItemsControl.ItemTemplate>
-                                         </ItemsControl>
+<!-- Enhanced candidates display for empty cells -->
+                                          <Grid IsVisible="{Binding ShowCandidates}" Margin="2"
+                                                ColumnDefinitions="*,*,*" RowDefinitions="*,*,*">
+                                              <!-- Row 0 -->
+                                              <Border Grid.Row="0" Grid.Column="0" Background="#F8F8F8" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[0]}" FontSize="7" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="0" Grid.Column="1" Background="#F8F8F8" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[1]}" FontSize="7" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="0" Grid.Column="2" Background="#F8F8F8" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[2]}" FontSize="7" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <!-- Row 1 -->
+                                              <Border Grid.Row="1" Grid.Column="0" Background="#F8F8F8" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[3]}" FontSize="7" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="1" Grid.Column="1" Background="#F8F8F8" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[4]}" FontSize="7" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="1" Grid.Column="2" Background="#F8F8F8" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[5]}" FontSize="7" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <!-- Row 2 -->
+                                              <Border Grid.Row="2" Grid.Column="0" Background="#F8F8F8" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[6]}" FontSize="7" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="2" Grid.Column="1" Background="#F8F8F8" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[7]}" FontSize="7" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="2" Grid.Column="2" Background="#F8F8F8" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[8]}" FontSize="7" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                          </Grid>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
