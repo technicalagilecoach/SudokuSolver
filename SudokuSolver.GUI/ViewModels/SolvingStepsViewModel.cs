@@ -36,6 +36,14 @@ public partial class SolvingStepsViewModel : ViewModelBase
     private bool _enableAnimations = true;
     
     [ObservableProperty]
+    private bool _showCandidates = true;
+    
+    partial void OnShowCandidatesChanged(bool value)
+    {
+        _sudokuGrid.SetShowCandidates(value);
+    }
+    
+    [ObservableProperty]
     private double _animationDuration = 300; // milliseconds
     
     [ObservableProperty]

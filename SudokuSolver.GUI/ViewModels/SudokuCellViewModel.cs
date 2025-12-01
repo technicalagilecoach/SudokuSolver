@@ -73,7 +73,19 @@ public partial class SudokuCellViewModel : ViewModelBase
     
     // Visual properties for styling
     public bool HasValue => Value != 0;
-    public bool ShowCandidates => Value == 0 && !string.IsNullOrEmpty(Candidates);
+    private bool _globalShowCandidates = true;
+    
+    public bool GlobalShowCandidates
+    {
+        get => _globalShowCandidates;
+        set
+        {
+            _globalShowCandidates = value;
+            OnPropertyChanged(nameof(ShowCandidates));
+        }
+    }
+    
+    public bool ShowCandidates => Value == 0 && !string.IsNullOrEmpty(Candidates) && GlobalShowCandidates;
     public string FontWeight => IsGiven ? "Bold" : "Normal";
     public SolidColorBrush TextColor => GetTextColor();
     public SolidColorBrush BackgroundColor => GetBackgroundColor();

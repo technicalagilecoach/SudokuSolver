@@ -20,6 +20,8 @@ public partial class SudokuGridViewModel : ViewModelBase
     
     [ObservableProperty]
     private string _status = "Ready";
+    
+    private bool _showCandidates = true;
 
     private Puzzle _puzzle = new();
     private Solver? _solver;
@@ -48,6 +50,7 @@ public partial class SudokuGridViewModel : ViewModelBase
             {
                 var position = new Position(row + 1, col + 1);
                 var cellViewModel = new SudokuCellViewModel(position);
+                cellViewModel.GlobalShowCandidates = _showCandidates;
                 rowCells.Add(cellViewModel);
             }
             Cells.Add(rowCells);
@@ -120,6 +123,18 @@ public partial class SudokuGridViewModel : ViewModelBase
     }
     
     public Action<Solver>? OnSolvingCompleted;
+    
+    public void SetShowCandidates(bool showCandidates)
+    {
+        _showCandidates = showCandidates;
+        foreach (var row in Cells)
+        {
+            foreach (var cell in row)
+            {
+                cell.GlobalShowCandidates = showCandidates;
+            }
+        }
+    }
 
     
 

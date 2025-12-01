@@ -125,10 +125,8 @@ Title="Sudoku Solver"
 
                     <!-- Steps Status -->
                     <StackPanel Grid.Row="4" Margin="10">
-                        <TextBlock Text="Playback Speed" FontWeight="Bold" Margin="0,0,0,5" Foreground="#333333"/>
-                        <Slider Value="{Binding SolvingSteps.PlaybackSpeed}" Minimum="100" Maximum="3000" TickFrequency="100" 
-                                IsSnapToTickEnabled="True" Margin="0,0,0,5"/>
                         <CheckBox Content="Enable Animations" IsChecked="{Binding SolvingSteps.EnableAnimations}" Margin="0,0,0,5"/>
+                        <CheckBox Content="Show Candidates" IsChecked="{Binding SolvingSteps.ShowCandidates}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SolvingSteps.Status}" FontSize="11" Foreground="#666666"/>
                     </StackPanel>
                     
