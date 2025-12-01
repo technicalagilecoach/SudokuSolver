@@ -4,6 +4,7 @@ using SudokuSolver;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
 
 namespace SudokuSolver.GUI.ViewModels;
 
@@ -67,13 +68,28 @@ public partial class SudokuGridViewModel : ViewModelBase
     [RelayCommand]
     private void SelectCell(SudokuCellViewModel cell)
     {
-        if (SelectedCell != null)
+        if (SelectedCell == cell)
         {
-            SelectedCell.IsSelected = false;
+            // Unmark if clicking the same cell again
+            SelectedCell = null;
+            cell.IsSelected = false;
+            
+            // Clear all highlights
+            foreach (var c in Cells.SelectMany(row => row))
+            {
+                c.SetHighlight(false);
+            }
         }
+        else
+        {
+            if (SelectedCell != null)
+            {
+                SelectedCell.IsSelected = false;
+            }
 
-        SelectedCell = cell;
-        cell.IsSelected = true;
+            SelectedCell = cell;
+            cell.IsSelected = true;
+        }
     }
 
     

@@ -21,7 +21,12 @@ public partial class SudokuGridControl : UserControl
         {
             var viewModel = DataContext as SudokuGridViewModel;
             viewModel?.SelectCellCommand.Execute(cell);
-            UpdateRelatedCellHighlights(cell);
+            
+            // Only update highlights if a cell is selected
+            if (viewModel?.SelectedCell != null)
+            {
+                UpdateRelatedCellHighlights(viewModel.SelectedCell);
+            }
         }
     }
 
