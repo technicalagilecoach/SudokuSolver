@@ -397,6 +397,7 @@ public partial class SolvingStepsViewModel : ViewModelBase
         }
         
         ClearHighlights();
+        UpdateNavigationState();
         Status = $"Reset to step {step.StepNumber}";
     }
 
@@ -414,10 +415,13 @@ public partial class SolvingStepsViewModel : ViewModelBase
         CanStepForward = HasSteps && CurrentStepIndex < Steps.Count - 1;
         CanStepBackward = HasSteps && CurrentStepIndex > 0;
         
+        System.Diagnostics.Debug.WriteLine($"UpdateNavigationState: CurrentStepIndex = {CurrentStepIndex}, Steps.Count = {Steps.Count}");
+        
         // Clear all previous selections
-        foreach (var step in Steps)
+        for (int i = 0; i < Steps.Count; i++)
         {
-            step.IsSelected = false;
+            Steps[i].IsSelected = false;
+            System.Diagnostics.Debug.WriteLine($"Step {i}: IsSelected = false");
         }
         
         // Highlight current step
@@ -425,7 +429,11 @@ public partial class SolvingStepsViewModel : ViewModelBase
         {
             SelectedStep = Steps[CurrentStepIndex];
             SelectedStep.IsSelected = true;
+            System.Diagnostics.Debug.WriteLine($"Step {CurrentStepIndex}: IsSelected = true");
         }
+        
+        // Force UI update by notifying property changed for the collection
+        OnPropertyChanged(nameof(Steps));
     }
 
     

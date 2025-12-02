@@ -31,9 +31,15 @@ public class SelectedToBackgroundConverter : IValueConverter
     {
         if (value is bool isSelected)
         {
-            return isSelected ? Avalonia.Media.Color.FromArgb(255, 240, 248, 255) : Avalonia.Media.Color.FromArgb(255, 255, 255, 255);
+            System.Diagnostics.Debug.WriteLine($"SelectedToBackgroundConverter: isSelected = {isSelected}");
+            return new Avalonia.Media.SolidColorBrush(
+                isSelected ? 
+                Avalonia.Media.Color.FromArgb(255, 240, 248, 255) : 
+                Avalonia.Media.Color.FromArgb(255, 255, 255, 255)
+            );
         }
-        return Avalonia.Media.Colors.White;
+        System.Diagnostics.Debug.WriteLine($"SelectedToBackgroundConverter: value is not bool, it's {value?.GetType().Name}");
+        return new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.White);
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
