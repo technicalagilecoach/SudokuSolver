@@ -85,7 +85,7 @@ Title="Sudoku Solver"
                         </Button>
                         <Button Command="{Binding SolvingSteps.SolveAsFarAsPossibleCommand}" Margin="2" Padding="12,8"
                                 Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"
-                                IsEnabled="{Binding SolvingSteps.HasSteps}">
+                                IsEnabled="{Binding SolvingSteps.CanPlay}">
                             <TextBlock Text="&#xf04b;" Classes="fa" FontSize="14"/>
                         </Button>
                         <Button Command="{Binding SolvingSteps.PauseCommand}" Margin="2" Padding="12,8"

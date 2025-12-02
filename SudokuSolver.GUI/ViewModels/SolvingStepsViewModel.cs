@@ -32,6 +32,24 @@ public partial class SolvingStepsViewModel : ViewModelBase
     [ObservableProperty]
     private bool _hasSteps = false;
     
+    public bool CanPlay => HasSteps && !IsPlaying;
+    
+    partial void OnIsPlayingChanged(bool value)
+    {
+        if (!value)
+        {
+            _playbackTimer?.Stop();
+        }
+        // Notify CanPlay property changed
+        OnPropertyChanged(nameof(CanPlay));
+    }
+    
+    partial void OnHasStepsChanged(bool value)
+    {
+        // Notify CanPlay property changed
+        OnPropertyChanged(nameof(CanPlay));
+    }
+    
     private System.Timers.Timer? _playbackTimer;
     
     [ObservableProperty]
@@ -151,6 +169,14 @@ public partial class SolvingStepsViewModel : ViewModelBase
         {
             _sudokuGrid.InitializeEmptyPuzzle();
         }
+        
+        // Ensure all properties are properly notified after reset
+        HasSteps = Steps.Count > 0;
+        
+        // Force property notifications for all relevant properties
+        OnPropertyChanged(nameof(CurrentStepIndex));
+        OnPropertyChanged(nameof(IsPlaying));
+        OnPropertyChanged(nameof(HasSteps));
         
         UpdateNavigationState();
         Status = "Reset to initial state";
@@ -481,7 +507,9 @@ public partial class SolvingStepsViewModel : ViewModelBase
         CanStepForward = HasSteps && CurrentStepIndex < Steps.Count - 1;
         CanStepBackward = HasSteps && CurrentStepIndex >= 0;
         
-        System.Diagnostics.Debug.WriteLine($"UpdateNavigationState: CurrentStepIndex = {CurrentStepIndex}, Steps.Count = {Steps.Count}");
+        System.Diagnostics.Debug.WriteLine($"UpdateNavigationState: CurrentStepIndex = {CurrentStepIndex}, Steps.Count = {Steps.Count}, HasSteps = {HasSteps}");
+        System.Diagnostics.Debug.WriteLine($"CanStepForward = {CanStepForward}, CanStepBackward = {CanStepBackward}");
+        System.Diagnostics.Debug.WriteLine($"CanStepForward condition: HasSteps={HasSteps}, CurrentStepIndex < Steps.Count-1 = {CurrentStepIndex < Steps.Count - 1}");
         
         // Clear all previous selections
         for (int i = 0; i < Steps.Count; i++)
@@ -500,6 +528,10 @@ public partial class SolvingStepsViewModel : ViewModelBase
         
         // Force UI update by notifying property changed for the collection
         OnPropertyChanged(nameof(Steps));
+        
+        // Also notify about the navigation properties to ensure UI updates
+        OnPropertyChanged(nameof(CanStepForward));
+        OnPropertyChanged(nameof(CanStepBackward));
     }
 
     
