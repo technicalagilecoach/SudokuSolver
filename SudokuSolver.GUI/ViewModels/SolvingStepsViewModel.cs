@@ -87,11 +87,20 @@ public partial class SolvingStepsViewModel : ViewModelBase
     [RelayCommand]
     private void StepBackward()
     {
-        if (CanStepBackward && CurrentStepIndex > 0)
+        if (CanStepBackward && CurrentStepIndex >= 0)
         {
-            CurrentStepIndex--;
-            // Reset to previous step state
-            ResetToStep(Steps[CurrentStepIndex]);
+            if (CurrentStepIndex > 0)
+            {
+                CurrentStepIndex--;
+                // Reset to previous step state
+                ResetToStep(Steps[CurrentStepIndex]);
+            }
+            else
+            {
+                // Going from first step back to initial state (no steps applied)
+                CurrentStepIndex = -1;
+                ResetToInitialState();
+            }
             UpdateNavigationState();
         }
     }
@@ -132,7 +141,9 @@ public partial class SolvingStepsViewModel : ViewModelBase
         // Reset to initial puzzle state if available, otherwise empty puzzle
         if (Steps.Count > 0 && !string.IsNullOrEmpty(Steps[0].PuzzleStateBefore))
         {
-            _sudokuGrid.LoadPuzzle(Steps[0].PuzzleStateBefore);
+            // Remove newlines from puzzle state string to match expected format
+            var puzzleState = Steps[0].PuzzleStateBefore.Replace("\n", "").Replace("\r", "");
+            _sudokuGrid.LoadPuzzle(puzzleState);
         }
         else
         {
@@ -213,7 +224,9 @@ public partial class SolvingStepsViewModel : ViewModelBase
         // Reset grid to initial state for proper playback
         if (Steps.Count > 0 && !string.IsNullOrEmpty(Steps[0].PuzzleStateBefore))
         {
-            _sudokuGrid.LoadPuzzle(Steps[0].PuzzleStateBefore);
+            // Remove newlines from puzzle state string to match expected format
+            var puzzleState = Steps[0].PuzzleStateBefore.Replace("\n", "").Replace("\r", "");
+            _sudokuGrid.LoadPuzzle(puzzleState);
         }
         
         UpdateNavigationState();
@@ -421,12 +434,28 @@ public partial class SolvingStepsViewModel : ViewModelBase
         return ((position.Row - 1) / 3) * 3 + ((position.Column - 1) / 3) + 1;
     }
 
+    private void ResetToInitialState()
+    {
+        // Reset to initial puzzle state (before any steps)
+        if (Steps.Count > 0 && !string.IsNullOrEmpty(Steps[0].PuzzleStateBefore))
+        {
+            // Remove newlines from puzzle state string to match expected format
+            var puzzleState = Steps[0].PuzzleStateBefore.Replace("\n", "").Replace("\r", "");
+            _sudokuGrid.LoadPuzzle(puzzleState);
+        }
+        
+        ClearHighlights();
+        Status = "Reset to initial state";
+    }
+
     private void ResetToStep(SolvingStep step)
     {
         // Load the puzzle state before this step
         if (!string.IsNullOrEmpty(step.PuzzleStateBefore))
         {
-            _sudokuGrid.LoadPuzzle(step.PuzzleStateBefore);
+            // Remove newlines from puzzle state string to match expected format
+            var puzzleState = step.PuzzleStateBefore.Replace("\n", "").Replace("\r", "");
+            _sudokuGrid.LoadPuzzle(puzzleState);
         }
         
         ClearHighlights();
@@ -448,7 +477,7 @@ public partial class SolvingStepsViewModel : ViewModelBase
     private void UpdateNavigationState()
     {
         CanStepForward = HasSteps && CurrentStepIndex < Steps.Count - 1;
-        CanStepBackward = HasSteps && CurrentStepIndex > 0;
+        CanStepBackward = HasSteps && CurrentStepIndex >= 0;
         
         System.Diagnostics.Debug.WriteLine($"UpdateNavigationState: CurrentStepIndex = {CurrentStepIndex}, Steps.Count = {Steps.Count}");
         
