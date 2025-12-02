@@ -210,17 +210,10 @@ public partial class SolvingStepsViewModel : ViewModelBase
         // Clear all highlights first
         ClearHighlights();
         
-        // Apply strategy-specific highlighting with animation
-        if (EnableAnimations)
-        {
-            await ApplyStrategySpecificHighlightsAnimated(step);
-        }
-        else
-        {
-            ApplyStrategySpecificHighlights(step);
-        }
-
-        // Apply cell changes with animation
+        // Get value placement cells for this step
+        var valuePlacementChanges = step.CellChanges.Where(c => c.IsValueChange).ToList();
+        
+        // Apply cell changes with animation first
         foreach (var change in step.CellChanges)
         {
             var cell = _sudokuGrid.Cells[change.Position.Row - 1][change.Position.Column - 1];
@@ -233,16 +226,35 @@ public partial class SolvingStepsViewModel : ViewModelBase
             {
                 cell.SetValue(change.NewValue);
             }
-            
-            // Highlight value placement
-            if (change.IsValueChange)
+        }
+        
+        // Now apply highlighting after values are set
+        if (valuePlacementChanges.Any())
+        {
+            // Highlight only the value placement cells
+            foreach (var change in valuePlacementChanges)
             {
+                var cell = _sudokuGrid.Cells[change.Position.Row - 1][change.Position.Column - 1];
                 cell.SetHighlightType(HighlightType.ValuePlacement);
+            }
+        }
+        else
+        {
+            // For non-value placement steps (candidate elimination), use the original highlighting
+            if (EnableAnimations)
+            {
+                await ApplyStrategySpecificHighlightsAnimated(step);
+            }
+            else
+            {
+                ApplyStrategySpecificHighlights(step);
             }
         }
 
         Status = $"Step {step.StepNumber}: {step.GetFormattedDescription()}";
     }
+    
+    
     
     private async Task ApplyStrategySpecificHighlightsAnimated(SolvingStep step)
     {
@@ -407,6 +419,8 @@ public partial class SolvingStepsViewModel : ViewModelBase
         {
             cell.ClearHighlights();
             cell.SetStepHighlight(false);
+            // Reset all highlight types
+            cell.SetHighlightType(HighlightType.None);
         }
     }
 
