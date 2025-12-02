@@ -18,7 +18,6 @@ Title="Sudoku Solver"
     </Design.DataContext>
     
     <Window.Resources>
-        <converters:BooleanToPlayPauseStringConverter x:Key="BooleanToPlayPauseStringConverter"/>
         <converters:SelectedToBackgroundConverter x:Key="SelectedToBackgroundConverter"/>
         <converters:CandidateIndexToColorConverter x:Key="CandidateIndexToColorConverter"/>
         <converters:BooleanToFontWeightConverter x:Key="BooleanToFontWeightConverter"/>
@@ -75,26 +74,40 @@ Title="Sudoku Solver"
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Solve Puzzle Button -->
-                    <Button Grid.Row="0" Content="Solve Puzzle" Command="{Binding SudokuGrid.SolvePuzzleCommand}" Margin="10,10,10,5"
-                            Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0" HorizontalAlignment="Center"/>
-                    
                     <!-- Steps Header -->
                     <TextBlock Grid.Row="1" Text="Solving Steps" FontWeight="Bold" FontSize="16" Margin="10,10,10,5" Foreground="#333333"/>
 
-                    <!-- Playback Controls -->
+<!-- Navigation Controls -->
                     <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,5" HorizontalAlignment="Center">
-                        <Button Content="⏮" Command="{Binding SolvingSteps.StepBackwardCommand}" Margin="2" Width="30" Height="30" 
-                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"/>
-                        <Button Content="{Binding SolvingSteps.IsPlaying, Converter={StaticResource BooleanToPlayPauseStringConverter}}" 
-                                Command="{Binding SolvingSteps.PlayPauseCommand}" Margin="2" Width="30" Height="30"
-                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"/>
-                        <Button Content="⏭" Command="{Binding SolvingSteps.StepForwardCommand}" Margin="2" Width="30" Height="30"
-                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"/>
-                        <Button Content="⏹" Command="{Binding SolvingSteps.ResetCommand}" Margin="2" Width="30" Height="30"
-                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"/>
-                        <Button Content="⏩" Command="{Binding SolvingSteps.GoToEndCommand}" Margin="2" Width="30" Height="30"
-                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"/>
+                        <Button Command="{Binding SudokuGrid.SolvePuzzleCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0">
+                            <TextBlock Text="🔍" FontSize="14"/>
+                        </Button>
+                        <Button Command="{Binding SolvingSteps.SolveAsFarAsPossibleCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"
+                                IsEnabled="{Binding SolvingSteps.HasSteps}">
+                            <TextBlock Text="▶" FontSize="14"/>
+                        </Button>
+                        <Button Command="{Binding SolvingSteps.PauseCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"
+                                IsEnabled="{Binding SolvingSteps.IsPlaying}">
+                            <TextBlock Text="⏸" FontSize="14"/>
+                        </Button>
+                        <Button Command="{Binding SolvingSteps.StepForwardCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"
+                                IsEnabled="{Binding SolvingSteps.CanStepForward}">
+                            <TextBlock Text="⏭" FontSize="14"/>
+                        </Button>
+                        <Button Command="{Binding SolvingSteps.StepBackwardCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"
+                                IsEnabled="{Binding SolvingSteps.CanStepBackward}">
+                            <TextBlock Text="⏮" FontSize="14"/>
+                        </Button>
+                        <Button Command="{Binding SolvingSteps.ResetCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"
+                                IsEnabled="{Binding SolvingSteps.HasSteps}">
+                            <TextBlock Text="↺" FontSize="14"/>
+                        </Button>
                     </StackPanel>
 
                     <!-- Steps List -->

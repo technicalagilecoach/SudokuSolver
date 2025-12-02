@@ -21,16 +21,18 @@ public partial class SolvingStepsViewModel : ViewModelBase
     private int _currentStepIndex = -1;
     
     [ObservableProperty]
-    private bool _isPlaying = false;
-    
-    [ObservableProperty]
     private bool _canStepForward = false;
     
     [ObservableProperty]
     private bool _canStepBackward = false;
     
     [ObservableProperty]
-    private int _playbackSpeed = 1000; // milliseconds
+    private bool _isPlaying = false;
+    
+    [ObservableProperty]
+    private bool _hasSteps = false;
+    
+    private System.Timers.Timer? _playbackTimer;
     
     [ObservableProperty]
     private bool _enableAnimations = true;
@@ -53,7 +55,6 @@ public partial class SolvingStepsViewModel : ViewModelBase
     private string _strategyExplanation = "Select a step to see strategy explanation";
 
     private SudokuGridViewModel _sudokuGrid;
-    private System.Timers.Timer? _playbackTimer;
 
     public SolvingStepsViewModel(SudokuGridViewModel sudokuGrid)
     {
@@ -65,23 +66,12 @@ public partial class SolvingStepsViewModel : ViewModelBase
     {
         _playbackTimer = new System.Timers.Timer
         {
-            Interval = PlaybackSpeed
+            Interval = 1000 // 1 second between steps
         };
         _playbackTimer.Elapsed += OnPlaybackTimerTick;
     }
 
-    [RelayCommand]
-    private void PlayPause()
-    {
-        if (IsPlaying)
-        {
-            PausePlayback();
-        }
-        else
-        {
-            StartPlayback();
-        }
-    }
+    
 
     [RelayCommand]
     private async Task StepForward()
@@ -107,23 +97,59 @@ public partial class SolvingStepsViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void Pause()
+    {
+        if (!IsPlaying) return;
+        
+        IsPlaying = false;
+        _playbackTimer?.Stop();
+        Status = "Paused";
+    }
+
+    private async void OnPlaybackTimerTick(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (CurrentStepIndex < Steps.Count - 1 && IsPlaying)
+        {
+            CurrentStepIndex++;
+            await ApplyStep(Steps[CurrentStepIndex]);
+            UpdateNavigationState();
+        }
+        else
+        {
+            // Reached the end or was paused
+            IsPlaying = false;
+            _playbackTimer?.Stop();
+            Status = CurrentStepIndex >= Steps.Count - 1 ? "Completed all steps" : "Playback stopped";
+        }
+    }
+
+    [RelayCommand]
     private void Reset()
     {
-        PausePlayback();
         CurrentStepIndex = -1;
+        HasSteps = false;
         _sudokuGrid.InitializeEmptyPuzzle();
         UpdateNavigationState();
         Status = "Reset to initial state";
     }
 
     [RelayCommand]
-    private void GoToEnd()
+    private async Task SolveAsFarAsPossible()
     {
-        PausePlayback();
+        if (IsPlaying) return;
+
+        IsPlaying = true;
+        Status = "Playing steps...";
+        _playbackTimer!.Start();
+    }
+
+    [RelayCommand]
+    private async Task GoToEnd()
+    {
         // Apply all steps
         for (int i = 0; i < Steps.Count; i++)
         {
-            ApplyStep(Steps[i]);
+            await ApplyStep(Steps[i]);
         }
         CurrentStepIndex = Steps.Count - 1;
         UpdateNavigationState();
@@ -172,38 +198,12 @@ public partial class SolvingStepsViewModel : ViewModelBase
             Steps.Add(step);
         }
 
+        HasSteps = Steps.Count > 0;
         UpdateNavigationState();
         Status = Steps.Count > 0 ? $"Loaded {Steps.Count} solving steps" : "No steps available";
     }
 
-    private void StartPlayback()
-    {
-        if (Steps.Count == 0) return;
-
-        IsPlaying = true;
-        _playbackTimer!.Interval = PlaybackSpeed;
-        _playbackTimer.Start();
-        Status = "Playing steps...";
-    }
-
-    private void PausePlayback()
-    {
-        IsPlaying = false;
-        _playbackTimer?.Stop();
-        Status = "Playback paused";
-    }
-
-    private async void OnPlaybackTimerTick(object? sender, System.Timers.ElapsedEventArgs e)
-    {
-        if (CurrentStepIndex < Steps.Count - 1)
-        {
-            _ = StepForward(); // Fire and forget for timer
-        }
-        else
-        {
-            PausePlayback();
-        }
-    }
+    
 
     private async Task ApplyStep(SolvingStep step)
     {
@@ -411,22 +411,24 @@ public partial class SolvingStepsViewModel : ViewModelBase
 
     private void UpdateNavigationState()
     {
-        CanStepForward = CurrentStepIndex < Steps.Count - 1;
-        CanStepBackward = CurrentStepIndex > 0;
+        CanStepForward = HasSteps && CurrentStepIndex < Steps.Count - 1;
+        CanStepBackward = HasSteps && CurrentStepIndex > 0;
         
+        // Clear all previous selections
+        foreach (var step in Steps)
+        {
+            step.IsSelected = false;
+        }
+        
+        // Highlight current step
         if (CurrentStepIndex >= 0 && CurrentStepIndex < Steps.Count)
         {
             SelectedStep = Steps[CurrentStepIndex];
+            SelectedStep.IsSelected = true;
         }
     }
 
-    partial void OnPlaybackSpeedChanged(int value)
-    {
-        if (_playbackTimer != null)
-        {
-            _playbackTimer.Interval = value;
-        }
-    }
+    
 
     partial void OnSelectedStepChanged(SolvingStep? value)
     {
