@@ -123,7 +123,12 @@ public partial class SudokuGridViewModel : ViewModelBase
 
             if (_solver != null)
             {
-                UpdateGridFromSolver();
+                // Don't update grid from solver immediately - we want to show only initial state for playback
+                // UpdateGridFromSolver();
+                
+                // Reset grid to initial puzzle state for proper playback
+                UpdateAllCellsFromPuzzle();
+                
                 // Notify parent view model about solving steps
                 OnSolvingCompleted?.Invoke(_solver);
             }

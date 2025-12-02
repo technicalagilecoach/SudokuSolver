@@ -128,7 +128,17 @@ public partial class SolvingStepsViewModel : ViewModelBase
     {
         CurrentStepIndex = -1;
         HasSteps = false;
-        _sudokuGrid.InitializeEmptyPuzzle();
+        
+        // Reset to initial puzzle state if available, otherwise empty puzzle
+        if (Steps.Count > 0 && !string.IsNullOrEmpty(Steps[0].PuzzleStateBefore))
+        {
+            _sudokuGrid.LoadPuzzle(Steps[0].PuzzleStateBefore);
+        }
+        else
+        {
+            _sudokuGrid.InitializeEmptyPuzzle();
+        }
+        
         UpdateNavigationState();
         Status = "Reset to initial state";
     }
@@ -199,6 +209,13 @@ public partial class SolvingStepsViewModel : ViewModelBase
         }
 
         HasSteps = Steps.Count > 0;
+        
+        // Reset grid to initial state for proper playback
+        if (Steps.Count > 0 && !string.IsNullOrEmpty(Steps[0].PuzzleStateBefore))
+        {
+            _sudokuGrid.LoadPuzzle(Steps[0].PuzzleStateBefore);
+        }
+        
         UpdateNavigationState();
         Status = Steps.Count > 0 ? $"Loaded {Steps.Count} solving steps" : "No steps available";
     }
@@ -210,21 +227,25 @@ public partial class SolvingStepsViewModel : ViewModelBase
         // Clear all highlights first
         ClearHighlights();
         
-        // Get value placement cells for this step
-        var valuePlacementChanges = step.CellChanges.Where(c => c.IsValueChange).ToList();
+        // Get value placement cells for this step (only actual value placements, not zeros)
+        var valuePlacementChanges = step.CellChanges.Where(c => c.IsValueChange && c.NewValue != 0).ToList();
         
         // Apply cell changes with animation first
         foreach (var change in step.CellChanges)
         {
             var cell = _sudokuGrid.Cells[change.Position.Row - 1][change.Position.Column - 1];
             
-            if (EnableAnimations && change.IsValueChange)
+            // Only set values when NewValue is not 0 (unknown values should not be shown during playback)
+            if (change.NewValue != 0)
             {
-                await AnimateValuePlacement(cell, change.NewValue);
-            }
-            else
-            {
-                cell.SetValue(change.NewValue);
+                if (EnableAnimations && change.IsValueChange)
+                {
+                    await AnimateValuePlacement(cell, change.NewValue);
+                }
+                else
+                {
+                    cell.SetValue(change.NewValue);
+                }
             }
         }
         
