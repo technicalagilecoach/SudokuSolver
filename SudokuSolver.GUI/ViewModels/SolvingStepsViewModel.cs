@@ -136,7 +136,9 @@ public partial class SolvingStepsViewModel : ViewModelBase
     private void Reset()
     {
         CurrentStepIndex = -1;
-        HasSteps = false;
+        IsPlaying = false; // Ensure playback is stopped
+        _playbackTimer?.Stop(); // Stop any running timer
+        // Don't set HasSteps = false - we want to preserve the steps for playback
         
         // Reset to initial puzzle state if available, otherwise empty puzzle
         if (Steps.Count > 0 && !string.IsNullOrEmpty(Steps[0].PuzzleStateBefore))
