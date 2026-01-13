@@ -2,6 +2,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SudokuSolver.GUI.Services;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using System;
 using System.IO;
@@ -90,7 +92,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 }
             }
         }
-        
+    
         return digits.Count == 81 ? new string(digits.ToArray()) : ParseGridFormat(puzzleText);
     }
     
@@ -189,6 +191,21 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 SudokuGrid.Status = $"Error saving file: {ex.Message}";
             }
+        }
+    }
+
+    [RelayCommand]
+    private void Exit()
+    {
+        // Close the application using Avalonia's shutdown mechanism
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.Shutdown();
+        }
+        else
+        {
+            // Fallback for other application lifetimes
+            System.Environment.Exit(0);
         }
     }
 }

@@ -1,17 +1,21 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:SudokuSolver.GUI.ViewModels"
-        xmlns:local="using:SudokuSolver.GUI.Views"
-        xmlns:converters="using:SudokuSolver.GUI.Converters"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
-        x:Class="SudokuSolver.GUI.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-Title="Sudoku Solver"
-         Width="1200" Height="700"
-         MinWidth="1050" MinHeight="600">
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:vm="using:SudokuSolver.GUI.ViewModels"
+         xmlns:local="using:SudokuSolver.GUI.Views"
+         xmlns:converters="using:SudokuSolver.GUI.Converters"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
+         x:Class="SudokuSolver.GUI.Views.MainWindow"
+         x:DataType="vm:MainWindowViewModel"
+         Icon="/Assets/avalonia-logo.ico"
+         Title="Sudoku Solver"
+          Width="1200" Height="700"
+          MinWidth="1050" MinHeight="600">
+
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+Q" Command="{Binding ExitCommand}"/>
+    </Window.KeyBindings>
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -38,7 +42,7 @@ Title="Sudoku Solver"
                 <MenuItem Header="Load Puzzle..." Command="{Binding LoadPuzzleFromFileCommand}"/>
                 <MenuItem Header="Save Puzzle..." Command="{Binding SavePuzzleToFileCommand}"/>
                 <Separator/>
-                <MenuItem Header="Exit"/>
+                <MenuItem Header="Exit" Command="{Binding ExitCommand}" InputGesture="Ctrl+Q"/>
             </MenuItem>
             
             <MenuItem Header="Solve">
