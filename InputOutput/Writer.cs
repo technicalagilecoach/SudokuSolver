@@ -105,7 +105,17 @@ public class Writer(bool unsolved, string undefinedSymbol, Input.FileType fileTy
         
         var puzzle = new Puzzle();
         puzzle.Init(allPuzzles[number-1]);
-        var name = puzzleNames.Count==0?fileName.Name:puzzleNames[0];
+        
+        var name ="";
+        if (puzzleNames.Count == 0)
+        {
+            name = fileName.Name + " " + number.ToString();
+        }
+        else
+        {
+            name = puzzleNames[number-1];
+        }
+        
         PdfWriter.WritePdf(name, puzzle, puzzle, false, pdfFile.FullName);
     }
     

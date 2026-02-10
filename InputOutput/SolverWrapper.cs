@@ -12,7 +12,8 @@ public class SolverWrapper(string undefinedSymbol, Input.FileType fileType, List
         List<string> results = [];
         if (FileType == Input.FileType.SinglePuzzle || number > 0)
         {
-            var result = Solve(AllPuzzles[number-1], UndefinedSymbol, out var count, out var strategyStats);
+            var index = FileType == Input.FileType.SinglePuzzle ? 0 : (number - 1);
+            var result = Solve(AllPuzzles[index], UndefinedSymbol, out var count, out var strategyStats);
             results.Add(result);
             StrategyStatistics.Add(strategyStats);
             output = CreateMessageForSinglePuzzle(count);
