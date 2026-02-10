@@ -1,0 +1,165 @@
+<Window xmlns="https://github.com/avaloniaui"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:vm="using:SudokuSolver.GUI.ViewModels"
+         xmlns:local="using:SudokuSolver.GUI.Views"
+         xmlns:converters="using:SudokuSolver.GUI.Converters"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
+         x:Class="SudokuSolver.GUI.Views.MainWindow"
+         x:DataType="vm:MainWindowViewModel"
+         Icon="/Assets/avalonia-logo.ico"
+         Title="Sudoku Solver"
+          Width="1200" Height="700"
+          MinWidth="1050" MinHeight="600">
+
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+Q" Command="{Binding ExitCommand}"/>
+    </Window.KeyBindings>
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    
+    <Window.Resources>
+        <converters:SelectedToBackgroundConverter x:Key="SelectedToBackgroundConverter"/>
+        <converters:CandidateIndexToColorConverter x:Key="CandidateIndexToColorConverter"/>
+        <converters:BooleanToFontWeightConverter x:Key="BooleanToFontWeightConverter"/>
+        <converters:BooleanToStrikethroughConverter x:Key="BooleanToStrikethroughConverter"/>
+        <converters:HighlightTypeToColorConverter x:Key="HighlightTypeToColorConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Menu Bar -->
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Load Puzzle..." Command="{Binding LoadPuzzleFromFileCommand}"/>
+                <MenuItem Header="Save Puzzle..." Command="{Binding SavePuzzleToFileCommand}"/>
+                <Separator/>
+                <MenuItem Header="Exit" Command="{Binding ExitCommand}" InputGesture="Ctrl+Q"/>
+            </MenuItem>
+            
+            <MenuItem Header="Solve">
+                <MenuItem Header="Solve Puzzle" Command="{Binding SudokuGrid.SolvePuzzleCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="400"/>
+                <ColumnDefinition Width="300" MinWidth="250"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Sudoku Grid -->
+            <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Viewbox Stretch="Uniform">
+                    <local:SudokuGridControl DataContext="{Binding SudokuGrid}"/>
+                </Viewbox>
+            </Grid>
+
+            
+
+            <!-- Solving Steps Panel -->
+            <Border Grid.Column="1" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="6" Margin="20,0,0,0" MinWidth="250" Background="#F8F8F8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Steps Header -->
+                    <TextBlock Grid.Row="1" Text="Solving Steps" FontWeight="Bold" FontSize="16" Margin="10,10,10,5" Foreground="#333333"/>
+
+<!-- Navigation Controls -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,5" HorizontalAlignment="Center">
+                        <Button Command="{Binding SudokuGrid.SolvePuzzleCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0">
+                            <TextBlock Text="&#xf002;" Classes="fa" FontSize="14"/>
+                        </Button>
+                        <Button Command="{Binding SolvingSteps.SolveAsFarAsPossibleCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"
+                                IsEnabled="{Binding SolvingSteps.CanPlay}">
+                            <TextBlock Text="&#xf04b;" Classes="fa" FontSize="14"/>
+                        </Button>
+                        <Button Command="{Binding SolvingSteps.PauseCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"
+                                IsEnabled="{Binding SolvingSteps.IsPlaying}">
+                            <TextBlock Text="&#xf04c;" Classes="fa" FontSize="14"/>
+                        </Button>
+                        <Button Command="{Binding SolvingSteps.StepForwardCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"
+                                IsEnabled="{Binding SolvingSteps.CanStepForward}">
+                            <TextBlock Text="&#xf051;" Classes="fa" FontSize="14"/>
+                        </Button>
+                        <Button Command="{Binding SolvingSteps.StepBackwardCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"
+                                IsEnabled="{Binding SolvingSteps.CanStepBackward}">
+                            <TextBlock Text="&#xf048;" Classes="fa" FontSize="14"/>
+                        </Button>
+                        <Button Command="{Binding SolvingSteps.ResetCommand}" Margin="2" Padding="12,8"
+                                Background="#F0F0F0" Foreground="#333333" BorderBrush="#D0D0D0"
+                                IsEnabled="{Binding SolvingSteps.HasSteps}">
+                            <TextBlock Text="&#xf2f9;" Classes="fa" FontSize="14"/>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Steps List -->
+                    <ScrollViewer Grid.Row="3" Margin="10,5">
+                        <ItemsControl ItemsSource="{Binding SolvingSteps.Steps}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#D8D8D8" BorderThickness="1" CornerRadius="4" 
+                                            Background="{Binding IsSelected, Converter={StaticResource SelectedToBackgroundConverter}}"
+                                            Margin="0,2" Padding="8">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding StepNumber}" FontWeight="Bold" Margin="0,0,5,0" Foreground="#333333"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding StrategyName}" FontWeight="SemiBold" Foreground="#333333"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Description}" FontSize="11" Foreground="#666666"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- Steps Status -->
+                    <StackPanel Grid.Row="4" Margin="10">
+                        <CheckBox Content="Enable Animations" IsChecked="{Binding SolvingSteps.EnableAnimations}" Margin="0,0,0,5"/>
+                        <CheckBox Content="Show Candidates" IsChecked="{Binding SolvingSteps.ShowCandidates}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SolvingSteps.Status}" FontSize="11" Foreground="#666666"/>
+                    </StackPanel>
+                    
+                    <!-- Strategy Explanation Panel -->
+                    <Border Grid.Row="5" BorderBrush="#D0D0D0" BorderThickness="1" CornerRadius="4" Margin="10,5,10,10" Background="#FFFFFF">
+                        <StackPanel Margin="8">
+                            <TextBlock Text="Strategy Explanation" FontWeight="Bold" FontSize="12" Margin="0,0,0,5" Foreground="#333333"/>
+                            <ScrollViewer MaxHeight="120" VerticalScrollBarVisibility="Auto">
+                                <TextBlock Text="{Binding SolvingSteps.StrategyExplanation}" FontSize="10" Foreground="#666666" TextWrapping="Wrap"/>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

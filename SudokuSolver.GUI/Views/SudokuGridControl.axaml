@@ -1,0 +1,103 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SudokuSolver.GUI.ViewModels"
+             xmlns:converters="using:SudokuSolver.GUI.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="450"
+             x:Class="SudokuSolver.GUI.Views.SudokuGridControl"
+             x:DataType="vm:SudokuGridViewModel">
+
+    <Border BorderBrush="Black" BorderThickness="2" CornerRadius="0" Background="#FFFFFF">
+    <ItemsControl ItemsSource="{Binding Cells}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" Spacing="0"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="0"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="vm:SudokuCellViewModel">
+                                <Border
+                                    Name="CellBorder"
+                                    BorderBrush="Black" 
+                                    BorderThickness="{Binding BorderThickness}"
+                                    Background="{Binding BackgroundColor}"
+                                    Width="70" Height="70"
+                                    Margin="0"
+                                    Cursor="Hand"
+                                    Tapped="OnCellTapped">
+                                    <Border.Transitions>
+                                        <Transitions>
+                                            <BrushTransition Property="Background" Duration="0:0:0.3"/>
+                                        </Transitions>
+                                    </Border.Transitions>
+                                    <Grid>
+                                        <!-- Given numbers styling -->
+                                        <TextBlock 
+                                            Text="{Binding Value}"
+                                            FontSize="20"
+                                            FontWeight="{Binding FontWeight}"
+                                            Foreground="{Binding TextColor}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsVisible="{Binding HasValue}">
+                                            <TextBlock.Transitions>
+                                                <Transitions>
+                                                    <BrushTransition Property="Foreground" Duration="0:0:0.3"/>
+                                                    <DoubleTransition Property="FontSize" Duration="0:0:0.2"/>
+                                                </Transitions>
+                                            </TextBlock.Transitions>
+                                        </TextBlock>
+                                        
+<!-- Enhanced candidates display for empty cells -->
+                                          <Grid IsVisible="{Binding ShowCandidates}" Margin="2"
+                                                ColumnDefinitions="*,*,*" RowDefinitions="*,*,*">
+                                              <!-- Row 0 -->
+                                              <Border Grid.Row="0" Grid.Column="0" Background="Transparent" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[0]}" FontSize="10" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="0" Grid.Column="1" Background="Transparent" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[1]}" FontSize="10" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="0" Grid.Column="2" Background="Transparent" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[2]}" FontSize="10" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <!-- Row 1 -->
+                                              <Border Grid.Row="1" Grid.Column="0" Background="Transparent" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[3]}" FontSize="10" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="1" Grid.Column="1" Background="Transparent" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[4]}" FontSize="10" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="1" Grid.Column="2" Background="Transparent" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[5]}" FontSize="10" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <!-- Row 2 -->
+                                              <Border Grid.Row="2" Grid.Column="0" Background="Transparent" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[6]}" FontSize="10" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="2" Grid.Column="1" Background="Transparent" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[7]}" FontSize="10" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                              <Border Grid.Row="2" Grid.Column="2" Background="Transparent" CornerRadius="2" Margin="0.5" MinWidth="12" MinHeight="12">
+                                                  <TextBlock Text="{Binding CandidateGrid[8]}" FontSize="10" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                              </Border>
+                                          </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+</Border>
+</UserControl>
