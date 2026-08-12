@@ -13,3 +13,9 @@ Currently it can solve all [50 puzzles](https://projecteuler.info/resources/docu
 ## Usage
 
 ![command line usage of the solver](CommandLineUsage.png)
+
+## GUI
+
+The SudokuSolver.GUI project provides a UI to interactively explore the solution strategy for a specific Sudoku puzzle.
+
+![graphicla user interface for the Sudoku solver](SudokuSolver-GUI.png)
